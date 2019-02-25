@@ -1,4 +1,7 @@
-class CvRDT:
+from dbconnect import *
+
+
+class DeltaCvRDT:
     timestamp = 0
     dict = {}
 
@@ -6,13 +9,13 @@ class CvRDT:
         print("join")
 
     def query(self):
-        print("query")
+        dbquery("heaps", "11")
 
     def merge(self):
         print("merge")
 
-    def compare(self, read, local):
-        if read < local:
+    def compare(self, received, local):
+        if received < local:
             print(1)
 
 
@@ -21,3 +24,5 @@ class Entry:
     timestamp = 0
     data = None
 
+
+dbquery("heaps", "11")

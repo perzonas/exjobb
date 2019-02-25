@@ -1,9 +1,11 @@
 import sqlite3
 
-conn = sqlite3.connect('WorkOrderData6.db')
+
+databases = {}
+# conn = sqlite3.connect('WorkOrderData6.db')
 # conn = sqlite3.connect('example.db')
 
-c = conn.cursor()
+# c = conn.cursor()
 
 # Create table
 # c.execute('''CREATE TABLE stocks
@@ -16,11 +18,35 @@ c = conn.cursor()
 # conn.commit()
 
 
-def dbquery(column, target):
-    c.execute('SELECT * FROM ? WHERE h_target=?', [column, target])
+def add(dbid, timestamp):
+    databases[dbid ]
+
+
+def dbquery():
+    conn = sqlite3.connect('WorkOrderData6.db')
+    # conn = sqlite3.connect('example.db')
+
+    c = conn.cursor()
+
+    c.execute('SELECT * FROM targets')
+    print(c.fetchall())
+
+    conn.close()
+
+
+def dbqueryid(id):
+    conn = sqlite3.connect('WorkOrderData6.db')
+    # conn = sqlite3.connect('example.db')
+
+    c = conn.cursor()
+
+    c.execute('SELECT * FROM states WHERE h_target=?', id)  # table names cannot be parametrized
     print(c.fetchone())
 
-# We can also close the connection if we are done with it.
-# Just be sure any changes have been committed or they will be lost.
-conn.close()
+    conn.close()
+
+
+# def dbadd(id, )
+
+# conn.close()
 
