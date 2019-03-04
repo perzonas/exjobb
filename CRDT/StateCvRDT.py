@@ -1,41 +1,25 @@
-from dbconnect import *
+from DbConnect import *
 import time
 
 
-class Database:
-    timestamp = time.time()
-    name = None  # should look something like 'WorkOrderData6.db'
-
-
 class StateCvRDT:
-    databases = {}
-    myvehicleid = None
-    mydb = Database()
-    mydb.name = myvehicleid
+    vehicleid = None
 
-    def add(self, vehicleid):
-
-            db = Database()
-            db.name = vehicleid
-            databases[vehicleid] = db
+    def adddb(self, vehicleid):
+        add(vehicleid)
 
     def query(self):
-        dbquery()
+        return dbquery()
 
     def queryid(self, id):
         dbqueryid(id)
 
     def compare(self, state):
-        if state.vehicleid not in databases:
-            self.add(state.vehicleid)
-        else:
-            localdb = self.dquery(state.vehicleid)
-            if localdb.timestamp < state.timestamp:
-                return True
+        pass
 
     def merge(self, statelist):
-        for s in statelist:
-            if self.compare(s):
+        for state in statelist:
+            if self.compare(state):
                 print(1)
 
 
@@ -44,7 +28,4 @@ class Entry:
     timestamp = 0
     data = None
 
-
-# dbquery()
-
-print(int(time.time()))
+# print(int(time.time()))
