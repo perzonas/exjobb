@@ -19,10 +19,6 @@ class DeltaCvRDT:
             print(1)
 
 
-class Entry:
-    id = 0
-    timestamp = 0
-    data = None
 
 
 dbquery("heaps", "11")

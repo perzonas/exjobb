@@ -3,13 +3,18 @@ from StateCvRDT import *
 
 def main():
     crdt = StateCvRDT()
+    crdt.merge()
     result = crdt.query()
 
     print(result)
 
-    crdt.vehicleid = 1
-    print(crdt.vehicleid)
 
+def receive():
+    pass
+
+
+def send():
+    pass
 
 main()
 

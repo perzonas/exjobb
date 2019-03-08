@@ -2,11 +2,11 @@ import sqlite3
 from typing import List, Any
 
 
-def add(vehicleid):
-    newdb = sqlite3.connect(vehicleid)
+def addnewdb(vehicleid):
+    newdb = sqlite3.connect(vehicleid, isolation_level=None)
     c = newdb.cursor()
 
-    c.execute('''CREATE TABLE android_metadata (locale TEXT)''')
+    # c.execute('''CREATE TABLE android_metadata (locale TEXT)''')
 
     c.execute('''CREATE TABLE customers(_ID integer primary key autoincrement,
                     c_name text not null unique,
@@ -137,6 +137,19 @@ def add(vehicleid):
     c.close()
 
 
+def addentrytotable(table, entry):
+    conn = sqlite3.connect('test3', isolation_level=None)
+    c = conn.cursor()
+    checkqueryparam(table)
+    c.execute("PRAGMA table_info(%s)" % table)
+    columns = len(c.fetchall())
+    cur = c.execute('SELECT * from %s' % table)
+    names = list(map(lambda x: x[0], cur.description))
+    cnames = table + '(' + ','.join(names[1:]) + ')'
+    c.execute('''INSERT INTO {tn} VALUES ({q})'''.format(tn=cnames, q=",".join(["?"]*(columns-1))), entry[1:])
+    c.close()
+
+
 def existdbcheck(dbid):
 
     try:
@@ -147,23 +160,88 @@ def existdbcheck(dbid):
         return False
 
 
-
 def dbquery():  # get all of mydb
-    conn = sqlite3.connect('WorkOrderData6.db')
+    state_dict = {}
+    conn = sqlite3.connect('test3')
+    # conn = sqlite3.connect('WorkOrderData6.db')
     c = conn.cursor()
+
+    # c.execute('SELECT * FROM android_metadata')
+    # state_dict['android_metadata'] = c.fetchall()
+
+    c.execute('SELECT * FROM customers')
+    state_dict['customers'] = c.fetchall()
+
+    c.execute('SELECT * FROM heaps')
+    state_dict['heaps'] = c.fetchall()
+
+    c.execute('SELECT * FROM loads')
+    state_dict['loads'] = c.fetchall()
+
+    c.execute('SELECT * FROM loads_waybills')
+    state_dict['loads_waybills'] = c.fetchall()
+
+    c.execute('SELECT * FROM materials')
+    state_dict['materials'] = c.fetchall()
+
+    c.execute('SELECT * FROM table_properties')
+    state_dict['table_properties'] = c.fetchall()
+
     c.execute('SELECT * FROM targets')
-    r = c.fetchall()
-    c.execute('SELECT * from loads')
-    r = r + c.fetchall()
+    state_dict['targets'] = c.fetchall()
+
+    c.execute('SELECT * FROM waybills')
+    state_dict['waybills'] = c.fetchall()
+
+    c.execute('SELECT * FROM work_orders')
+    state_dict['work_orders'] = c.fetchall()
+
     conn.close()
-    return r
+
+    return state_dict
 
 
 def dbqueryid(id):  # Query a certain database
+    # conn = sqlite3.connect('WorkOrderData6.db')
+    # c = conn.cursor()
+    # c.execute('SELECT * FROM states WHERE h_target=?', id)  # table names cannot be parametrized
+    # print(c.fetchone())
+    # conn.close()
+    pass
+
+
+def entryexist(table, key):
     conn = sqlite3.connect('WorkOrderData6.db')
     c = conn.cursor()
-    c.execute('SELECT * FROM states WHERE h_target=?', id)  # table names cannot be parametrized
-    print(c.fetchone())
 
-    conn.close()
+    if not checkqueryparam(table):
+        conn.close()
+        print("Not valid table")
 
+    r = c.execute('SELECT _ID FROM %s ORDER BY _ID DESC' % table).fetchall()
+    return (key,) in r
+
+
+def checkqueryparam(param):
+    if param == 'android_metadata':
+        return True
+    elif param == 'customers':
+        return True
+    elif param == 'heaps':
+        return True
+    elif param == 'loads':
+        return True
+    elif param == 'loads_waybills':
+        return True
+    elif param == 'materials':
+        return True
+    elif param == 'table_properties':
+        return True
+    elif param == 'targets':
+        return True
+    elif param == 'waybills':
+        return True
+    elif param == 'work_orders':
+        return True
+    else:
+        return False
