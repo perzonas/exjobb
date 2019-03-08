@@ -1,20 +1,8 @@
-from mininet.topo import Topo
-from mininet.net import Mininet
-from mininet.cli import CLI
+import socket
 
-class CustomSingleTopo(Topo):
-    def build(self, no_hosts=4):
-        hosts = [self.addHost("host%s" % (h+1)) for h in range(no_hosts)]
-        switch = self.addSwitch("Switch1")
+HOST = '127.0.0.1'  # The server's hostname or IP address
+PORT = 1337        # The port used by the server
 
-        for host in hosts:
-            self.addLink(host, switch)
-
-
-topos = {'customsingletopo': (lambda: CustomSingleTopo())}
-
-singleswitch = CustomSingleTopo(4)
-net = Mininet(topo=singleswitch)
-net.start()
-CLI(net)
-net.stop()
+with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+    s.connect((HOST, PORT))
+    s.sendall(b'Hello, world')

@@ -13,7 +13,7 @@ from mininet.cli import CLI
 class CustomTopo(Topo):
 
     def build(self, no_of_hosts, cpu=0.5, cores=2):
-        hosts = [self.addHost("Host%s" % h, cpu=cpu, cores=cores) for h in range(1, no_of_hosts+1)]
+        hosts = [self.addHost("Host%s" % h, cpu=cpu, cores=cores, ip=("20.1.90.%d/24" % h)) for h in range(1, no_of_hosts+1)]
         switch = self.addSwitch("Switch1")
 
         for host in hosts:
@@ -23,7 +23,7 @@ class CustomTopo(Topo):
 topos = {'customtopo': (lambda: CustomTopo())}
 
 
-class CustomTopology():
+class CustomTopology:
 
     def startBackend(self, server, hosts):
 
@@ -34,8 +34,8 @@ class CustomTopology():
 
         topology = CustomTopo(no_of_hosts)
         # Select TCP Reno
-        output = quietRun('sysctl -w net.ipv4.tcp_congestion_control=reno')
-        assert 'reno' in output
+        # output = quietRun('sysctl -w net.ipv4.tcp_congestion_control=reno')
+        # assert 'reno' in output
 
         links = partial(TCLink, delay=delay, bw=bandwidth, loss=loss, max_queue_size=queue_size, use_htb=True)
         ovsswitch = partial(OVSSwitch, protocol='OpenFlow13')
@@ -44,7 +44,7 @@ class CustomTopology():
         # Set the topology, the class for links and interfaces, the mininet environment must be cleaned up before
         # launching, we should build now the topology
         network = Mininet(topo=topology, switch=ovsswitch, controller=Controller, intf=TCIntf,
-                          host=CPULimitedHost, link=links, cleanup=True, build=True)
+                          host=CPULimitedHost, link=links, cleanup=True, build=True, ipBase='20.1.90.0/24')
 
         network.start()
 
@@ -59,6 +59,7 @@ class CustomTopology():
         # network.iperf((h1, h2))
 
         for host in network.hosts:
+            print(host.IP())
             self.startBackend(host, host.name[-1])
 
         CLI(network)

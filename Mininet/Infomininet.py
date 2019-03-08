@@ -44,3 +44,27 @@
 # correctness, you can run Mininet without specific bandwidth limits - this is the quick and easy way to run Mininet,
 # and it also provides the highest performance at the expense of timing accuracy under load.
 
+
+
+
+
+# In the Mininet documentation it's possible to __init__ the CLI mode with a script. Each line of the script will
+# be executed within the CLI, without stopping for user input. A cursory glance in this documentation reveals the
+# individual methods the CLI uses to interpret and execute commands.
+
+# Here is an example:
+
+# myScript = "genTraffic.sh"
+# CLI(net, script=myScript) # Batch mode script execution
+# CLI(net) # Send user in the CLI for additional manual actions
+# The script I use is the same as the one posted in the question, with prepended Pings to let the network controller
+# and Mininet some time to "see" each other.
+
+# h1 ping h5 -c 3
+# h2 ping h6 -c 3
+# h5 iperf3 -s -p 1337 &
+# h6 iperf3 -s -p 1338 &
+# h1 iperf3 -c h5 -n 10G -b 11M -p 1337 &
+# h2 iperf3 -c h6 -n 10G -b 11M -p 1338 &
+
+
