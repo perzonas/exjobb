@@ -137,10 +137,10 @@ def addnewdb(vehicleid):
     c.close()
 
 
-def addentrytotable(table, entry):
+def addentry(table, entry):  # vehicleid for which database we're working on
+    checkqueryparam(table)
     conn = sqlite3.connect('test3', isolation_level=None)
     c = conn.cursor()
-    checkqueryparam(table)
     c.execute("PRAGMA table_info(%s)" % table)
     columns = len(c.fetchall())
     cur = c.execute('SELECT * from %s' % table)
@@ -150,8 +150,7 @@ def addentrytotable(table, entry):
     c.close()
 
 
-def existdbcheck(dbid):
-
+def dbexistcheck(dbid):
     try:
         c = sqlite3.connect('file:{}?mode=rw'.format(dbid), uri=True)
         c.close()
@@ -210,8 +209,8 @@ def dbqueryid(id):  # Query a certain database
     pass
 
 
-def entryexist(table, key):
-    conn = sqlite3.connect('WorkOrderData6.db')
+def entryexist(table, key):  # vehicleid for which database we're working on
+    conn = sqlite3.connect('test3')
     c = conn.cursor()
 
     if not checkqueryparam(table):
@@ -245,3 +244,12 @@ def checkqueryparam(param):
         return True
     else:
         return False
+
+
+def dbgarbagecheck():
+    pass
+
+
+def deleteentry(table, entry):
+    pass
+

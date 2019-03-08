@@ -20,14 +20,17 @@ class StateCvRDT:
         entryexist(table, entry)
 
     def merge(self):
-        data = {}
-        data['customers'] = (9, 'test2', '55', 'herp', 'derp', 1337, 'durr')
+        self.data['customers'] = (9, 'test2', '55', 'herp', 'derp', 1337, 'durr')
+        vehicleid = 'test3'
 
-        for table, content in data.items():
+        if not dbexistcheck(vehicleid):
+            self.adddb(vehicleid)
+            pass
+
+        for table, content in self.data.items():
             if content:
                 if not self.compare(table, content[0]):
-                    addentrytotable(table, content)
+                    addentry(table, content)
 
-
-
-# print(int(time.time()))
+    def garbagecheck(self):
+        dbgarbagecheck()
