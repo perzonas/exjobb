@@ -2,6 +2,7 @@ import sys
 import time
 import socket
 from threading import Thread
+import json
 
 
 class Server:
@@ -41,13 +42,27 @@ class Server:
 
     def handleconnection(self, connection, connectinfo):
         print("handling connection")
+        host, port = connectinfo
+        self.sendmessage(("hejsan", 12, 90), host, port, connection)
 
     def broadcast(self, message, ):
         print("Broadcasting message")
 
-    def sendmessage(self, message, host):
-        # sending message to another host
-        
+    # sending message to another host
+    def sendmessage(self, message, host, port, connection):
+
+        try:
+            serializeddata = json.dumps(message)
+        except (TypeError, ValueError) as e:
+            raise Exception("Not Json")
+
+        # sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        print(host, port)
+        # sock.connect((host, port))
+        print(serializeddata)
+
+        connection.sendall((serializeddata+";").encode())
+
 
 
 
