@@ -1,6 +1,7 @@
 import sqlite3
 from typing import List, Any
 
+table_names = ['customers', 'heaps', 'loads', 'loads_waybills', 'materials', 'table_properties', 'targets', 'waybills']
 
 def addnewdb(vehicleid):
     newdb = sqlite3.connect(vehicleid, isolation_level=None)
@@ -104,6 +105,12 @@ def addnewdb(vehicleid):
                     FOREIGN KEY (lwb_waybill) REFERENCES waybills (_ID) ON DELETE CASCADE
                 )''')
 
+    # c.execute('''CREATE TABLE garbage(
+    #                _ID integer primary key autoincrement,
+    #                table text not null,
+    #                row integer not null
+    #            )''')
+
     c.execute('''CREATE INDEX h_workorder_index ON heaps (h_workorder)''')
 
     c.execute('''CREATE INDEX h_target_index ON heaps (h_target)''')
@@ -150,67 +157,63 @@ def addentry(table, entry):  # vehicleid for which database we're working on
     c.close()
 
 
-def dbexistcheck(dbid):
-    try:
-        c = sqlite3.connect('file:{}?mode=rw'.format(dbid), uri=True)
-        c.close()
-        return True
-    except sqlite3.OperationalError:
-        return False
-
-
-def dbquery():  # get all of mydb
-    state_dict = {}
-    conn = sqlite3.connect('test3')
-    # conn = sqlite3.connect('WorkOrderData6.db')
+def dbquery(vehicleid):  # get all of mydb
+    dbaste = {}
+    conn = sqlite3.connect(vehicleid)
     c = conn.cursor()
 
-    # c.execute('SELECT * FROM android_metadata')
-    # state_dict['android_metadata'] = c.fetchall()
+    for name in table_names:
+        c.execute('SELECT * FROM %s' % name)
+        dbaste[name] = c.fetchall()
 
-    c.execute('SELECT * FROM customers')
-    state_dict['customers'] = c.fetchall()
+    conn.close()
 
-    c.execute('SELECT * FROM heaps')
-    state_dict['heaps'] = c.fetchall()
+    return dbaste
 
-    c.execute('SELECT * FROM loads')
-    state_dict['loads'] = c.fetchall()
 
-    c.execute('SELECT * FROM loads_waybills')
-    state_dict['loads_waybills'] = c.fetchall()
+def dbdeltaquery(vehicleid, table, nrtograb):
+    delta_state = {}
+    conn = sqlite3.connect(vehicleid)
+    c = conn.cursor()
 
-    c.execute('SELECT * FROM materials')
-    state_dict['materials'] = c.fetchall()
+    c.execute('SELECT * FROM %s ORDER BY _ID DESC LIMIT %s' % (table, nrtograb))
+    r = c.fetchall()
+    r.reverse()
+    delta_state[table] = r
 
-    c.execute('SELECT * FROM table_properties')
-    state_dict['table_properties'] = c.fetchall()
+    return delta_state
 
-    c.execute('SELECT * FROM targets')
-    state_dict['targets'] = c.fetchall()
 
-    c.execute('SELECT * FROM waybills')
-    state_dict['waybills'] = c.fetchall()
+def dbgetstate(dbid):
+    state_dict = {}
+    conn = sqlite3.connect(dbid, isolation_level=None)
+    c = conn.cursor()
 
-    c.execute('SELECT * FROM work_orders')
-    state_dict['work_orders'] = c.fetchall()
+    for name in table_names:
+        c.execute('SELECT _ID FROM %s ORDER BY _ID DESC LIMIT 1' % name)
+        tup = c.fetchone()
+        if isinstance(tup, tuple):
+            state_dict[name] = tup[0]
+        else:
+            state_dict[name] = 0
 
     conn.close()
 
     return state_dict
 
 
-def dbqueryid(id):  # Query a certain database
-    # conn = sqlite3.connect('WorkOrderData6.db')
-    # c = conn.cursor()
-    # c.execute('SELECT * FROM states WHERE h_target=?', id)  # table names cannot be parametrized
-    # print(c.fetchone())
-    # conn.close()
-    pass
+def dbexistcheck(dbid):
+    try:
+        c = sqlite3.connect('file:{}?mode=rw'.format(dbid), uri=True)
+        c.close()
+        return True
+    except sqlite3.OperationalError:
+        print("Db " + str(dbid) + " already exists")
+        return False
 
 
-def entryexist(table, key):  # vehicleid for which database we're working on
-    conn = sqlite3.connect('test3')
+def entryexist(dbid, table, key):  # vehicleid for which database we're working on
+    conn = sqlite3.connect(dbid)
     c = conn.cursor()
 
     if not checkqueryparam(table):
