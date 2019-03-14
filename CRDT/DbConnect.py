@@ -172,16 +172,16 @@ def dbquery(vehicleid):  # get all of mydb
 
 
 def dbdeltaquery(vehicleid, table, nrtograb):
-    delta_state = {}
     conn = sqlite3.connect(vehicleid)
     c = conn.cursor()
 
     c.execute('SELECT * FROM %s ORDER BY _ID DESC LIMIT %s' % (table, nrtograb))
-    r = c.fetchall()
-    r.reverse()
-    delta_state[table] = r
+    delta_state = c.fetchall()
+    delta_state.reverse()
 
-    return delta_state
+    if delta_state:
+        print("True")
+        return delta_state
 
 
 def dbgetstate(dbid):

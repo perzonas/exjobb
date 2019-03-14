@@ -9,11 +9,10 @@ def main():
     dcrdt = DeltaCvRDT()
     dcrdt.myvehicleid = 'test3'
     result = dcrdt.getstate()
-    print(result)
-    result['test3']['materials'] -= 2
-    result['test3']['customers'] -= 2
-
-    print(result)
+    print("State: ", result)
+    result['test3']['customers'] -= 1
+    result['WorkOrderData6.db']['materials'] -= 4
+    print("Result: ", result)
     print(dcrdt.query(result))
 
 

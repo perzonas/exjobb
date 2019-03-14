@@ -10,26 +10,23 @@ class DeltaCvRDT:
         addnewdb(vehicleid)
 
     def query(self, state):
-        querydata = {}
+        queryresult = {}
         mystate = self.getstate()
 
-        for vid, content in state.items():
-            if vid == self.myvehicleid:
-                for table, entry in content.items():
-                    if entry < mystate[self.myvehicleid][table]:
-                        nrtograb = mystate[self.myvehicleid][table] - entry
-                        print(dbdeltaquery(self.myvehicleid, table, nrtograb))
-                        querydata[self.myvehicleid] = dbdeltaquery(self.myvehicleid, table, nrtograb)
-                        print("Result: ", querydata[self.myvehicleid])
-            elif not dbexistcheck(vid):
-                print("DB DOESN'T EXIST")
-            #else:
-            #    for table, entry in content.items():
-            #        if entry <= mystate[vid][table]:
-            #            nrtograb = mystate[vid][table]
-            #            querydata[table] = dbdeltaquery(vid, table, nrtograb)
+        print("myState: ", mystate)
 
-        return querydata
+        for vid, content in state.items():
+            if not dbexistcheck(vid):
+                print("DB DOESN'T EXIST")
+            else:
+                querydata = {}
+                for table, entry in content.items():
+                    if entry < mystate[vid][table]:
+                        nrtograb = mystate[vid][table] - entry
+                        querydata[table] = dbdeltaquery(vid, table, nrtograb)
+                        queryresult[vid] = querydata
+
+        return queryresult
 
 
     def compare(self, dbid, table, entry):
