@@ -3,29 +3,35 @@ import time
 
 
 class StateCvRDT:
-    vehicleid = None
+    myvehicleid = None
+    dbases = ['WorkOrderData6.db']
 
     def adddb(self, vehicleid):
-        add(vehicleid)
+        self.dbases.append(str(vehicleid))
+        addnewdb(vehicleid)
 
     def query(self):
-        return dbquery()
+        querydata = {}
+        querydata[self.myvehicleid] = dbquery(self.myvehicleid)
 
-    def queryid(self, id):
-        dbqueryid(id)
+        for dbase in self.dbases:
+            querydata[dbase] = dbquery(dbase)
 
-    def compare(self, state):
-        pass
+        return querydata
 
-    def merge(self, statelist):
-        for state in statelist:
-            if self.compare(state):
-                print(1)
+    def compare(self, dbid, table, entry):
+        entryexist(dbid, table, entry)
 
+    def merge(self, data):
+        for vid, content in data.items():
+            if not vid == self.myvehicleid:
+                if not dbexistcheck(vid):
+                    self.adddb(vid)
 
-class Entry:
-    id = 0
-    timestamp = 0
-    data = None
+                for table, entry in content.items():
+                    if content:
+                        if not self.compare(vid, table, content[0]):
+                            addentry(table, content)
 
-# print(int(time.time()))
+    def garbagecheck(self):
+        dbgarbagecheck()

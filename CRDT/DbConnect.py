@@ -1,12 +1,13 @@
 import sqlite3
 from typing import List, Any
 
+table_names = ['customers', 'heaps', 'loads', 'loads_waybills', 'materials', 'table_properties', 'targets', 'waybills']
 
-def add(vehicleid):
-    newdb = sqlite3.connect(vehicleid)
+def addnewdb(vehicleid):
+    newdb = sqlite3.connect(vehicleid, isolation_level=None)
     c = newdb.cursor()
 
-    c.execute('''CREATE TABLE android_metadata (locale TEXT)''')
+    # c.execute('''CREATE TABLE android_metadata (locale TEXT)''')
 
     c.execute('''CREATE TABLE customers(_ID integer primary key autoincrement,
                     c_name text not null unique,
@@ -104,6 +105,12 @@ def add(vehicleid):
                     FOREIGN KEY (lwb_waybill) REFERENCES waybills (_ID) ON DELETE CASCADE
                 )''')
 
+    # c.execute('''CREATE TABLE garbage(
+    #                _ID integer primary key autoincrement,
+    #                table text not null,
+    #                row integer not null
+    #            )''')
+
     c.execute('''CREATE INDEX h_workorder_index ON heaps (h_workorder)''')
 
     c.execute('''CREATE INDEX h_target_index ON heaps (h_target)''')
@@ -137,33 +144,115 @@ def add(vehicleid):
     c.close()
 
 
-def existdbcheck(dbid):
+def addentry(table, entry):  # vehicleid for which database we're working on
+    checkqueryparam(table)
+    conn = sqlite3.connect('test3', isolation_level=None)
+    c = conn.cursor()
+    c.execute("PRAGMA table_info(%s)" % table)
+    columns = len(c.fetchall())
+    cur = c.execute('SELECT * from %s' % table)
+    names = list(map(lambda x: x[0], cur.description))
+    cnames = table + '(' + ','.join(names[1:]) + ')'
+    c.execute('''INSERT INTO {tn} VALUES ({q})'''.format(tn=cnames, q=",".join(["?"]*(columns-1))), entry[1:])
+    c.close()
 
+
+def dbquery(vehicleid):  # get all of mydb
+    dbaste = {}
+    conn = sqlite3.connect(vehicleid)
+    c = conn.cursor()
+
+    for name in table_names:
+        c.execute('SELECT * FROM %s' % name)
+        dbaste[name] = c.fetchall()
+
+    conn.close()
+
+    return dbaste
+
+
+def dbdeltaquery(vehicleid, table, nrtograb):
+    conn = sqlite3.connect(vehicleid)
+    c = conn.cursor()
+
+    c.execute('SELECT * FROM %s ORDER BY _ID DESC LIMIT %s' % (table, nrtograb))
+    delta_state = c.fetchall()
+    delta_state.reverse()
+
+    if delta_state:
+        print("True")
+        return delta_state
+
+
+def dbgetstate(dbid):
+    state_dict = {}
+    conn = sqlite3.connect(dbid, isolation_level=None)
+    c = conn.cursor()
+
+    for name in table_names:
+        c.execute('SELECT _ID FROM %s ORDER BY _ID DESC LIMIT 1' % name)
+        tup = c.fetchone()
+        if isinstance(tup, tuple):
+            state_dict[name] = tup[0]
+        else:
+            state_dict[name] = 0
+
+    conn.close()
+
+    return state_dict
+
+
+def dbexistcheck(dbid):
     try:
         c = sqlite3.connect('file:{}?mode=rw'.format(dbid), uri=True)
         c.close()
         return True
     except sqlite3.OperationalError:
+        print("Db " + str(dbid) + " already exists")
         return False
 
 
-
-def dbquery():  # get all of mydb
-    conn = sqlite3.connect('WorkOrderData6.db')
+def entryexist(dbid, table, key):  # vehicleid for which database we're working on
+    conn = sqlite3.connect(dbid)
     c = conn.cursor()
-    c.execute('SELECT * FROM targets')
-    r = c.fetchall()
-    c.execute('SELECT * from loads')
-    r = r + c.fetchall()
-    conn.close()
-    return r
+
+    if not checkqueryparam(table):
+        conn.close()
+        print("Not valid table")
+
+    r = c.execute('SELECT _ID FROM %s ORDER BY _ID DESC' % table).fetchall()
+    return (key,) in r
 
 
-def dbqueryid(id):  # Query a certain database
-    conn = sqlite3.connect('WorkOrderData6.db')
-    c = conn.cursor()
-    c.execute('SELECT * FROM states WHERE h_target=?', id)  # table names cannot be parametrized
-    print(c.fetchone())
+def checkqueryparam(param):
+    if param == 'android_metadata':
+        return True
+    elif param == 'customers':
+        return True
+    elif param == 'heaps':
+        return True
+    elif param == 'loads':
+        return True
+    elif param == 'loads_waybills':
+        return True
+    elif param == 'materials':
+        return True
+    elif param == 'table_properties':
+        return True
+    elif param == 'targets':
+        return True
+    elif param == 'waybills':
+        return True
+    elif param == 'work_orders':
+        return True
+    else:
+        return False
 
-    conn.close()
+
+def dbgarbagecheck():
+    pass
+
+
+def deleteentry(table, entry):
+    pass
 
