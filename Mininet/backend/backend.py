@@ -22,6 +22,10 @@ class Server:
         # AF_INET -> ipv4 and SOCK_STREAM -> tcp
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
+        thread = Thread(target=self.broadcaststate)
+        thread.daemon = True
+        thread.start()
+
         print("Starting server")
         sock.bind((self.test, self.port))
         (ip, po) = sock.getsockname()
@@ -41,7 +45,7 @@ class Server:
                 thread.daemon = True
                 thread.start()
             except Exception as exception:
-                print("Exception when accepting connection or creating thread.")
+                print("Exception when creating thread.")
                 print(exception)
 
     # handling incoming connection
@@ -49,52 +53,51 @@ class Server:
         print("handling connection from ", connectinfo)
         ip, port = connectinfo
         id = ip.split(".")[-1]
-        message, type = self.retrievemessage(connection)
-        print(message)
-        print(type)
 
-        #host, port = connectinfo
-        #self.sendmessage(("hejsan", 12, 90), host, port, connection)
+        # message received from connected node.
+        message = self.retrievemessage(connection)
 
+        self.crdt.merge(message)
+
+        state = self.crdt.getState()
+        self.broadcast(state)
+
+    # read message sent
     def retrievemessage(self, connection):
-        id = 0
         data = ""
-        type = 0
-
 
         while True:
             byte = connection.recv(1)
             byte = byte.decode()
             if byte == ";":
-                break
-            elif byte:
-                data += byte
-            else:
-                break
-        type = int(data)
-        data = ""
-        while True:
-            byte = connection.recv(1)
-            byte = byte.decode()
-            if byte == ";":
-                connection.close()
                 break
             elif byte:
                 data += byte
             else:
                 break
         message = json.loads(data)
-        return message, type
+        return message
 
-    def broadcast(self, message, ):
+    # Broadcast nodes current state
+    def broadcaststate(self):
+        # sleep before starting to broadcast
+        time.sleep(5)
+
+        # get state from crdt
+        for i in range(120):
+            state = self.crdt.get()
+            self.broadcast(state)
+            time.sleep(1)
+
+    # Broadcast a message to all other nodes
+    def broadcast(self, message):
         print("Broadcasting message to all hosts")
-        for host in range(1, (self.numberofhost+1)):
+        for host in range(1, (self.numberofhost + 1)):
             host = self.ip + host
 
             # do not send to ourselves
             if host != self.ownIP:
                 self.sendmessage(message, host, self.port)
-
 
     # sending message to another host
     def sendmessage(self, message, host, port, connection):
@@ -105,20 +108,20 @@ class Server:
             raise Exception("Not Json")
 
         # sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        print(host, port)
+        # print(host, port)
         # sock.connect((host, port))
-        print(serializeddata)
-        connection.send((str(len(serializeddata))+";").encode(), (len(serializeddata)+1))
-        print(len(serializeddata))
 
-        connection.sendall((serializeddata+";").encode())
+        connection.sendall((serializeddata + ";").encode())
 
 
-
-
+    def addlocaly(self, state):
+        self.crdt.merge(message)
 
 
 
 if __name__ == '__main__':
     server = Server()
-    server.run(sys.argv[1])
+    try:
+        server.run(sys.argv[1])
+    except KeyboardInterrupt:
+        print("Shutting down server")
