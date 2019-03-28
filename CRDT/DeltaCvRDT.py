@@ -9,13 +9,16 @@ class DeltaCvRDT:
         self.dbases.append(str(vehicleid))
         addnewdb(vehicleid)
 
-    def query(self, state):
+    def update(self, myvid, table, row):
+        dbaddentry(myvid, table, row)
+
+    def query(self, snapshot):
         queryresult = {}
         mystate = self.getstate()
 
         print("myState: ", mystate)
 
-        for vid, content in state.items():
+        for vid, content in snapshot.items():
             if not dbexistcheck(vid):
                 print("DB DOESN'T EXIST")
             else:
@@ -26,11 +29,12 @@ class DeltaCvRDT:
                         querydata[table] = dbdeltaquery(vid, table, nrtograb)
                         queryresult[vid] = querydata
 
+
         return queryresult
 
 
     def compare(self, dbid, table, entry):
-        entryexist(dbid, table, entry)
+        dbentryexist(dbid, table, entry)
 
     def merge(self, data):
         for vid, content in data.items():

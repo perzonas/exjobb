@@ -144,9 +144,9 @@ def addnewdb(vehicleid):
     c.close()
 
 
-def addentry(table, entry):  # vehicleid for which database we're working on
-    checkqueryparam(table)
-    conn = sqlite3.connect('test3', isolation_level=None)
+def dbaddentry(vid, table, entry):
+    dbcheckqueryparam(table)
+    conn = sqlite3.connect(vid, isolation_level=None)
     c = conn.cursor()
     c.execute("PRAGMA table_info(%s)" % table)
     columns = len(c.fetchall())
@@ -212,11 +212,11 @@ def dbexistcheck(dbid):
         return False
 
 
-def entryexist(dbid, table, key):  # vehicleid for which database we're working on
+def dbentryexist(dbid, table, key):
     conn = sqlite3.connect(dbid)
     c = conn.cursor()
 
-    if not checkqueryparam(table):
+    if not dbcheckqueryparam(table):
         conn.close()
         print("Not valid table")
 
@@ -224,7 +224,7 @@ def entryexist(dbid, table, key):  # vehicleid for which database we're working 
     return (key,) in r
 
 
-def checkqueryparam(param):
+def dbcheckqueryparam(param):
     if param == 'android_metadata':
         return True
     elif param == 'customers':
