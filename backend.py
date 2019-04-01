@@ -4,9 +4,12 @@ import socket
 from threading import Thread
 import json
 from queue import Queue
+from StateCvRDT import *
+import os.path
 
 
 class Server:
+    crdt = StateCvRDT()
     mergeStack = Queue()
     test = "127.0.0.1"
     ip = "20.1.90."
@@ -20,6 +23,7 @@ class Server:
         self.numberofhost = numberofhosts
         self.ownIP += str(hostnumber)
         self.hostID = hostnumber
+        self.crdt.myvehicleid = hostnumber
 
         # AF_INET -> ipv4 and SOCK_STREAM -> tcp
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -92,7 +96,7 @@ class Server:
 
         # get state from crdt
         for i in range(120):
-            state = self.crdt.get()
+            state = self.crdt.query()
             self.broadcaststate(state)
             time.sleep(1)
 
@@ -122,13 +126,17 @@ class Server:
 
 
     def localthread(self):
+        filename = "localstates/local"+self.hostID
+        if not os.path.isfile(filename):
+            file = open(filename, "w+")
+            file.close()
 
         while True:
             reproduce = []
             action = ""
 
             ### Read file that holds local updates ###
-            file = open("local"+self.hostID, "r")
+            file = open(filename, "r")
             text = file.readlines()
 
             if text:
