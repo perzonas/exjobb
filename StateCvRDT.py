@@ -4,7 +4,7 @@ import time
 
 class StateCvRDT:
     myvehicleid = None
-    dbases = ['WorkOrderData6.db']
+    dbases = []
 
     def adddb(self, vehicleid):
         self.dbases.append(str(vehicleid))
