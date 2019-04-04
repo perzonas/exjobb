@@ -22,7 +22,7 @@ class Script:
         line3 = json.dumps(("insert", {"materials": {"name": "rocks", "date": "17-08-2017", "nameid": 98}}))
         line4 = json.dumps(("insert", {"materials": {"name": "pavement", "date": "19-02-2019", "nameid": 35}}))
 
-        for i in range(1, self.hosts):
+        for i in range(1, self.hosts+1):
             file = open(("localstates/local"+str(i)), "a")
             file.write(line1+"\n")
             file.write(line2+"\n")
@@ -47,7 +47,7 @@ class Script:
         line5 = json.dumps(("insert", {"customers": {"name": "", "nameid": 22, "contact": "Fredrik Johansson",
                                                     "phone": "+46727898767", "date": "12-02-2012",
                                                     "misc": "hate ericsson"}}))
-        for i in range(1, self.hosts):
+        for i in range(1, self.hosts+1):
             file = open(("localstates/local"+str(i)), "a")
             file.write(line1+"\n")
             file.write(line2+"\n")

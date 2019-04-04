@@ -5,11 +5,11 @@ from threading import Thread
 import json
 from queue import Queue
 from StateCvRDT import *
+from DbConnect import *
 import os.path
 
 
 class Server:
-    crdt = StateCvRDT()
     mergeStack = Queue()
     test = "127.0.0.1"
     ip = "20.1.90."
@@ -23,7 +23,6 @@ class Server:
         self.numberofhost = numberofhosts
         self.ownIP += str(hostnumber)
         self.hostID = hostnumber
-        self.crdt.myvehicleid = hostnumber
 
         # AF_INET -> ipv4 and SOCK_STREAM -> tcp
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -73,35 +72,39 @@ class Server:
         ip, port = connectinfo
         id = ip[-1]
         data = ""
+        receivedMessage = False
 
         while True:
             byte = connection.recv(1)
             byte = byte.decode()
             if byte == ";":
+                receivedMessage = True
                 break
             elif byte:
                 data += byte
             else:
                 break
         message = json.loads(data)
-        print("message received: ", message)
+
+        if int(self.hostID) == 1:
+            if receivedMessage:
+                connection.send("a".encode())
+        connection.close()
 
         ### Add state to TODO stack so worker thread can perform the received action ###
-        if int(self.hostID) != 1:
-            self.mergeStack.put(message)
+        if int(self.hostID) == 1:
+            self.mergeStack.put((id, message))
+
+        ### slave received state from master and should update its own database based on received state
         else:
-            ### slave received state from master and should update its own database based on received state
-            self.performaction(message)
+            self.updatestate(message)
 
-    def performaction(self, message):
-        pass
+    def performaction(self, id, message):
+    ### Master node have received an updates from slave nodes and perform the action received to update its state
 
-    def updatestate(self):
-        while True:
-            time.sleep(10+int(self.hostID))
-            message = ("upgrade", {})
-            print("*** Asking master for update ***")
-            self.sendmessage(message, (self.ip+"1"), 1337)
+
+    def updatestate(self, state):
+        ###  Slave node have received the state from the master node and will update its own state to this state
 
 
     # Broadcast a message to all other nodes
@@ -116,6 +119,7 @@ class Server:
 
     # sending message to another host
     def sendmessage(self, message, host, port):
+        received = False
 
         try:
             serializeddata = json.dumps(message)
@@ -125,12 +129,23 @@ class Server:
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             sock.connect((host, port))
             sock.sendall((serializeddata + ";").encode())
+
+            byte = sock.recv(1)
+            byte = byte.decode()
+            if byte == "a":
+                print("*** Received ACK ***")
+                received = True
+
+            sock.close()
+            return received
         except Exception as e:
-            return False
+            return received
 
 
     def localthread(self):
         filename = "localstates/local"+self.hostID
+        sendQueue = Queue()
+        currentMessage = None
 
         ### Create local update file if it doesn't exist
         if not os.path.isfile(filename):
@@ -140,7 +155,9 @@ class Server:
 
         while True:
             reproduce = None
-            action = ""
+            action = None
+
+
 
             ### Read file that holds local updates ###
             file = open(filename, "r")
@@ -150,39 +167,40 @@ class Server:
                 action = text[0]
                 if len(text) > 1:
                     reproduce = text[1:]
-
-                ### Send the update from the local machine to the centralized machine ###
-                ### if you are a slave node you send the update to master, if you are master you perform update
-
-                if int(self.hostID) != 1:
-                    if self.sendmessage(action, (self.ip+"1"), 1337):
-                        self.performaction(action)
+                else:
+                    reproduce = ""
 
             ### Update the file and remove the line that will be performed if there was an update in the file ###
 
-                        file = open(filename, "w")
-                        if reproduce:
-                            for line in reproduce:
-                                file.write(line)
-                        else:
-                            file.write("")
-                        file.close()
+                file = open(filename, "w")
+                if reproduce:
+                    for line in reproduce:
+                        file.write(line)
+                else:
+                    file.write("")
+                file.close()
 
+            ### Send the update from the local machine to the centralized machine ###
+            ### if you are a slave node you send the update to master, if you are master you perform update
 
+            if int(self.hostID) != 1:
+                if action:
+                    sendQueue.put(action)
 
-
-
-
-
-
-
+                if currentMessage is None and not sendQueue.empty():
+                    currentMessage = sendQueue.get()
+                    print("*** current message :" + currentMessage + " ***")
+                if currentMessage is not None:
+                    if self.sendmessage(currentMessage, self.ip + "1", 1337):
+                        currentMessage = None
+                        sendQueue.task_done()
 
             ### Maybe not needed in this topology
             ### Perform actions received from other nodes and saved in a buffer ###
             if int(self.hostID) == 1:
                 if not self.mergeStack.empty():
-                    state = self.mergeStack.get()
-                    self.performaction(state)
+                    (id, operation) = self.mergeStack.get()
+                    self.performaction(id, operation)
                     self.mergeStack.task_done()
             time.sleep(5)
 
