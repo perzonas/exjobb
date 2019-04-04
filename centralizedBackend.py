@@ -29,15 +29,21 @@ class Server:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 
-        # a thread that broadcast it's own state to all other nodes in a predefined intervall intervall
-        # thread = Thread(target=self.broadcaststates)
-        # thread.daemon = True
-        # thread.start()
+        # a thread that ask master for update and then receives the update and updates it's own state in a
+        # predefined interval
+        if int(self.hostID) != 1:
+            print("*** starting update thread ***")
+            thread = Thread(target=self.updatestate)
+            thread.daemon = True
+            thread.start()
+            print("*** Update thread is running ***")
 
         # A thread that looks at changes done by the local machine
+        print("*** Starting worker thread ***")
         thread = Thread(target=self.localthread)
         thread.daemon = True
         thread.start()
+        print("*** Worker thread is running ***")
 
         print("Starting server")
         sock.bind((self.ownIP, self.port))
@@ -78,27 +84,25 @@ class Server:
             else:
                 break
         message = json.loads(data)
-        print(message)
+        print("message received: ", message)
 
         ### Add state to TODO stack so worker thread can perform the received action ###
-        self.mergeStack.put(message)
+        if int(self.hostID) != 1:
+            self.mergeStack.put(message)
+        else:
+            ### slave received state from master and should update its own database based on received state
+            self.performaction(message)
 
-        ### merge received state with own state ###
-        # self.crdt.merge(message)
-        # state = self.crdt.getState()
-        # self.broadcast(state)
+    def performaction(self, message):
+        pass
 
+    def updatestate(self):
+        while True:
+            time.sleep(10+int(self.hostID))
+            message = ("upgrade", {})
+            print("*** Asking master for update ***")
+            self.sendmessage(message, (self.ip+"1"), 1337)
 
-    # Broadcast nodes current state
-    def broadcaststates(self):
-        # sleep before starting to broadcast
-        time.sleep(5)
-
-        # get state from crdt
-        for i in range(120):
-            state = self.crdt.query()
-            self.broadcaststate(state)
-            time.sleep(1)
 
     # Broadcast a message to all other nodes
     def broadcaststate(self, message):
@@ -111,18 +115,18 @@ class Server:
                 self.sendmessage(message, host, self.port)
 
     # sending message to another host
-    def sendmessage(self, message, host, port, connection):
+    def sendmessage(self, message, host, port):
 
         try:
             serializeddata = json.dumps(message)
         except (TypeError, ValueError) as e:
             raise Exception("Not Json")
-
-        # sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        # print(host, port)
-        # sock.connect((host, port))
-
-        connection.sendall((serializeddata + ";").encode())
+        try:
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.connect((host, port))
+            sock.sendall((serializeddata + ";").encode())
+        except Exception as e:
+            return False
 
 
     def localthread(self):
@@ -135,39 +139,54 @@ class Server:
             file.close()
 
         while True:
-            reproduce = []
+            reproduce = None
             action = ""
 
             ### Read file that holds local updates ###
             file = open(filename, "r")
             text = file.readlines()
-
+            file.close()
             if text:
                 action = text[0]
                 if len(text) > 1:
                     reproduce = text[1:]
-            file.close()
+
+                ### Send the update from the local machine to the centralized machine ###
+                ### if you are a slave node you send the update to master, if you are master you perform update
+
+                if int(self.hostID) != 1:
+                    if self.sendmessage(action, (self.ip+"1"), 1337):
+                        self.performaction(action)
 
             ### Update the file and remove the line that will be performed if there was an update in the file ###
-            if text:
-                file = open("local" + self.hostID, "w")
-                if reproduce:
-                    for line in reproduce:
-                        file.write(line+"\n")
-                else:
-                    file.write("")
-                file.close()
 
-                ### Perform the action from local machine ###
-                state = self.reformataction(action)
-                self.performaction(state)
+                        file = open(filename, "w")
+                        if reproduce:
+                            for line in reproduce:
+                                file.write(line)
+                        else:
+                            file.write("")
+                        file.close()
 
 
-            ### Perform actions received from other nodes  and saved in a buffer ###
-            if not self.mergeStack.empty():
-                state = self.mergeStack.get()
-                self.performaction(state)
-                self.mergeStack.task_done()
+
+
+
+
+
+
+
+
+            ### Maybe not needed in this topology
+            ### Perform actions received from other nodes and saved in a buffer ###
+            if int(self.hostID) == 1:
+                if not self.mergeStack.empty():
+                    state = self.mergeStack.get()
+                    self.performaction(state)
+                    self.mergeStack.task_done()
+            time.sleep(5)
+
+
 
 
 
@@ -175,6 +194,9 @@ class Server:
 if __name__ == '__main__':
     server = Server()
     try:
-        server.run(sys.argv[1], sys.argv[1])
-    except KeyboardInterrupt:
-        print("Shutting down server")
+        server.run(sys.argv[1], sys.argv[2])
+    except (KeyboardInterrupt, IndexError) as e:
+        if e == KeyboardInterrupt:
+            print("Shutting down server")
+        else:
+            print("Too few arguments")

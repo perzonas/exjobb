@@ -28,7 +28,7 @@ class CustomTopology:
     def startBackend(self, server, hosts, totalnohost):
         print("starting server %s" % server.IP())
         # makeTerm(node=server, cmd="python backend/backend.py %s %d" % (server.IP().replace("10.1.0.",""), nbOfServers) )
-        makeTerm(node=server, cmd="python3 backend.py %s %s" % (hosts, totalnohost))
+        makeTerm(node=server, cmd="python3 centralizedBackend.py %s %s" % (hosts, totalnohost))
 
     def setup(self, no_of_hosts=10, bandwidth=1000, delay='5ms', loss=1, queue_size=1000):
 
@@ -37,7 +37,10 @@ class CustomTopology:
         # output = quietRun('sysctl -w net.ipv4.tcp_congestion_control=reno')
         # assert 'reno' in output
 
-        links = partial(TCLink, delay=delay, bw=bandwidth, loss=loss, max_queue_size=queue_size, use_htb=True)
+
+
+        # links = partial(TCLink, delay=delay, bw=bandwidth, loss=loss, max_queue_size=queue_size, use_htb=True)
+        links = partial(TCLink, delay=delay, bw=bandwidth, max_queue_size=queue_size, use_htb=True)
         ovsswitch = partial(OVSSwitch, protocol='OpenFlow13')
 
         # remoteController = partial(RemoteController, ip='127.0.0.1', port=6653)
@@ -47,6 +50,7 @@ class CustomTopology:
                           host=CPULimitedHost, link=links, cleanup=True, build=True, ipBase='20.1.90.0/24')
 
         network.start()
+
 
         info("*** Dumping host connections\n")
         dumpNodeConnections(network.hosts)
