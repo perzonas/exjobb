@@ -1,2 +1,5 @@
+<<<<<<< HEAD
 {"1": {"customers": [], "heaps": [], "loads": [], "loads_waybills": [], "materials": [[4, "rocks", 1543980836, "66"]], "table_properties": [], "targets": [], "waybills": []}}
 {"1": {"customers": [], "heaps": [], "loads": [], "loads_waybills": [], "materials": [[5, "pavement", 1414985403, "35"]], "table_properties": [], "targets": [], "waybills": []}}
+=======
+>>>>>>> bbb6734ce3b6f2ec36561d9d44ed14f35eddb621

@@ -3,12 +3,13 @@ import os
 
 table_names = ['customers', 'heaps', 'loads', 'loads_waybills', 'materials', 'table_properties', 'targets', 'waybills']
 
+
 def addnewdb(myid, dbid):
     try:
         os.mkdir('databases/' + str(myid), 0o777)
     except OSError:
         print("Folder already exsist")
-    newdb = sqlite3.connect('databases/' + myid + '/' +  str(dbid), isolation_level=None (not active))
+    newdb = sqlite3.connect('databases/' + myid + '/' + str(dbid), isolation_level=None)
     c = newdb.cursor()
 
     # c.execute('''CREATE TABLE android_metadata (locale TEXT)''')
@@ -172,8 +173,8 @@ def dbaddentry(myid, dbid, table, entry):
 
 def dbquery(myid, dbid):  # get all of mydb
     dbaste = {}
-    if not dbexistcheck(dbid):
-        addnewdb(dbid)
+    if not dbexistcheck(myid, dbid):
+        addnewdb(myid, dbid)
     conn = sqlite3.connect('databases/' + myid + '/' + str(dbid))
     c = conn.cursor()
 
@@ -187,8 +188,8 @@ def dbquery(myid, dbid):  # get all of mydb
 
 
 def dbdeltaquery(myid, dbid, table, nrtograb):
-    if not dbexistcheck(dbid):
-        addnewdb(dbid)
+    if not dbexistcheck(myid, dbid):
+        addnewdb(myid, dbid)
     conn = sqlite3.connect('databases/' + myid + '/' + str(dbid))
     c = conn.cursor()
 

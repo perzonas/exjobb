@@ -121,7 +121,7 @@ class Server:
 
     # Broadcast a message to all other nodes
     def broadcaststate(self):
-        message = ""
+        message = dbquery(self.hostID, self.hostID)
 
         while True:
             time.sleep(10)
