@@ -1,10 +1,14 @@
 import sqlite3
-from typing import List, Any
+import os
 
 table_names = ['customers', 'heaps', 'loads', 'loads_waybills', 'materials', 'table_properties', 'targets', 'waybills']
 
-def addnewdb(vehicleid):
-    newdb = sqlite3.connect('databases/' +  str(vehicleid))  #isolation_level=None (not active)
+def addnewdb(myid, dbid):
+    try:
+        os.mkdir('databases/' + str(myid), 0o777)
+    except OSError:
+        print("Folder already exsist")
+    newdb = sqlite3.connect('databases/' + myid + '/' +  str(dbid), isolation_level=None (not active))
     c = newdb.cursor()
 
     # c.execute('''CREATE TABLE android_metadata (locale TEXT)''')
@@ -144,26 +148,33 @@ def addnewdb(vehicleid):
     c.close()
 
 
-def dbaddentry(vid, table, entry):
+def dbaddentry(myid, dbid, table, entry):
     dbcheckqueryparam(table)
-    if not dbexistcheck(vid):
-        addnewdb(vid)
-    conn = sqlite3.connect('databases/' +  vid, isolation_level=None)
+    if not dbexistcheck(myid, dbid):
+        addnewdb(myid, dbid)
+
+    conn = sqlite3.connect('databases/' + myid + '/' +  str(dbid), isolation_level=None)
     c = conn.cursor()
     c.execute("PRAGMA table_info(%s)" % table)
     columns = len(c.fetchall())
     cur = c.execute('SELECT * from %s' % table)
+
     names = list(map(lambda x: x[0], cur.description))
+
     cnames = table + '(' + ','.join(names[1:]) + ')'
+    print("DATABAS ID: " + str(dbid))
+    #print("ENTRY: " + str(entry[]) + " || " + str(type(entry)))
+    #print("CNAMES: " + cnames)
+    print(entry)
     c.execute('''INSERT INTO {tn} VALUES ({q})'''.format(tn=cnames, q=",".join(["?"]*(columns-1))), entry[1:])
     c.close()
 
 
-def dbquery(vehicleid):  # get all of mydb
+def dbquery(myid, dbid):  # get all of mydb
     dbaste = {}
-    if not dbexistcheck(vehicleid):
-        addnewdb(vehicleid)
-    conn = sqlite3.connect('databases/' +  str(vehicleid))
+    if not dbexistcheck(dbid):
+        addnewdb(dbid)
+    conn = sqlite3.connect('databases/' + myid + '/' +  str(dbid))
     c = conn.cursor()
 
     for name in table_names:
@@ -175,10 +186,10 @@ def dbquery(vehicleid):  # get all of mydb
     return dbaste
 
 
-def dbdeltaquery(vehicleid, table, nrtograb):
-    if not dbexistcheck(vehicleid):
-        addnewdb(vehicleid)
-    conn = sqlite3.connect('databases/' +  vehicleid)
+def dbdeltaquery(myid, dbid, table, nrtograb):
+    if not dbexistcheck(dbid):
+        addnewdb(dbid)
+    conn = sqlite3.connect('databases/' + myid + '/' +  str(dbid))
     c = conn.cursor()
 
     c.execute('SELECT * FROM %s ORDER BY _ID DESC LIMIT %s' % (table, nrtograb))
@@ -190,9 +201,9 @@ def dbdeltaquery(vehicleid, table, nrtograb):
         return delta_state
 
 
-def dbgetstate(dbid):
+def dbgetstate(myid, dbid):
     state_dict = {}
-    conn = sqlite3.connect('databases/' +  dbid, isolation_level=None)
+    conn = sqlite3.connect('databases/' + myid + '/' +  str(dbid), isolation_level=None)
     c = conn.cursor()
 
     for name in table_names:
@@ -208,17 +219,17 @@ def dbgetstate(dbid):
     return state_dict
 
 
-def dbexistcheck(dbid):
+def dbexistcheck(myid, dbid):
     try:
-        c = sqlite3.connect('file:{}?mode=rw'.format('databases/' + dbid), uri=True)
+        c = sqlite3.connect('file:{}?mode=rw'.format('databases/' + myid + '/' +  str(dbid)), uri=True)
         c.close()
         return True
     except sqlite3.OperationalError:
         return False
 
 
-def dbentryexist(dbid, table, key):
-    conn = sqlite3.connect('databases/' +  dbid)
+def dbentryexist(myid, dbid, table, key):
+    conn = sqlite3.connect('databases/' + myid + '/' +  str(dbid))
     c = conn.cursor()
 
     if not dbcheckqueryparam(table):

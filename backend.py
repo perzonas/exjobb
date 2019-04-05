@@ -159,7 +159,7 @@ class Server:
                 file.close()
 
                 ### Perform the action from local machine ###
-                state = self.reformataction(action)
+                state = json.loads(action)
                 self.performaction(state)
 
 
@@ -168,6 +168,9 @@ class Server:
                 state = self.mergeStack.get()
                 self.performaction(state)
                 self.mergeStack.task_done()
+
+    def performaction(self, state):
+        self.crdt.merge(state)
 
 
 

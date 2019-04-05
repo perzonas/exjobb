@@ -4,10 +4,11 @@ from DeltaCvRDT import *
 
 def main():
     crdt = StateCvRDT()
-    crdt.myvehicleid = 'test5'
+    crdt.myvehicleid = 'test3'
     print("Vanlig: ", crdt.query())
-    #crdt.update('test3', 'customers', (1, 'asd', '222', 'dsft', 'sSDSDre', 2, 'beEFSrra'))
-
+    d = {'test3': {'customers': [(6, 'six', '66', 'sectiosex', 'sixtys', 60, 'saxtio'),(7, 'i', '8765', 'x', 's', 41, 'o')], 'heaps': [], 'loads': [], 'loads_waybills': [], 'materials': [(1, '', 555, 'test'), (2, 'test', 555, '')], 'table_properties': [], 'targets': [], 'waybills': []}}
+    crdt.merge(d)
+    print("Vanlig updated: ", crdt.query())
     #dcrdt = DeltaCvRDT()
     #dcrdt.myvehicleid = 'test3'
     #result = dcrdt.getstate()
