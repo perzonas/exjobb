@@ -30,7 +30,7 @@ class Script:
                                       'materials': [(5, 'pavement', 1414985403, '35')], 'table_properties': [],
                                       'targets': [], 'waybills': []}})
 
-        for i in range(1, self.hosts):
+        for i in range(1, self.hosts+1):
             file = open(("localstates/local"+str(i)), "a")
             file.write(line1+"\n")
             file.write(line2+"\n")
@@ -56,7 +56,7 @@ class Script:
         line5 = json.dumps(("insert", {"customers": {"name": "", "nameid": 22, "contact": "Fredrik Johansson",
                                                     "phone": "+46727898767", "date": "12-02-2012",
                                                     "misc": "hate ericsson"}}))
-        for i in range(1, self.hosts):
+        for i in range(1, self.hosts+1):
             file = open(("localstates/local"+str(i)), "a")
             file.write(line1+"\n")
             file.write(line2+"\n")
