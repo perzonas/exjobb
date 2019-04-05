@@ -115,8 +115,15 @@ class Server:
         pass
 
     def updatestate(self, state):
-
+        print("Received state: ", state)
         ###  Slave node have received the state from the master node and will update its own state to this state
+        if not dbexistcheck(self.hostID, self.hostID):
+            addnewdb(self.hostID, self.hostID)
+            for table, tlist in state.items():
+                if tlist:
+                    for entry in tlist:
+                        if not self.compare(vid, table, entry[0]):
+                            dbaddentry(self.myvehicleid, vid, table, entry)
         pass
 
     # Broadcast a message to all other nodes
