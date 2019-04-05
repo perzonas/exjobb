@@ -12,15 +12,23 @@ class Script:
     def run(self, hosts):
         self.hosts = int(hosts)
         self.addmaterials()
-        self.addcustomers()
+        #self.addcustomers()
 
 
     ### Add a number of materials for all machines
     def addmaterials(self):
-        line1 = json.dumps(("insert", {"materials": {"name": "gravel", "date": "17-02-2019", "nameid": 345}}))
-        line2 = json.dumps(("insert", {"materials": {"name": "dirt", "date": "28-06-2018", "nameid": 28}}))
-        line3 = json.dumps(("insert", {"materials": {"name": "rocks", "date": "17-08-2017", "nameid": 98}}))
-        line4 = json.dumps(("insert", {"materials": {"name": "pavement", "date": "19-02-2019", "nameid": 35}}))
+        line1 = json.dumps({'1': {'customers': [], 'heaps': [], 'loads': [], 'loads_waybills': [],
+                                      'materials': [(1, 'gravel', 1554371143, '345'), (2, 'peat', 1554374143, '55')], 'table_properties': [],
+                                      'targets': [], 'waybills': []}})
+        line2 = json.dumps({'1': {'customers': [], 'heaps': [], 'loads': [], 'loads_waybills': [],
+                                      'materials': [(3, 'dirt', 1522921530, '98')], 'table_properties': [],
+                                      'targets': [], 'waybills': []}})
+        line3 = json.dumps({'1': {'customers': [], 'heaps': [], 'loads': [], 'loads_waybills': [],
+                                      'materials': [(4, 'rocks', 1543980836, '66')], 'table_properties': [],
+                                      'targets': [], 'waybills': []}})
+        line4 = json.dumps({'1': {'customers': [], 'heaps': [], 'loads': [], 'loads_waybills': [],
+                                      'materials': [(5, 'pavement', 1414985403, '35')], 'table_properties': [],
+                                      'targets': [], 'waybills': []}})
 
         for i in range(1, self.hosts):
             file = open(("localstates/local"+str(i)), "a")
@@ -32,6 +40,7 @@ class Script:
 
 
     ### Add a number of customers to all machines
+    '''
     def addcustomers(self):
         line1 = json.dumps(("insert", {"customers": {"name": "ericsson", "nameid": 22, "contact": "Fredrik Johansson",
                                                     "phone": "+46727898767",  "date": "12-02-2012", "misc": "hate ericsson"}}))
@@ -55,7 +64,7 @@ class Script:
             file.write(line4+"\n")
             file.write(line5+"\n")
             file.close()
-
+    '''
 
 
 
