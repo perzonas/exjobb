@@ -3,6 +3,7 @@ import os
 
 table_names = ['customers', 'heaps', 'loads', 'loads_waybills', 'materials', 'table_properties', 'targets', 'waybills']
 
+
 def addnewdb(myid, dbid):
     try:
         os.mkdir('databases/' + str(myid), 0o777)
@@ -172,8 +173,8 @@ def dbaddentry(myid, dbid, table, entry):
 
 def dbquery(myid, dbid):  # get all of mydb
     dbaste = {}
-    if not dbexistcheck(dbid):
-        addnewdb(dbid)
+    if not dbexistcheck(myid, dbid):
+        addnewdb(myid, dbid)
     conn = sqlite3.connect('databases/' + myid + '/' +  str(dbid))
     c = conn.cursor()
 
@@ -187,9 +188,9 @@ def dbquery(myid, dbid):  # get all of mydb
 
 
 def dbdeltaquery(myid, dbid, table, nrtograb):
-    if not dbexistcheck(dbid):
-        addnewdb(dbid)
-    conn = sqlite3.connect('databases/' + myid + '/' +  str(dbid))
+    if not dbexistcheck(myid, dbid):
+        addnewdb(myid, dbid)
+    conn = sqlite3.connect('databases/' + myid + '/' + str(dbid))
     c = conn.cursor()
 
     c.execute('SELECT * FROM %s ORDER BY _ID DESC LIMIT %s' % (table, nrtograb))
