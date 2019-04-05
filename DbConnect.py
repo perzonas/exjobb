@@ -7,9 +7,12 @@ table_names = ['customers', 'heaps', 'loads', 'loads_waybills', 'materials', 'ta
 def addnewdb(myid, dbid):
     try:
         os.mkdir('databases/' + str(myid), 0o777)
+        os.chmod('databases/' + str(myid), 0o777)
     except OSError:
         print("Folder already exsist")
+
     newdb = sqlite3.connect('databases/' + myid + '/' + str(dbid), isolation_level=None)
+    os.chmod('databases/' + myid + '/' + str(dbid), 0o777)
     c = newdb.cursor()
 
     # c.execute('''CREATE TABLE android_metadata (locale TEXT)''')
