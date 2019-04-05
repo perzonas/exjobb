@@ -9,7 +9,7 @@ def addnewdb(myid, dbid):
         os.mkdir('databases/' + str(myid), 0o777)
     except OSError:
         print("Folder already exsist")
-    newdb = sqlite3.connect('databases/' + myid + '/' +  str(dbid), isolation_level=None (not active))
+    newdb = sqlite3.connect('databases/' + myid + '/' + str(dbid), isolation_level=None)
     c = newdb.cursor()
 
     # c.execute('''CREATE TABLE android_metadata (locale TEXT)''')
