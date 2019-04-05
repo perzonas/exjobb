@@ -7,6 +7,7 @@ from queue import Queue
 from StateCvRDT import *
 from DbConnect import *
 import os.path
+import sqlite3
 
 
 class Server:
@@ -30,9 +31,9 @@ class Server:
 
         # a thread that ask master for update and then receives the update and updates it's own state in a
         # predefined interval
-        if int(self.hostID) != 1:
+        if int(self.hostID) == 1:
             print("*** starting update thread ***")
-            thread = Thread(target=self.updatestate)
+            thread = Thread(target=self.broadcaststate)
             thread.daemon = True
             thread.start()
             print("*** Update thread is running ***")
@@ -85,37 +86,52 @@ class Server:
             else:
                 break
         message = json.loads(data)
+        if receivedMessage:
+            if int(self.hostID) == 1:
+                 connection.send("a".encode())
 
-        if int(self.hostID) == 1:
-            if receivedMessage:
-                connection.send("a".encode())
+            ### Add state to TODO stack so worker thread can perform the received action ###
+            if int(self.hostID) == 1:
+                self.mergeStack.put((id, message))
+
+            ### slave received state from master and should update its own database based on received state
+            else:
+                self.updatestate(message)
+
         connection.close()
 
-        ### Add state to TODO stack so worker thread can perform the received action ###
-        if int(self.hostID) == 1:
-            self.mergeStack.put((id, message))
-
-        ### slave received state from master and should update its own database based on received state
-        else:
-            self.updatestate(message)
-
     def performaction(self, id, message):
-    ### Master node have received an updates from slave nodes and perform the action received to update its state
+        ### Master node have received an updates from slave nodes and perform the action received to update its state
+        vid, content = message
+        if not dbexistcheck(self.hostID):
+            self.adddb(self.hostID)
 
+        for table, entry in content.items():
+            if content:
+                    dbaddentry(self.hostID, table, entry)
+
+
+
+        pass
 
     def updatestate(self, state):
-        ###  Slave node have received the state from the master node and will update its own state to this state
 
+        ###  Slave node have received the state from the master node and will update its own state to this state
+        pass
 
     # Broadcast a message to all other nodes
-    def broadcaststate(self, message):
-        print("Broadcasting message to all hosts")
-        for host in range(1, (self.numberofhost + 1)):
-            host = self.ip + host
+    def broadcaststate(self):
+        message = ""
 
-            # do not send to ourselves
-            if host != self.ownIP:
-                self.sendmessage(message, host, self.port)
+        while True:
+            time.sleep(10)
+            print("Broadcasting message to all hosts")
+            for host in range(1, (int(self.numberofhost) + 1)):
+                host = self.ip + str(host)
+
+                # do not send to ourselves
+                if host != self.ownIP:
+                    self.sendmessage(message, host, self.port)
 
     # sending message to another host
     def sendmessage(self, message, host, port):

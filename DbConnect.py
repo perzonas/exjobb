@@ -210,7 +210,7 @@ def dbgetstate(dbid):
 
 def dbexistcheck(dbid):
     try:
-        c = sqlite3.connect('file:{}?mode=rw'.format('databases/' +  dbid), uri=True)
+        c = sqlite3.connect('file:{}?mode=rw'.format('databases/' + dbid), uri=True)
         c.close()
         return True
     except sqlite3.OperationalError:
