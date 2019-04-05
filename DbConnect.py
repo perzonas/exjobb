@@ -154,7 +154,7 @@ def dbaddentry(myid, dbid, table, entry):
     if not dbexistcheck(myid, dbid):
         addnewdb(myid, dbid)
 
-    conn = sqlite3.connect('databases/' + myid + '/' +  str(dbid), isolation_level=None)
+    conn = sqlite3.connect('databases/' + myid + '/' + str(dbid), isolation_level=None)
     c = conn.cursor()
     c.execute("PRAGMA table_info(%s)" % table)
     columns = len(c.fetchall())
@@ -175,7 +175,7 @@ def dbquery(myid, dbid):  # get all of mydb
     dbaste = {}
     if not dbexistcheck(myid, dbid):
         addnewdb(myid, dbid)
-    conn = sqlite3.connect('databases/' + myid + '/' +  str(dbid))
+    conn = sqlite3.connect('databases/' + myid + '/' + str(dbid))
     c = conn.cursor()
 
     for name in table_names:

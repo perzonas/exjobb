@@ -141,19 +141,20 @@ class Server:
             ### Read file that holds local updates ###
             file = open(filename, "r")
             text = file.readlines()
-
+            file.close()
             if text:
                 action = text[0]
                 if len(text) > 1:
                     reproduce = text[1:]
-            file.close()
+                else:
+                    reproduce = ""
 
-            ### Update the file and remove the line that will be performed if there was an update in the file ###
-            if text:
-                file = open("local" + self.hostID, "w")
+                ### Update the file and remove the line that will be performed if there was an update in the file ###
+
+                file = open(filename, "w")
                 if reproduce:
                     for line in reproduce:
-                        file.write(line+"\n")
+                        file.write(line)
                 else:
                     file.write("")
                 file.close()
