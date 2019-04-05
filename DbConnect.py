@@ -153,7 +153,7 @@ def dbaddentry(myid, dbid, table, entry):
     if not dbexistcheck(myid, dbid):
         addnewdb(myid, dbid)
 
-    conn = sqlite3.connect('databases/' + myid + '/' +  str(dbid), isolation_level=None)
+    conn = sqlite3.connect('databases/' + myid + '/' + str(dbid), isolation_level=None)
     c = conn.cursor()
     c.execute("PRAGMA table_info(%s)" % table)
     columns = len(c.fetchall())
@@ -174,7 +174,7 @@ def dbquery(myid, dbid):  # get all of mydb
     dbaste = {}
     if not dbexistcheck(dbid):
         addnewdb(dbid)
-    conn = sqlite3.connect('databases/' + myid + '/' +  str(dbid))
+    conn = sqlite3.connect('databases/' + myid + '/' + str(dbid))
     c = conn.cursor()
 
     for name in table_names:
@@ -189,7 +189,7 @@ def dbquery(myid, dbid):  # get all of mydb
 def dbdeltaquery(myid, dbid, table, nrtograb):
     if not dbexistcheck(dbid):
         addnewdb(dbid)
-    conn = sqlite3.connect('databases/' + myid + '/' +  str(dbid))
+    conn = sqlite3.connect('databases/' + myid + '/' + str(dbid))
     c = conn.cursor()
 
     c.execute('SELECT * FROM %s ORDER BY _ID DESC LIMIT %s' % (table, nrtograb))
