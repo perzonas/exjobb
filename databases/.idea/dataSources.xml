@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="1" uuid="2d0fe825-0f7f-4024-905c-894911416da7">
+    <data-source source="LOCAL" name="1" uuid="268ce5c5-cec9-4a40-a31c-d4603054e22f">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
@@ -18,24 +18,7 @@
         </library>
       </libraries>
     </data-source>
-    <data-source source="LOCAL" name="1 [2]" uuid="ad5f9892-7a1b-4652-b149-78bd8bef4e73">
-      <driver-ref>sqlite.xerial</driver-ref>
-      <synchronize>true</synchronize>
-      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/2/1</jdbc-url>
-      <driver-properties>
-        <property name="enable_load_extension" value="true" />
-      </driver-properties>
-      <libraries>
-        <library>
-          <url>file://$APPLICATION_CONFIG_DIR$/jdbc-drivers/Xerial SQLiteJDBC/3.25.1/license.txt</url>
-        </library>
-        <library>
-          <url>file://$APPLICATION_CONFIG_DIR$/jdbc-drivers/Xerial SQLiteJDBC/3.25.1/sqlite-jdbc-3.25.1.jar</url>
-        </library>
-      </libraries>
-    </data-source>
-    <data-source source="LOCAL" name="2" uuid="f82d1d57-88cf-44bc-b8ac-a709e08d6428">
+    <data-source source="LOCAL" name="2" uuid="e445a55b-996a-4d07-ba23-d7f24dcb80eb">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>

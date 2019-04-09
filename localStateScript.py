@@ -12,30 +12,30 @@ class Script:
     def run(self, hosts):
         self.hosts = int(hosts)
         self.addmaterials()
-        #self.addcustomers()
+        # self.addcustomers()
 
 
     ### Add a number of materials for all machines
     def addmaterials(self):
-        line1 = json.dumps({'1': {'customers': [], 'heaps': [], 'loads': [], 'loads_waybills': [],
+        line1 = json.dumps(('i', {'customers': [], 'heaps': [], 'loads': [], 'loads_waybills': [],
                                       'materials': [(1, 'gravel', 1554371143, '345'), (2, 'peat', 1554374143, '55')], 'table_properties': [],
-                                      'targets': [], 'waybills': []}})
-        line2 = json.dumps({'1': {'customers': [], 'heaps': [], 'loads': [], 'loads_waybills': [],
+                                      'targets': [], 'waybills': []}))
+        line2 = json.dumps(('i', {'customers': [], 'heaps': [], 'loads': [], 'loads_waybills': [],
                                       'materials': [(3, 'dirt', 1522921530, '98')], 'table_properties': [],
-                                      'targets': [], 'waybills': []}})
-        line3 = json.dumps({'1': {'customers': [], 'heaps': [], 'loads': [], 'loads_waybills': [],
+                                      'targets': [], 'waybills': []}))
+        line3 = json.dumps(('i', {'customers': [], 'heaps': [], 'loads': [], 'loads_waybills': [],
                                       'materials': [(4, 'rocks', 1543980836, '66')], 'table_properties': [],
-                                      'targets': [], 'waybills': []}})
-        line4 = json.dumps({'1': {'customers': [], 'heaps': [], 'loads': [], 'loads_waybills': [],
+                                      'targets': [], 'waybills': []}))
+        line4 = json.dumps(('i', {'customers': [], 'heaps': [], 'loads': [], 'loads_waybills': [],
                                       'materials': [(5, 'pavement', 1414985403, '35')], 'table_properties': [],
-                                      'targets': [], 'waybills': []}})
+                                      'targets': [], 'waybills': []}))
 
-        for i in range(1, self.hosts+1):
+        for i in range(2, self.hosts+1):
             file = open(("localstates/local"+str(i)), "a")
             file.write(line1+"\n")
-            file.write(line2+"\n")
-            file.write(line3+"\n")
-            file.write(line4+"\n")
+            #file.write(line2+"\n")
+            #file.write(line3+"\n")
+            #file.write(line4+"\n")
             file.close()
 
 
