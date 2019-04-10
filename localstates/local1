@@ -1,0 +1,4 @@
+["i", {"customers": {"contact": "Andre perzon", "misc": "good stuff", "nameid": 25, "phone": "+46776898767", "date": "20-01-2012", "name": "cpac"}}]
+["i", {"customers": {"contact": "Linus Johansson", "misc": "bananas", "nameid": 2, "phone": "+46727898111", "date": "12-02-2015", "name": "apotekarnes"}}]
+["i", {"customers": {"contact": "Elias Forsberg", "misc": "hate ericsson", "nameid": 12, "phone": "+46727823456", "date": "12-10-2007", "name": "dtek"}}]
+["i", {"customers": {"contact": "Fredrik Johansson", "misc": "hate ericsson", "nameid": 22, "phone": "+46727898767", "date": "12-02-2012", "name": ""}}]

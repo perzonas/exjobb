@@ -166,11 +166,12 @@ def dbaddentry(myid, dbid, table, entry):
     names = list(map(lambda x: x[0], cur.description))
 
     cnames = table + '(' + ','.join(names[1:]) + ')'
-    print("DATABAS ID: " + str(dbid))
     #print("ENTRY: " + str(entry[]) + " || " + str(type(entry)))
     #print("CNAMES: " + cnames)
-    print(entry)
-    c.execute('''INSERT INTO {tn} VALUES ({q})'''.format(tn=cnames, q=",".join(["?"]*(columns-1))), entry[1:])
+    try:
+        c.execute('''INSERT INTO {tn} VALUES ({q})'''.format(tn=cnames, q=",".join(["?"]*(columns-1))), entry[1:])
+    except sqlite3.IntegrityError as e:
+        print("row already added: ", e)
     c.close()
 
 
@@ -207,7 +208,7 @@ def dbdeltaquery(myid, dbid, table, nrtograb):
 
 def dbgetstate(myid, dbid):
     state_dict = {}
-    conn = sqlite3.connect('databases/' + myid + '/' +  str(dbid), isolation_level=None)
+    conn = sqlite3.connect('databases/' + myid + '/' + str(dbid), isolation_level=None)
     c = conn.cursor()
 
     for name in table_names:
@@ -225,7 +226,7 @@ def dbgetstate(myid, dbid):
 
 def dbexistcheck(myid, dbid):
     try:
-        c = sqlite3.connect('file:{}?mode=rw'.format('databases/' + myid + '/' +  str(dbid)), uri=True)
+        c = sqlite3.connect('file:{}?mode=rw'.format('databases/' + myid + '/' + str(dbid)), uri=True)
         c.close()
         return True
     except sqlite3.OperationalError:
@@ -233,7 +234,7 @@ def dbexistcheck(myid, dbid):
 
 
 def dbentryexist(myid, dbid, table, key):
-    conn = sqlite3.connect('databases/' + myid + '/' +  str(dbid))
+    conn = sqlite3.connect('databases/' + myid + '/' + str(dbid))
     c = conn.cursor()
 
     if not dbcheckqueryparam(table):
@@ -241,7 +242,22 @@ def dbentryexist(myid, dbid, table, key):
         print("Not valid tablename")
 
     r = c.execute('SELECT _ID FROM %s ORDER BY _ID DESC' % table).fetchall()
+    print(r)
     return (key,) in r
+
+
+def slavedbentryexist(myid, dbid, table, key):
+    conn = sqlite3.connect('databases/' + myid + '/' + str(dbid))
+    c = conn.cursor()
+
+    if not dbcheckqueryparam(table):
+        conn.close()
+        print("Not valid tablename")
+    id = key[0]
+
+    r = c.execute('SELECT COUNT(*) FROM %s WHERE _ID = %s' % (table, id)).fetchall()
+    (line, ) = r[0]
+    return line
 
 
 def dbcheckqueryparam(param):
