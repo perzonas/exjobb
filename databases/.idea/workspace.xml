@@ -19,11 +19,27 @@
     <option name="HIDDEN_KINDS">
       <set />
     </option>
-    <expand />
+    <expand>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="2" type="feb32156:DbDataSourceImpl" />
+      </path>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="2" type="feb32156:DbDataSourceImpl" />
+        <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
+      </path>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="2" type="feb32156:DbDataSourceImpl" />
+        <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
+        <item name="main: schema" type="981a47c2:SqliteImplModel$Schema" />
+      </path>
+    </expand>
     <select />
   </component>
   <component name="FileEditorManager">
-    <leaf />
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="298" />
@@ -36,24 +52,35 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
             <path>
-              <item name="databases" type="8cb6161f:DatabaseProjectViewPane$1$1" />
-              <item name="databases" type="5b8f4e1:DatabaseProjectViewPane$1$1$1" />
+              <item name="databases" type="e2918438:DataGripProjectViewPane$1$1" />
+              <item name="databases" type="252d1985:DataGripProjectViewPane$1$1$1" />
+            </path>
+            <path>
+              <item name="databases" type="e2918438:DataGripProjectViewPane$1$1" />
+              <item name="databases" type="252d1985:DataGripProjectViewPane$1$1$1" />
+              <item name="1" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="databases" type="e2918438:DataGripProjectViewPane$1$1" />
+              <item name="databases" type="252d1985:DataGripProjectViewPane$1$1$1" />
+              <item name="2" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="DBE.Init.BalloonShown" value="true" />
     <property name="GoToClass.toSaveIncludeLibraries" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/test3" />
+    <property name="database.console.LAST_STATE" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -68,25 +95,95 @@
     </option>
   </component>
   <component name="ToolWindowManager">
-    <frame x="67" y="25" width="1853" height="1055" extended-state="6" />
+    <frame x="65" y="-4" width="1855" height="979" extended-state="6" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Database" order="0" visible="true" weight="0.24958494" />
+      <window_info active="true" content_ui="combo" id="Database" order="0" visible="true" weight="0.249309" />
       <window_info id="Favorites" order="1" side_tool="true" />
+      <window_info anchor="bottom" id="Debug" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Run" order="2" />
       <window_info anchor="bottom" id="Inspection" order="3" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="4" />
-      <window_info anchor="bottom" id="Database Changes" order="5" />
+      <window_info anchor="bottom" id="Database Changes" order="5" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="7" />
-      <window_info anchor="right" content_ui="combo" id="Project" order="0" visible="true" weight="0.25235197" />
+      <window_info anchor="bottom" id="Database Console" order="8" weight="0.328877" />
+      <window_info anchor="right" content_ui="combo" id="Project" order="0" visible="true" weight="0.262576" />
       <window_info anchor="right" id="Structure" order="1" side_tool="true" weight="0.25" />
     </layout>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/WorkOrderData6.db">
-      <provider selected="true" editor-type-id="text-editor" />
+    <entry file="file://$PROJECT_DIR$/WorkOrderData6.db" />
+    <entry file="das://9a4571d0-5b9a-4e03-aaa4-469fbdfe8f75/schema/main/table/materials" />
+    <entry file="das://434dc233-f215-4e81-84f8-0753102fdde6/schema/main/table/materials" />
+    <entry file="das://f82d1d57-88cf-44bc-b8ac-a709e08d6428/schema/main/table/materials">
+      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
+        <state>
+          <filtering enabled="true" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="das://268ce5c5-cec9-4a40-a31c-d4603054e22f/schema/main/table/materials">
+      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
+        <state>
+          <filtering enabled="true">
+            <filter text="" />
+          </filtering>
+        </state>
+      </provider>
+    </entry>
+    <entry file="das://e445a55b-996a-4d07-ba23-d7f24dcb80eb/schema/main/table/materials">
+      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
+        <state>
+          <filtering enabled="true">
+            <filter text="" />
+          </filtering>
+        </state>
+      </provider>
+    </entry>
+    <entry file="das://e3ed69d4-2367-4326-9b12-065fb784d906/schema/main/table/materials">
+      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
+        <state>
+          <filtering enabled="true">
+            <filter text="" />
+          </filtering>
+        </state>
+      </provider>
+    </entry>
+    <entry file="das://96e17444-9ffe-464f-88f6-aee6461f94d4/schema/main/table/materials">
+      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
+        <state>
+          <filtering enabled="true">
+            <filter text="" />
+          </filtering>
+        </state>
+      </provider>
+    </entry>
+    <entry file="das://6e97154e-94e0-449a-896a-24a43a739b44/schema/main/table/materials">
+      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
+        <state>
+          <filtering enabled="true">
+            <filter text="" />
+          </filtering>
+        </state>
+      </provider>
+    </entry>
+    <entry file="das://2c96d3d2-2cd4-49d6-9355-ab4b7b40726c/schema/main/table/materials">
+      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
+        <state>
+          <filtering enabled="true">
+            <filter text="" />
+          </filtering>
+        </state>
+      </provider>
+    </entry>
+    <entry file="das://ab2cf0ed-8de8-4120-9993-38fc888bc1f1/schema/main/table/materials">
+      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
+        <state>
+          <filtering enabled="true" />
+        </state>
+      </provider>
     </entry>
   </component>
 </project>
