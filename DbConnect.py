@@ -240,8 +240,15 @@ def dbentryexist(myid, dbid, table, key):
         conn.close()
         print("Not valid tablename")
 
-    r = c.execute('SELECT _ID FROM %s ORDER BY _ID DESC' % table).fetchall()
-    return (key,) in r
+    r = c.execute('SELECT _ID FROM %s WHERE _ID = %s' % (table, key))
+
+    print("r: " + str(r))
+    if r:
+        print("R IS TRUE")
+        return True
+    else:
+        print("R IS FALSE")
+        return False
 
 
 def dbcheckqueryparam(param):

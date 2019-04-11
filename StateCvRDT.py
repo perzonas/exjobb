@@ -23,6 +23,9 @@ class StateCvRDT:
         return querydata
 
     def compare(self, dbid, table, entry):
+        print("DBID: " + dbid)
+        print("TABLE: " + table)
+        print("ENTRY: " + str(entry))
         dbentryexist(self.myvehicleid, dbid, table, entry)
 
     def merge(self, data):
