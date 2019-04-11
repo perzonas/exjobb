@@ -1,5 +1,6 @@
 import sys
 import json
+import time
 
 ### (action, dict(dict, dict, dict))
 
@@ -9,13 +10,22 @@ class Script:
 
 
 
-    def run(self, hosts):
+    def run(self, hosts=2):
+        '''
         self.hosts = int(hosts)
-        # self.addmaterials()
+        self.addmaterials()
         self.addcustomers()
+        time.sleep(1)
+        if self.hosts > 2:
+            self.addtargets(3)
+        else:
+            self.addtargets(2)
+        '''
+        self.addworkorders()
 
 
-    ### Add a number of materials for all machines
+
+    ### Add a number of materials to machine 1
     def addmaterials(self):
         line1 = json.dumps(('i', {'customers': [], 'heaps': [], 'loads': [], 'loads_waybills': [],
                                       'materials': [(1, 'gravel', 1554371143, '345')], 'table_properties': [],
@@ -30,41 +40,70 @@ class Script:
                                       'materials': [(5, 'pavement', 1414985403, '35')], 'table_properties': [],
                                       'targets': [], 'waybills': []}))
 
-        for i in range(2, self.hosts+1):
-            file = open(("localstates/local"+str(i)), "a")
-            file.write(line1+"\n")
-            file.write(line2+"\n")
-            file.write(line3+"\n")
-            file.write(line4+"\n")
-            file.close()
+
+        file = open("localstates/local1", "a")
+        file.write(line1+"\n")
+        file.write(line2+"\n")
+        file.write(line3+"\n")
+        file.write(line4+"\n")
+        file.close()
 
 
-    ### Add a number of customers to all machines
+    ### Add a number of customers to machine 2
     def addcustomers(self):
-        line1 = json.dumps(("i", {"customers": {"name": "ericsson", "nameid": 22, "contact": "Fredrik Johansson",
-                                                    "phone": "+46727898767",  "date": "12-02-2012", "misc": "hate ericsson"}}))
-        line2 = json.dumps(("i", {"customers": {"name": "cpac", "nameid": 25, "contact": "Andre perzon",
-                                                    "phone": "+46776898767", "date": "20-01-2012",
-                                                    "misc": "good stuff"}}))
-        line3 = json.dumps(("i", {"customers": {"name": "apotekarnes", "nameid": 2, "contact": "Linus Johansson",
-                                                    "phone": "+46727898111", "date": "12-02-2015",
-                                                    "misc": "bananas"}}))
-        line4 = json.dumps(("i", {"customers": {"name": "dtek", "nameid": 12, "contact": "Elias Forsberg",
-                                                    "phone": "+46727823456", "date": "12-10-2007",
-                                                    "misc": "hate ericsson"}}))
-        line5 = json.dumps(("i", {"customers": {"name": "", "nameid": 22, "contact": "Fredrik Johansson",
-                                                    "phone": "+46727898767", "date": "12-02-2012",
-                                                    "misc": "hate ericsson"}}))
-        for i in range(1, self.hosts):
-            file = open(("localstates/local"+str(i)), "a")
-            file.write(line1+"\n")
-            file.write(line2+"\n")
-            file.write(line3+"\n")
-            file.write(line4+"\n")
-            file.write(line5+"\n")
-            file.close()
+        line1 = json.dumps(('i', {'customers': [(0, "ericsson", 22, "Fredrik Johansson", "+46727898767",  15432121836,
+                            "hate ericsson")], 'heaps': [], 'loads': [], 'loads_waybills': [], 'materials': [],
+                                  'table_properties': [], 'targets': [], 'waybills': []}))
 
+        line2 = json.dumps(('i', {'customers': [(0, "cpac", 25, "Andre Perzon", "+46776898767", 1540836, "good stuff")],
+                                  'heaps': [], 'loads': [], 'loads_waybills': [], 'materials': [], 'table_properties': [],
+                                  'targets': [], 'waybills': []}))
 
+        line3 = json.dumps(('i', {'customers': [(0, "apotekarnes", 2, "Linus Johansson", "+46727898111", 154532236,
+                                    "bananas")], 'heaps': [], 'loads': [], 'loads_waybills': [], 'materials': [],
+                                  'table_properties': [], 'targets': [], 'waybills': []}))
+
+        line4 = json.dumps(('i', {'customers': [(0, "dtek", 12, "Elias Forsberg", "+46727823456", 1543980836,
+                                 "hate ericsson")], 'heaps': [], 'loads': [], 'loads_waybills': [], 'materials': [],
+                                  'table_properties': [], 'targets': [], 'waybills': []}))
+
+        line5 = json.dumps(('i', {'customers': [(0, "chalmers", 22, "Fredrik Johansson", "+46727898767", 1543790836,
+                                 "hate ericsson")], 'heaps': [], 'loads': [], 'loads_waybills': [], 'materials': [],
+                                  'table_properties': [], 'targets': [], 'waybills': []}))
+
+        file = open(("localstates/local"+str(2)), "a")
+        file.write(line1+"\n")
+        file.write(line2+"\n")
+        file.write(line3+"\n")
+        file.write(line4+"\n")
+        file.write(line5+"\n")
+        file.close()
+
+    def addtargets(self, number):
+        line1 = json.dumps(('i', {'customers': [], 'heaps': [], 'loads': [], 'loads_waybills': [], 'materials': [],
+                                  'table_properties': [], 'targets': [(0, 0, "Pappa noden", 30000, 1543984526,
+                                   "hate ericsson")], 'waybills': []}))
+
+        line2 = json.dumps(('i', {'customers': [], 'heaps': [], 'loads': [], 'loads_waybills': [], 'materials': [],
+                                  'table_properties': [], 'targets': [(0, 1, "elaka styvdottern", 3000, 15439123836,
+                                                                       "hate ericsson")], 'waybills': []}))
+
+        line3 = json.dumps(('i', {'customers': [], 'heaps': [], 'loads': [], 'loads_waybills': [], 'materials': [],
+                                  'table_properties': [], 'targets': [(0, 0, "favorit sonen", 130000, 1586980836,
+                                                                       "hate ericsson")], 'waybills': []}))
+
+        file = open(("localstates/local" + str(number)), "a")
+        file.write(line1 + "\n")
+        file.write(line2 + "\n")
+        file.write(line3 + "\n")
+
+    def addworkorders(self):
+        line1 = json.dumps(('i', {'customers': [], 'heaps': [], 'loads': [], 'loads_waybills': [], 'materials': [],
+                                  'table_properties': [], 'targets': [], 'waybills': [], 'work_orders': [(0, "krashar",
+                                  2222222, 30000, "misc", "duetime", 1543984526, 1543999526, 20)]}))
+
+        file = open(("localstates/local" + str(2)), "a")
+        file.write(line1 + "\n")
 
 
 

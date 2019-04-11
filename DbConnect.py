@@ -9,7 +9,7 @@ def addnewdb(myid, dbid):
         os.mkdir('databases/' + str(myid), 0o777)
         os.chmod('databases/' + str(myid), 0o777)
     except OSError:
-        print("Folder already exsist")
+        print("Folder already exists")
 
     newdb = sqlite3.connect('databases/' + myid + '/' + str(dbid), isolation_level=None)
     os.chmod('databases/' + myid + '/' + str(dbid), 0o777)
@@ -166,8 +166,6 @@ def dbaddentry(myid, dbid, table, entry):
     names = list(map(lambda x: x[0], cur.description))
 
     cnames = table + '(' + ','.join(names[1:]) + ')'
-    #print("ENTRY: " + str(entry[]) + " || " + str(type(entry)))
-    #print("CNAMES: " + cnames)
     try:
         c.execute('''INSERT INTO {tn} VALUES ({q})'''.format(tn=cnames, q=",".join(["?"]*(columns-1))), entry[1:])
     except sqlite3.IntegrityError as e:
@@ -253,9 +251,7 @@ def slavedbentryexist(myid, dbid, table, key):
     if not dbcheckqueryparam(table):
         conn.close()
         print("Not valid tablename")
-    id = key[0]
-
-    r = c.execute('SELECT COUNT(*) FROM %s WHERE _ID = %s' % (table, id)).fetchall()
+    r = c.execute('SELECT COUNT(*) FROM %s WHERE _ID = %s' % (table, key[0])).fetchall()
     (line, ) = r[0]
     return line
 

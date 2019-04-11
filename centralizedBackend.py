@@ -88,7 +88,6 @@ class Server:
             else:
                 break
         message = json.loads(data)
-        print("*** MESSAGE REC IS: ", message)
         if receivedMessage:
             if int(self.hostID) == 1:
                 connection.send("a".encode())
@@ -104,24 +103,25 @@ class Server:
         connection.close()
 
     ### Master node have received an updates from slave nodes and perform the action received to update its state
-    def performaction(self, id, message):
-        (clock, rest) = message
-        (action, content) = json.loads(rest)
-        print("current clockholder is %d and received clock is: %s" % (self.centralclockholder[int(id)], clock))
+    def performaction(self, id, clock, received):
+        (action, content) = json.loads(received)
         if int(clock) > self.centralclockholder[int(id)]:
+            self.centralclockholder[int(id)] = clock
             if not dbexistcheck(self.hostID, self.hostID):
-                self.adddb(self.hostID, self.hostID)
-            for table, entry in content.items():
-                if entry:
-                    dbaddentry(self.hostID, self.hostID, table, entry[0])
-                    self.centralclockholder[int(id)] = clock
+                addnewdb(self.hostID, self.hostID)
+            ### If the action is insert perform the insert ***
+            if action == "i":
+                for table, entry in content.items():
+                    if entry:
+                        dbaddentry(self.hostID, self.hostID, table, entry[0])
+
         else:
             print("***  Already added to  DB  ***")
 
 
     ###  Slave node have received the state from the master node and will update its own state to this state
     def updatestate(self, state):
-        print("Received state: ", state)
+        print("***  Updating slave state based on master state  ***\n")
         if not dbexistcheck(self.hostID, self.hostID):
             addnewdb(self.hostID, self.hostID)
         for table, tlist in state.items():
@@ -139,7 +139,7 @@ class Server:
 
             time.sleep(15)
             message = dbquery(self.hostID, self.hostID)
-            print("***  Current state: %s  ***\n" % message)
+            print("***  Broadcasting master state: %s  ***\n")
             for host in range(1, (int(self.numberofhost) + 1)):
                 host = self.ip + str(host)
 
@@ -219,23 +219,21 @@ class Server:
 
                 if currentMessage is None and not sendQueue.empty():
                     currentMessage = sendQueue.get()
-                    print("\n*** current message :" + str(currentMessage) + " ***\n")
                 if currentMessage is not None:
                     if self.sendmessage(currentMessage, self.ip + "1", 1337):
                         currentMessage = None
                         sendQueue.task_done()
 
 
-            ### Perform actions received from other nodes and saved in a buffer ###
-            if int(self.hostID) == 1:
+            ### Master node perform actions received from other nodes that are saved in a buffer ###
+            else:
                 if action:
                     self.logicalclock += 1
-                    self.mergeStack.put((self.logicalclock, action))
+                    self.mergeStack.put((self.hostID, (self.logicalclock, action)))
                 if not self.mergeStack.empty():
-                    (id, operation) = self.mergeStack.get()
-                    self.performaction(id, operation)
+                    (id, (clock, operation)) = self.mergeStack.get()
+                    self.performaction(id, clock, operation)
                     self.mergeStack.task_done()
-            time.sleep(5)
 
 
 
