@@ -9,7 +9,7 @@ def addnewdb(myid, dbid):
         os.mkdir("databases/" + str(myid), 0o777)
         os.chmod("databases/" + str(myid), 0o777)
     except OSError:
-        print("Folder already exsist")
+        print("Folder already exists")
 
     newdb = sqlite3.connect("databases/" + myid + "/" + str(dbid), isolation_level=None)
     os.chmod("databases/" + myid + "/" + str(dbid), 0o777)

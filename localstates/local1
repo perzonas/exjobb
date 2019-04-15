@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 {"1": {"customers": [], "heaps": [], "loads": [], "loads_waybills": [], "materials": [[3, "dirt", 1522921530, "98"]], "table_properties": [], "targets": [], "waybills": []}}
 {"1": {"customers": [], "heaps": [], "loads": [], "loads_waybills": [], "materials": [[4, "rocks", 1543980836, "66"]], "table_properties": [], "targets": [], "waybills": []}}
 {"1": {"customers": [], "heaps": [], "loads": [], "loads_waybills": [], "materials": [[5, "pavement", 1414985403, "35"]], "table_properties": [], "targets": [], "waybills": []}}
@@ -8,3 +9,5 @@
 ["i", {"customers": {"contact": "Elias Forsberg", "misc": "hate ericsson", "nameid": 12, "phone": "+46727823456", "date": "12-10-2007", "name": "dtek"}}]
 ["i", {"customers": {"contact": "Fredrik Johansson", "misc": "hate ericsson", "nameid": 22, "phone": "+46727898767", "date": "12-02-2012", "name": ""}}]
 >>>>>>> 6b4a2ff739eb2b7e9796509d398371ac624ab832
+=======
+>>>>>>> fb395b4572aa3105980970c9233f955578e37fd4
