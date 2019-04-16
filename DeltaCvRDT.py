@@ -5,9 +5,9 @@ class DeltaCvRDT:
     myvehicleid = None
     dbases = []
 
-    def adddb(self, vehicleid):
-        self.dbases.append(str(vehicleid))
-        addnewdb(vehicleid)
+    def adddb(self, dbid):
+        self.dbases.append(str(dbid))
+        addnewdb(self.myvehicleid, dbid)
 
     def update(self, myvid, table, row):
         dbaddentry(myvid, table, row)
@@ -16,11 +16,9 @@ class DeltaCvRDT:
         queryresult = {}
         mystate = self.getstate()
 
-        #print("myState: ", mystate)
-
         for dbid, content in snapshot.items():
             if not dbexistcheck(self.myvehicleid, dbid):
-                print("DB DOESN'T EXIST")
+                self.adddb(dbid)
             else:
                 querydata = {}
                 for table, entry in content.items():
@@ -34,7 +32,7 @@ class DeltaCvRDT:
 
     def compare(self, dbid, table, entry):
         dbcheck = dbentryexist(self.myvehicleid, dbid, table, entry)
-        gravecheck = dbgraveyardcheck(self.myvehicleid, dbid, table, entry)
+        gravecheck = dbgraveyardcheck(self.myvehicleid, self.myvehicleid, table, entry)
         return dbcheck or gravecheck
 
 
@@ -46,12 +44,14 @@ class DeltaCvRDT:
             for table, tlist in content.items():
                 if tlist:
                     for entry in tlist:
-                        if table == "graveyard" and not dbgraveyardcheck(self.myvehicleid, self.myvehicleid, "graveyard", entry):
-                            print("ENTRY: ", entry)
-                            dbaddentry(self.myvehicleid, self.myvehicleid, table, entry)
+                        if table == "graveyard":
+                            print("MENTRY: ", entry)
+                        if table == "graveyard" and not dbgraveyardcheck(self.myvehicleid, dbid, table, entry):
                             self.delete(entry)
                         elif not self.compare(dbid, table, entry[0]):
                             dbaddentry(self.myvehicleid, dbid, table, entry)
+                        else:
+                            print("SKIPPING: ", dbid, " | ", table, " | ", entry)
 
 
     def getstate(self):
