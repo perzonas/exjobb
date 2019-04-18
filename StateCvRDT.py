@@ -10,32 +10,35 @@ class StateCvRDT:
         self.dbases.append(str(vehicleid))
         addnewdb(self.myvehicleid, str(vehicleid))
 
-    def update(self, myvid, table, row):
-        dbaddentry(self.myvehicleid, myvid, table, row)
+    def updaterow(self, myvid, table, oldrow, newrow):
+        self.delete(myvid, table, oldrow)
+        dbaddentry(self.myvehicleid, myvid, table, newrow)
 
     def query(self):
         querydata = {}
-        #querydata[self.myvehicleid] = dbquery(self.myvehicleid)
+        querydata[self.myvehicleid] = dbquery(self.myvehicleid, self.myvehicleid)
 
         for dbase in self.dbases:
-            querydata[dbase] = dbquery(dbase)
+            querydata[dbase] = dbquery(self.myvehicleid, dbase)
 
         return querydata
 
-    def compare(self, dbid, table, entry):
-        dbentryexist(self.myvehicleid, dbid, table, entry)
+    def compare(self, dbid, table, key):
+        dbcheck = dbentryexist(self.myvehicleid, dbid, table, key)
+        gravecheck = dbgraveyardcheck(self.myvehicleid, dbid, table, key)
+        return dbcheck or gravecheck
 
     def merge(self, data):
-        for vid, content in data.items():
-            if not dbexistcheck(self.myvehicleid, vid):
-                self.adddb(vid)
+        for dbid, content in data.items():
+            if not dbexistcheck(self.myvehicleid, dbid):
+                self.adddb(dbid)
 
             for table, tlist in content.items():
                 if tlist:
                     for entry in tlist:
-                        if not self.compare(vid, table, entry[0]):
-                            dbaddentry(self.myvehicleid, vid, table, entry)
+                        if not self.compare(dbid, table, entry[0]):
+                            dbaddentry(self.myvehicleid, dbid, table, entry)
 
 
-    def garbagecheck(self):
-        dbgarbagecheck()
+    def delete(self, entry):
+        dbdeleteentry(self.myvehicleid, entry)

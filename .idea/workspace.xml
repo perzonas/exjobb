@@ -2,6 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9be58d51-eada-45c5-9011-75aa8cfe4cbd" name="Default Changelist" comment="">
+<<<<<<< HEAD
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DbConnect.py" beforeDir="false" afterPath="$PROJECT_DIR$/DbConnect.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StateCvRDT.py" beforeDir="false" afterPath="$PROJECT_DIR$/StateCvRDT.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/databases/1/1" beforeDir="false" afterPath="$PROJECT_DIR$/databases/1/1" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/databases/2/1" beforeDir="false" afterPath="$PROJECT_DIR$/databases/2/1" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/localstates/local1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/localstates/local2" beforeDir="false" />
+=======
       <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DbConnect.py" beforeDir="false" afterPath="$PROJECT_DIR$/DbConnect.py" afterDir="false" />
@@ -14,6 +23,7 @@
       <change beforePath="$PROJECT_DIR$/localStateScript.py" beforeDir="false" afterPath="$PROJECT_DIR$/localStateScript.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/localstates/local1" beforeDir="false" afterPath="$PROJECT_DIR$/localstates/local1" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/testing.py" beforeDir="false" afterPath="$PROJECT_DIR$/testing.py" afterDir="false" />
+>>>>>>> 6b4a2ff739eb2b7e9796509d398371ac624ab832
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -26,8 +36,13 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/backend.py">
           <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
+            <state relative-caret-position="244">
+              <caret line="162" column="42" selection-start-line="162" selection-start-column="42" selection-end-line="162" selection-end-column="42" />
+=======
             <state relative-caret-position="2400">
               <caret line="167" column="42" selection-start-line="167" selection-start-column="42" selection-end-line="167" selection-end-column="42" />
+>>>>>>> 6b4a2ff739eb2b7e9796509d398371ac624ab832
               <folding>
                 <element signature="e#0#10#0" expanded="true" />
               </folding>
@@ -74,8 +89,13 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/DbConnect.py">
           <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
+            <state relative-caret-position="284">
+              <caret line="30" column="26" lean-forward="true" selection-start-line="30" selection-start-column="26" selection-end-line="30" selection-end-column="26" />
+=======
             <state relative-caret-position="566">
               <caret line="173" column="39" selection-start-line="173" selection-start-column="39" selection-end-line="173" selection-end-column="39" />
+>>>>>>> 6b4a2ff739eb2b7e9796509d398371ac624ab832
               <folding>
                 <element signature="e#0#14#0" expanded="true" />
               </folding>
@@ -99,7 +119,12 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/centralizedTopology.py">
           <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
+            <state relative-caret-position="255">
+              <caret line="242" column="69" lean-forward="true" selection-start-line="242" selection-start-column="69" selection-end-line="242" selection-end-column="69" />
+=======
             <state relative-caret-position="-544">
+>>>>>>> 6b4a2ff739eb2b7e9796509d398371ac624ab832
               <folding>
                 <element signature="e#0#10#0" expanded="true" />
               </folding>
@@ -147,9 +172,15 @@
       <list>
         <option value="$PROJECT_DIR$/localstates/local1" />
         <option value="$PROJECT_DIR$/NodeMain.py" />
+<<<<<<< HEAD
+        <option value="$PROJECT_DIR$/localStateScript.py" />
+        <option value="$PROJECT_DIR$/backend.py" />
+        <option value="$PROJECT_DIR$/StateCvRDT.py" />
+=======
         <option value="$PROJECT_DIR$/StateCvRDT.py" />
         <option value="$PROJECT_DIR$/backend.py" />
         <option value="$PROJECT_DIR$/testing.py" />
+>>>>>>> 6b4a2ff739eb2b7e9796509d398371ac624ab832
         <option value="$PROJECT_DIR$/DbConnect.py" />
         <option value="$PROJECT_DIR$/localStateScript.py" />
         <option value="$PROJECT_DIR$/centralizedBackend.py" />
@@ -331,11 +362,14 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python.backend" />
-      <item itemvalue="Python.localStateScript" />
       <item itemvalue="Python.NodeMain" />
       <item itemvalue="Python.StateCvRDT" />
+<<<<<<< HEAD
+      <item itemvalue="Python.backend" />
+      <item itemvalue="Python.localStateScript" />
+=======
       <item itemvalue="Python.testing" />
+>>>>>>> 6b4a2ff739eb2b7e9796509d398371ac624ab832
     </list>
     <recent_temporary>
       <list>
@@ -420,6 +454,14 @@
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
+    <entry file="file://$PROJECT_DIR$/customTopology.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="16" column="42" selection-start-line="16" selection-start-column="42" selection-end-line="16" selection-end-column="42" />
+          <folding>
+            <element signature="e#0#10#0" expanded="true" />
+=======
     <entry file="file://$PROJECT_DIR$/DeltaCvRDT.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -429,30 +471,50 @@
           <caret line="8" column="24" selection-start-line="8" selection-start-column="24" selection-end-line="8" selection-end-column="24" />
           <folding>
             <element signature="e#0#24#0" expanded="true" />
+>>>>>>> 6b4a2ff739eb2b7e9796509d398371ac624ab832
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/StateCvRDT.py">
+    <entry file="file://$PROJECT_DIR$/localStateScript.py">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
+        <state relative-caret-position="195">
+          <caret line="13" column="27" selection-start-line="13" selection-start-column="27" selection-end-line="13" selection-end-column="27" />
+=======
         <state relative-caret-position="375">
           <caret line="25" column="8" selection-start-line="25" selection-start-column="8" selection-end-line="25" selection-end-column="58" />
-          <folding>
-            <element signature="e#0#23#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/customTopology.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="16" column="42" selection-start-line="16" selection-start-column="42" selection-end-line="16" selection-end-column="42" />
+>>>>>>> 6b4a2ff739eb2b7e9796509d398371ac624ab832
           <folding>
             <element signature="e#0#10#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/customTopology.py">
+      <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
+        <state relative-caret-position="244">
+          <caret line="162" column="42" selection-start-line="162" selection-start-column="42" selection-end-line="162" selection-end-column="42" />
+=======
+        <state relative-caret-position="105">
+          <caret line="16" column="42" selection-start-line="16" selection-start-column="42" selection-end-line="16" selection-end-column="42" />
+>>>>>>> 6b4a2ff739eb2b7e9796509d398371ac624ab832
+          <folding>
+            <element signature="e#0#10#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+<<<<<<< HEAD
+    <entry file="file://$PROJECT_DIR$/DeltaCvRDT.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/localstates/local1">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="1" selection-start-line="1" selection-end-line="1" />
+=======
     <entry file="file://$PROJECT_DIR$/testing.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="255">
@@ -469,23 +531,34 @@
           <folding>
             <element signature="e#0#10#0" expanded="true" />
           </folding>
+>>>>>>> 6b4a2ff739eb2b7e9796509d398371ac624ab832
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/localStateScript.py">
+    <entry file="file://$PROJECT_DIR$/StateCvRDT.py">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
+        <state relative-caret-position="284">
+          <caret line="30" column="26" lean-forward="true" selection-start-line="30" selection-start-column="26" selection-end-line="30" selection-end-column="26" />
+=======
         <state relative-caret-position="101">
           <caret line="13" column="10" selection-start-line="13" selection-start-column="10" selection-end-line="13" selection-end-column="10" />
+>>>>>>> 6b4a2ff739eb2b7e9796509d398371ac624ab832
           <folding>
-            <element signature="e#0#10#0" expanded="true" />
+            <element signature="e#0#23#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/DbConnect.py">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
+        <state relative-caret-position="255">
+          <caret line="242" column="69" lean-forward="true" selection-start-line="242" selection-start-column="69" selection-end-line="242" selection-end-column="69" />
+=======
         <state relative-caret-position="566">
           <caret line="173" column="39" selection-start-line="173" selection-start-column="39" selection-end-line="173" selection-end-column="39" />
+>>>>>>> 6b4a2ff739eb2b7e9796509d398371ac624ab832
           <folding>
             <element signature="e#0#14#0" expanded="true" />
           </folding>

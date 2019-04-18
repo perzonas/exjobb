@@ -3,11 +3,11 @@ from DbConnect import *
 
 class DeltaCvRDT:
     myvehicleid = None
-    dbases = ['WorkOrderData6.db', 't']
+    dbases = []
 
-    def adddb(self, vehicleid):
-        self.dbases.append(str(vehicleid))
-        addnewdb(vehicleid)
+    def adddb(self, dbid):
+        self.dbases.append(str(dbid))
+        addnewdb(self.myvehicleid, dbid)
 
     def update(self, myvid, table, row):
         dbaddentry(myvid, table, row)
@@ -16,45 +16,54 @@ class DeltaCvRDT:
         queryresult = {}
         mystate = self.getstate()
 
-        print("myState: ", mystate)
-
-        for vid, content in snapshot.items():
-            if not dbexistcheck(vid):
-                print("DB DOESN'T EXIST")
+        for dbid, content in snapshot.items():
+            if not dbexistcheck(self.myvehicleid, dbid):
+                self.adddb(dbid)
             else:
                 querydata = {}
                 for table, entry in content.items():
-                    if entry < mystate[vid][table]:
-                        nrtograb = mystate[vid][table] - entry
-                        querydata[table] = dbdeltaquery(vid, table, nrtograb)
-                        queryresult[vid] = querydata
-
+                    if entry < mystate[dbid][table]:
+                        nrtograb = mystate[dbid][table] - entry
+                        querydata[table] = dbdeltaquery(self.myvehicleid, dbid, table, nrtograb)
+                        queryresult[dbid] = querydata
 
         return queryresult
 
 
     def compare(self, dbid, table, entry):
-        dbentryexist(dbid, table, entry)
+        dbcheck = dbentryexist(self.myvehicleid, dbid, table, entry)
+        gravecheck = dbgraveyardcheck(self.myvehicleid, self.myvehicleid, table, entry)
+        return dbcheck or gravecheck
+
 
     def merge(self, data):
-        for vid, content in data.items():
-            if not vid == self.myvehicleid:
-                if not dbexistcheck(vid):
-                    self.adddb(vid)
+        for dbid, content in data.items():
+            if not dbexistcheck(self.myvehicleid, dbid):
+                self.adddb(dbid)
 
-                for table, entry in content.items():
-                    if content:
-                        if not self.compare(vid, table, content[0]):
-                            addentry(table, content)
+            for table, tlist in content.items():
+                if tlist:
+                    for entry in tlist:
+                        if table == "graveyard":
+                            print("MENTRY: ", entry)
+                        if table == "graveyard" and not dbgraveyardcheck(self.myvehicleid, dbid, table, entry):
+                            self.delete(entry)
+                        elif not self.compare(dbid, table, entry[0]):
+                            dbaddentry(self.myvehicleid, dbid, table, entry)
+                        else:
+                            print("SKIPPING: ", dbid, " | ", table, " | ", entry)
 
 
     def getstate(self):
         state = {}
-        state[self.myvehicleid] = dbgetstate(self.myvehicleid)
+        state[self.myvehicleid] = dbgetstate(self.myvehicleid, self.myvehicleid)
 
         for dbase in self.dbases:
-            state[dbase] = dbgetstate(dbase)
+            state[dbase] = dbgetstate(self.myvehicleid, dbase)
 
         return state
 
 
+    def delete(self, entry):
+        if not dbgraveyardcheck(self.myvehicleid, entry[0], entry[1], entry[2]):
+            dbdeleteentry(self.myvehicleid, entry[0], entry[1], entry[2])
