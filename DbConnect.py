@@ -10,13 +10,18 @@ def addnewdb(myid, dbid):
         os.chmod("databases/" + str(myid), 0o777)
     except OSError:
         pass
-        #print("Folder already exists")
 
-    newdb = sqlite3.connect("databases/" + myid + "/" + str(dbid), isolation_level=None)
+    conn = sqlite3.connect("databases/" + myid + "/" + str(dbid), isolation_level=None)
     os.chmod("databases/" + myid + "/" + str(dbid), 0o777)
-    c = newdb.cursor()
+    c = conn.cursor()
 
     # c.execute('''CREATE TABLE android_metadata (locale TEXT)''')
+
+    c.execute('''CREATE TABLE graveyard(_ID integer primary key autoincrement,
+                            c_databaseid text not null,
+                            c_tablename text not null,
+                            c_rowid integer not null
+                        )''')
 
     c.execute('''CREATE TABLE customers(_ID integer primary key autoincrement,
                     c_name text not null unique,
@@ -150,13 +155,7 @@ def addnewdb(myid, dbid):
                     SELECT new. h_workorder, targets, ID, new.h_date, new.h_finished, new.h_weighing FROM targets 
                     WHERE new.h_target = targets.t_parent_id; END''')
 
-    c.execute('''CREATE TABLE graveyard(_ID integer primary key autoincrement,
-                        c_databaseid text not null,
-                        c_tablename text not null,
-                        c_rowid integer not null
-                    )''')
-
-    c.close()
+    conn.close()
 
 
 def dbaddentry(myid, dbid, table, entry):
@@ -169,21 +168,24 @@ def dbaddentry(myid, dbid, table, entry):
     c.execute("PRAGMA table_info(%s)" % table)
     columns = len(c.fetchall())
     cur = c.execute("SELECT * from %s" % table)
-
     names = list(map(lambda x: x[0], cur.description))
-
     cnames = table + "(" + ",".join(names[1:]) + ")"
+
     try:
         c.execute('''INSERT INTO {tn} VALUES ({q})'''.format(tn=cnames, q=",".join(["?"]*(columns-1))), entry[1:])
     except sqlite3.IntegrityError as e:
         print("row already added: ", e, " ", entry, " ", dbid)
-    c.close()
+
+    conn.close()
 
 
 def dbquery(myid, dbid):  # get all of mydb
     dbaste = {}
+    final_dbaste = {}
+
     if not dbexistcheck(myid, dbid):
         addnewdb(myid, dbid)
+
     conn = sqlite3.connect("databases/" + myid + "/" + str(dbid))
     c = conn.cursor()
 
@@ -191,30 +193,28 @@ def dbquery(myid, dbid):  # get all of mydb
         c.execute("SELECT * FROM %s" % name)
         dbaste[name] = c.fetchall()
 
-    conn.close()
+    for table in table_names:
+        print(dbaste[table])
+        final_dbaste[table] = [entry for entry in dbaste[table] if not dbgraveyardcheck(myid, dbid, table, entry[0])]
 
-    return dbaste
+    conn.close()
+    return final_dbaste
 
 
 def dbdeltaquery(myid, dbid, table, nrtograb):
     if not dbexistcheck(myid, dbid):
         addnewdb(myid, dbid)
+
     conn = sqlite3.connect("databases/" + myid + "/" + str(dbid))
     c = conn.cursor()
 
     c.execute("SELECT * FROM %s ORDER BY _ID DESC LIMIT %s" % (table, str(nrtograb+1)))
     delta_state = c.fetchall()
     delta_state.reverse()
-
-    #print("DELTA STATE: ", delta_state)
-    #print("DBID: ", dbid)
-
     final_delta_state = [entry for entry in delta_state if not dbgraveyardcheck(myid, dbid, table, entry[0])]
 
-    #print("DS2", delta_state)
-
-    if final_delta_state:
-        return final_delta_state
+    conn.close()
+    return final_delta_state
 
 
 def dbgetstate(myid,dbid):
@@ -231,6 +231,7 @@ def dbgetstate(myid,dbid):
         state_dict[table] = entry
 
     conn.close()
+    return state_dict
 
 
 def dbexistcheck(myid, dbid):
@@ -246,11 +247,8 @@ def dbentryexist(myid, dbid, table, key):
     conn = sqlite3.connect("databases/" + myid + "/" + str(dbid))
     c = conn.cursor()
 
-    if not dbcheckqueryparam(table):
-        conn.close()
-        print("Not valid tablename")
-
     r = c.execute("SELECT COUNT(*) FROM %s WHERE _ID = %s" % (table, key)).fetchall()
+    conn.close()
     return r[0][0]
 
 
@@ -282,25 +280,13 @@ def dbcheckqueryparam(param):
 
 
 def dbgraveyardcheck(myid, dbid, table, key):
-    conn = sqlite3.connect("databases/" + myid + "/" + str(dbid))
+    conn = sqlite3.connect("databases/" + myid + "/" + str(myid))
     c = conn.cursor()
 
-    if not dbcheckqueryparam(table):
-        conn.close()
-        print("Not valid tablename")
-
     r = c.execute("SELECT COUNT(*) FROM graveyard WHERE c_databaseid='%s' AND c_tablename = '%s' AND c_rowid = '%s'" % (dbid, table, key)).fetchall()
-    #print("Graveyard: ", r)
+    conn.close()
     return r[0][0]
 
 
 def dbdeleteentry(myid, dbid, table, key):
-    #conn = sqlite3.connect("databases/" + myid + "/" + str(dbid), isolation_level=None)
-    #c = conn.cursor()
-
-    if not dbcheckqueryparam(table):
-        #conn.close()
-        print("Not valid tablename")
-    else:
-        #c.execute("DELETE from %s where _ID = %s" % (table, str(key)))
         dbaddentry(myid, myid, "graveyard", (0, dbid, table, key))

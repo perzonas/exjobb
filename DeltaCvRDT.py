@@ -9,8 +9,9 @@ class DeltaCvRDT:
         self.dbases.append(str(dbid))
         addnewdb(self.myvehicleid, dbid)
 
-    def update(self, myvid, table, row):
-        dbaddentry(myvid, table, row)
+    def update(self, table, entry):
+        self.delete(entry)
+        dbaddentry(self.myvehicleid, self.myvehicleid, table, entry)
 
     def query(self, snapshot):
         queryresult = {}
@@ -30,25 +31,16 @@ class DeltaCvRDT:
         return queryresult
 
 
-    def compare(self, dbid, table, entry):
-        dbcheck = dbentryexist(self.myvehicleid, dbid, table, entry)
-        gravecheck = dbgraveyardcheck(self.myvehicleid, self.myvehicleid, table, entry)
-        return dbcheck or gravecheck
-
-
     def merge(self, data):
         for dbid, content in data.items():
             if not dbexistcheck(self.myvehicleid, dbid):
                 self.adddb(dbid)
-
             for table, tlist in content.items():
                 if tlist:
                     for entry in tlist:
-                        if table == "graveyard":
-                            print("MENTRY: ", entry)
-                        if table == "graveyard" and not dbgraveyardcheck(self.myvehicleid, dbid, table, entry):
+                        if (table == "graveyard" and not dbgraveyardcheck(self.myvehicleid, entry[0], entry[1], entry[2])):
                             self.delete(entry)
-                        elif not self.compare(dbid, table, entry[0]):
+                        elif not dbentryexist(self.myvehicleid, dbid, table, entry[0]):
                             dbaddentry(self.myvehicleid, dbid, table, entry)
                         else:
                             print("SKIPPING: ", dbid, " | ", table, " | ", entry)
