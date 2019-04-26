@@ -20,6 +20,8 @@ class Server:
     numberofhost = 0
     logicalclock = 0
     centralclockholder = {}
+    bytessent = 0
+    bytessentadress = ""
 
     def run(self, hostnumber, numberofhosts=1):
         self.numberofhost = numberofhosts
@@ -27,6 +29,13 @@ class Server:
         self.hostID = hostnumber
         for i in range(1, int(numberofhosts)+1):
             self.centralclockholder[i] = 0
+        self.bytessentadress = "testdata/bytes" + self.hostID
+
+        ### Create testdata file if it doesn't exist
+        if not os.path.isfile(self.bytessentadress):
+            file = open(self.bytessentadress, "w+")
+            os.chmod(self.bytessentadress, 0o777)
+            file.close()
 
         # AF_INET -> ipv4 and SOCK_STREAM -> tcp
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -87,11 +96,12 @@ class Server:
                 data += byte
             else:
                 break
-        message = json.loads(data)
-        if receivedMessage:
-            if int(self.hostID) == 1:
-                connection.send("a".encode())
 
+        if receivedMessage:
+            message = json.loads(data)
+            if int(self.hostID) == 1:
+                succeded = connection.send("a".encode())
+                self.bytessent += succeded
             ### Add state to TODO stack so worker thread can perform the received action ###
             if int(self.hostID) == 1:
                 self.mergeStack.put((id, message))
@@ -114,6 +124,20 @@ class Server:
                 for table, entry in content.items():
                     if entry:
                         dbaddentry(self.hostID, self.hostID, table, entry[0])
+            ### If the action is update then update the DB ###
+            elif action == "u":
+                for table, entry in content.items():
+                    if entry:
+                        print(entry[0])
+                        dbdeleteentry(self.hostID, self.hostID, table, entry[0][0])
+                        dbaddentry(self.hostID, self.hostID, table, entry[0])
+
+
+            ### If the action is delete, then delete a row ###
+            else:
+                for table, entry in content.items():
+                    if entry:
+                        dbdeleteentry(self.hostID, self.hostID, table, entry[0])
 
         else:
             print("***  Already added to  DB  ***")
@@ -127,7 +151,7 @@ class Server:
         for table, tlist in state.items():
             if tlist:
                 for entry in tlist:
-                    if not slavedbentryexist(self.hostID, self.hostID, table, entry):
+                    if not dbentryexist(self.hostID, self.hostID, table, entry[0]):
                         dbaddentry(self.hostID, self.hostID, table, entry)
         pass
 
@@ -149,6 +173,7 @@ class Server:
 
     # sending message to another host
     def sendmessage(self, message, host, port):
+        finished = False
         received = False
 
         try:
@@ -158,18 +183,40 @@ class Server:
         try:
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             sock.connect((host, port))
-            sock.sendall((serializeddata + ";").encode())
-
-            byte = sock.recv(1)
-            byte = byte.decode()
-            if byte == "a":
-                print("*** Received ACK ***")
-                received = True
-
+            data = (serializeddata + ";").encode()
+            datasize = len(data)
+            totalsent = 0
+            while totalsent < datasize:
+                sent = sock.send(data[totalsent:])
+                if sent == 0:
+                    print("Connection broken closing socket")
+                    break
+                totalsent += sent
+                if totalsent == datasize:
+                    finished = True
+            if finished:
+                byte = sock.recv(1)
+                byte = byte.decode()
+                if byte == "a":
+                    print("*** Received ACK ***")
+                    received = True
             sock.close()
+            self.bytessent += totalsent
+
+            print("### BYTES SENT: ", self.bytessent)
+            ### Write bytes sent to testdatafile ###
+            file = open(self.bytessentadress, "w")
+            file.write(str(self.bytessent))
+            file.close()
             return received
         except Exception as e:
             return received
+
+        ### antingen räkna hur lång tid det ar att ett meddelande kommer fram till den andra noden och då även räkna
+        # hur många meddelanden som tappas p.g.a. i CRDT så kommer inte samma meddelande skickas flera gånger utan en
+        # ny state kommer skickas nästa gång som inte säkert är samma. ska man då tolka detta som sama eller ett nytt?
+        # Räkna på tiden det tar för en merge, local update, copy state etc. och jämföra dessa? vilken latency är bäst?
+
 
 
     def localthread(self):

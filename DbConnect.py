@@ -24,7 +24,7 @@ def addnewdb(myid, dbid):
                         )''')
 
     c.execute('''CREATE TABLE customers(_ID integer primary key autoincrement,
-                    c_name text not null unique,
+                    c_name text not null,
                     c_name_id text not null,
                     c_contact text not null,
                     c_phone text not null,
@@ -36,7 +36,7 @@ def addnewdb(myid, dbid):
 
     c.execute('''CREATE TABLE materials(
                     _ID integer primary key autoincrement,
-                    m_name text not null unique,
+                    m_name text not null,
                     m_date integer default 0,
                     m_name_id text not null
                 )''')
@@ -44,7 +44,7 @@ def addnewdb(myid, dbid):
     c.execute('''CREATE TABLE targets(
                     _ID integer primary key autoincrement,
                     t_parent_id integer default 0,
-                    t_name text unique,
+                    t_name text,
                     t_capacity integer not null,
                     t_date integer default 0,
                     t_misc text not null
@@ -52,7 +52,7 @@ def addnewdb(myid, dbid):
 
     c.execute('''CREATE TABLE work_orders(
                     _ID integer primary key autoincrement,
-                    wo_name text unique,
+                    wo_name text,
                     wo_customer_id integer,
                     wo_capacity integer default 0,
                     wo_misc text not null,
@@ -194,11 +194,12 @@ def dbquery(myid, dbid):  # get all of mydb
         dbaste[name] = c.fetchall()
 
     for table in table_names:
-        print(dbaste[table])
         final_dbaste[table] = [entry for entry in dbaste[table] if not dbgraveyardcheck(myid, dbid, table, entry[0])]
 
     conn.close()
     return final_dbaste
+
+
 
 
 def dbdeltaquery(myid, dbid, table, nrtograb):
@@ -289,4 +290,5 @@ def dbgraveyardcheck(myid, dbid, table, key):
 
 
 def dbdeleteentry(myid, dbid, table, key):
-        dbaddentry(myid, myid, "graveyard", (0, dbid, table, key))
+    print("ADDING TO GRAVEYARD", dbid, table, key)
+    dbaddentry(myid, myid, "graveyard", (0, dbid, table, key))

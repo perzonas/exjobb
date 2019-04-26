@@ -21,7 +21,10 @@ class Script:
         else:
             self.addtargets(2)
         '''
+        self.addcustomers()
         self.addworkorders()
+        self.updateCustomers()
+        return 1
 
 
 
@@ -71,7 +74,7 @@ class Script:
                                  "hate ericsson")], 'heaps': [], 'loads': [], 'loads_waybills': [], 'materials': [],
                                   'table_properties': [], 'targets': [], 'waybills': []}))
 
-        file = open(("localstates/local"+str(2)), "a")
+        file = open("localstates/local2", "a")
         file.write(line1+"\n")
         file.write(line2+"\n")
         file.write(line3+"\n")
@@ -105,7 +108,19 @@ class Script:
         file = open(("localstates/local" + str(2)), "a")
         file.write(line1 + "\n")
 
+    def updateCustomers(self):
+        line1 = json.dumps(('u', {'customers': [(3, "ericssonsuger", 22, "Fredrik Johansson", "+46727898767", 15432121836,
+                                                 "hate ericsson")], 'heaps': [], 'loads': [], 'loads_waybills': [],
+                                  'materials': [],
+                                  'table_properties': [], 'targets': [], 'waybills': []}))
+        line2 = json.dumps(('u', {'customers': [(2, "cpacisgut", 25, "Andre Perzon", "+46776898767", 1540836, "good stuff")],
+                                  'heaps': [], 'loads': [], 'loads_waybills': [], 'materials': [],
+                                  'table_properties': [],
+                                  'targets': [], 'waybills': []}))
 
+        file = open("localstates/local2", "a")
+        file.write(line1 + "\n")
+        file.write(line2 + "\n")
 
 
 if __name__ == '__main__':

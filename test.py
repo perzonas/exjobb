@@ -1,6 +1,7 @@
 import os
 import sys
 import glob
+from LocalStateScript import Script
 
 
 class Test:
@@ -23,7 +24,8 @@ class Test:
                 os.remove(file)
                 print("File removed: ", file)
 
-
+        script = Script()
+        script.run()
 
 if __name__ == '__main__':
 

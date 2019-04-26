@@ -19,98 +19,11 @@
     <option name="HIDDEN_KINDS">
       <set />
     </option>
-    <expand>
-      <path>
-        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
-        <item name="1" type="feb32156:DbDataSourceImpl" />
-      </path>
-      <path>
-        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
-        <item name="1" type="feb32156:DbDataSourceImpl" />
-        <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
-      </path>
-      <path>
-        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
-        <item name="1" type="feb32156:DbDataSourceImpl" />
-        <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
-        <item name="main: schema" type="981a47c2:SqliteImplModel$Schema" />
-      </path>
-      <path>
-        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
-        <item name="2" type="feb32156:DbDataSourceImpl" />
-      </path>
-      <path>
-        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
-        <item name="2" type="feb32156:DbDataSourceImpl" />
-        <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
-      </path>
-      <path>
-        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
-        <item name="2" type="feb32156:DbDataSourceImpl" />
-        <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
-        <item name="main: schema" type="981a47c2:SqliteImplModel$Schema" />
-      </path>
-    </expand>
+    <expand />
     <select />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file pinned="false" current-in-tab="false">
-        <entry file="das://d208a524-d146-48bd-bb7c-e1ab4d3ac015/schema/main/table/materials">
-          <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-            <state>
-              <filtering enabled="true">
-                <filter text="" />
-              </filtering>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="das://d208a524-d146-48bd-bb7c-e1ab4d3ac015/schema/main/table/customers">
-          <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-            <state>
-              <filtering enabled="true">
-                <filter text="" />
-              </filtering>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="das://d208a524-d146-48bd-bb7c-e1ab4d3ac015/schema/main/table/targets">
-          <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-            <state>
-              <filtering enabled="true">
-                <filter text="" />
-              </filtering>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="das://103b6c21-de8f-44bf-8aec-0cf17408ab5d/schema/main/table/targets">
-          <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-            <state>
-              <filtering enabled="true">
-                <filter text="" />
-              </filtering>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="das://d208a524-d146-48bd-bb7c-e1ab4d3ac015/schema/main/table/work_orders">
-          <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-            <state>
-              <filtering enabled="true">
-                <filter text="" />
-              </filtering>
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="298" />
@@ -123,7 +36,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -145,6 +57,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -167,7 +80,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="67" y="25" width="1533" height="875" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Database" order="0" visible="true" weight="0.24949563" />
       <window_info id="Favorites" order="1" side_tool="true" />
@@ -181,7 +93,7 @@
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Database Console" order="8" weight="0.328877" />
       <window_info anchor="bottom" id="Debug" order="9" />
-      <window_info anchor="right" content_ui="combo" id="Project" order="0" weight="0.25958306" />
+      <window_info anchor="right" content_ui="combo" id="Project" order="0" visible="true" weight="0.25958306" />
       <window_info anchor="right" id="Structure" order="1" side_tool="true" weight="0.25" />
     </layout>
     <layout-to-restore>
@@ -205,13 +117,7 @@
     <entry file="file://$PROJECT_DIR$/WorkOrderData6.db" />
     <entry file="das://9a4571d0-5b9a-4e03-aaa4-469fbdfe8f75/schema/main/table/materials" />
     <entry file="das://434dc233-f215-4e81-84f8-0753102fdde6/schema/main/table/materials" />
-    <entry file="das://f82d1d57-88cf-44bc-b8ac-a709e08d6428/schema/main/table/materials">
-      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="das://f82d1d57-88cf-44bc-b8ac-a709e08d6428/schema/main/table/materials" />
     <entry file="das://268ce5c5-cec9-4a40-a31c-d4603054e22f/schema/main/table/materials" />
     <entry file="das://e445a55b-996a-4d07-ba23-d7f24dcb80eb/schema/main/table/materials" />
     <entry file="das://e3ed69d4-2367-4326-9b12-065fb784d906/schema/main/table/materials" />
@@ -220,33 +126,6 @@
     <entry file="das://2c96d3d2-2cd4-49d6-9355-ab4b7b40726c/schema/main/table/materials" />
     <entry file="das://ab2cf0ed-8de8-4120-9993-38fc888bc1f1/schema/main/table/materials" />
     <entry file="das://103b6c21-de8f-44bf-8aec-0cf17408ab5d/schema/main/table/materials">
-      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true">
-            <filter text="" />
-          </filtering>
-        </state>
-      </provider>
-    </entry>
-    <entry file="das://103b6c21-de8f-44bf-8aec-0cf17408ab5d/schema/main/table/customers">
-      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true">
-            <filter text="" />
-          </filtering>
-        </state>
-      </provider>
-    </entry>
-    <entry file="das://d208a524-d146-48bd-bb7c-e1ab4d3ac015/schema/main/table/targets">
-      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true">
-            <filter text="" />
-          </filtering>
-        </state>
-      </provider>
-    </entry>
-    <entry file="das://103b6c21-de8f-44bf-8aec-0cf17408ab5d/schema/main/table/targets">
       <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
         <state>
           <filtering enabled="true">
@@ -264,7 +143,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="das://d208a524-d146-48bd-bb7c-e1ab4d3ac015/schema/main/table/customers">
+    <entry file="das://103b6c21-de8f-44bf-8aec-0cf17408ab5d/schema/main/table/targets">
       <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
         <state>
           <filtering enabled="true">
@@ -274,6 +153,87 @@
       </provider>
     </entry>
     <entry file="das://d208a524-d146-48bd-bb7c-e1ab4d3ac015/schema/main/table/work_orders">
+      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
+        <state>
+          <filtering enabled="true">
+            <filter text="" />
+          </filtering>
+        </state>
+      </provider>
+    </entry>
+    <entry file="das://d208a524-d146-48bd-bb7c-e1ab4d3ac015/schema/main/table/targets">
+      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
+        <state>
+          <filtering enabled="true">
+            <filter text="" />
+          </filtering>
+        </state>
+      </provider>
+    </entry>
+    <entry file="das://d208a524-d146-48bd-bb7c-e1ab4d3ac015/schema/main/table/customers">
+      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
+        <state>
+          <filtering enabled="true">
+            <filter text="" />
+          </filtering>
+        </state>
+      </provider>
+    </entry>
+    <entry file="das://103b6c21-de8f-44bf-8aec-0cf17408ab5d/schema/main/table/customers">
+      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
+        <state>
+          <filtering enabled="true">
+            <filter text="" />
+          </filtering>
+        </state>
+      </provider>
+    </entry>
+    <entry file="das://d208a524-d146-48bd-bb7c-e1ab4d3ac015/schema/main/table/graveyard">
+      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
+        <state>
+          <filtering enabled="true">
+            <filter text="" />
+          </filtering>
+        </state>
+      </provider>
+    </entry>
+    <entry file="das://103b6c21-de8f-44bf-8aec-0cf17408ab5d/schema/main/table/graveyard">
+      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
+        <state>
+          <filtering enabled="true">
+            <filter text="" />
+          </filtering>
+        </state>
+      </provider>
+    </entry>
+    <entry file="das://6afc24c7-8698-41a3-8e7b-f7cb4bd5f540/schema/main/table/graveyard">
+      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
+        <state>
+          <filtering enabled="true">
+            <filter text="" />
+          </filtering>
+        </state>
+      </provider>
+    </entry>
+    <entry file="das://6afc24c7-8698-41a3-8e7b-f7cb4bd5f540/schema/main/table/customers">
+      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
+        <state>
+          <filtering enabled="true">
+            <filter text="" />
+          </filtering>
+        </state>
+      </provider>
+    </entry>
+    <entry file="das://7150d8af-2722-4ea5-b34e-721906c2a464/schema/main/table/customers">
+      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
+        <state>
+          <filtering enabled="true">
+            <filter text="" />
+          </filtering>
+        </state>
+      </provider>
+    </entry>
+    <entry file="das://ed80443d-dd63-4f29-b32b-86308a6edb6f/schema/main/table/graveyard">
       <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
         <state>
           <filtering enabled="true">

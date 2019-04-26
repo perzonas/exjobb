@@ -18,23 +18,32 @@ class Server:
     hostID = 0
     numberofhost = 0
     logicalclock = 0
+    bytessent = 0
+    bytessentadress = ""
 
     def run(self, hostnumber, numberofhosts=1):
-        self.numberofhost = numberofhosts
+        self.numberofhost = int(numberofhosts)
         self.ownIP += str(hostnumber)
         self.hostID = hostnumber
         self.crdt.myvehicleid = hostnumber
+        self.bytessentadress = "testdata/bytes" + self.hostID
+
+        ### Create testdata file if it doesn't exist
+        if not os.path.isfile(self.bytessentadress):
+            file = open(self.bytessentadress, "w+")
+            os.chmod(self.bytessentadress, 0o777)
+            file.close()
 
         # AF_INET -> ipv4 and SOCK_STREAM -> tcp
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 
         # a thread that broadcast it's own state to all other nodes in a predefined intervall intervall
-        # thread = Thread(target=self.broadcaststates)
-        # thread.daemon = True
-        # thread.start()
+        thread = Thread(target=self.broadcaststates)
+        thread.daemon = True
+        thread.start()
 
-        # A thread that looks at changes done by the local machine
+        # A thread that looks at changes done by the local machine and performs all the actions on the CRDT
         thread = Thread(target=self.localthread)
         thread.daemon = True
         thread.start()
@@ -63,25 +72,28 @@ class Server:
 
     # handling incoming connection
     def handleconnection(self, connection, connectinfo):
-        print("handling connection from ", connectinfo)
         ip, port = connectinfo
         id = ip[-1]
         data = ""
+        recievedmessage = False
 
         while True:
             byte = connection.recv(1)
             byte = byte.decode()
             if byte == ";":
+                recievedmessage = True
                 break
             elif byte:
                 data += byte
             else:
                 break
-        message = json.loads(data)
-        print(message)
 
-        ### Add state to TODO stack so worker thread can perform the received action ###
-        self.mergeStack.put(message)
+        if recievedmessage:
+            message = json.loads(data)
+            print("### RECEIVED MESSAGE FROM NODE %s ###" % id)
+
+            ### Add state to TODO stack so worker thread can perform the received action ###
+            self.mergeStack.put(message)
 
         ### merge received state with own state ###
         # self.crdt.merge(message)
@@ -92,18 +104,19 @@ class Server:
     # Broadcast nodes current state
     def broadcaststates(self):
         # sleep before starting to broadcast
-        time.sleep(5)
+        time.sleep(2)
 
         # get state from crdt
-        for i in range(120):
+        for i in range(3):
             state = self.crdt.query()
             self.broadcaststate(state)
-            time.sleep(1)
+            time.sleep(2)
 
     # Broadcast a message to all other nodes
     def broadcaststate(self, message):
         print("Broadcasting message to all hosts")
         for host in range(1, (self.numberofhost + 1)):
+            host = str(host)
             host = self.ip + host
 
             # do not send to ourselves
@@ -111,22 +124,41 @@ class Server:
                 self.sendmessage(message, host, self.port)
 
     # sending message to another host
-    def sendmessage(self, message, host, port, connection):
+    def sendmessage(self, message, host, port):
 
         try:
             serializeddata = json.dumps(message)
         except (TypeError, ValueError) as e:
             raise Exception("Not Json")
+        try:
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.connect((host, port))
+            data = (serializeddata+";").encode()
+            datasize = len(data)
+            totalsent = 0
+            while totalsent < datasize:
+                sent = sock.send(data[totalsent:])
+                if sent == 0:
+                    print("Connection broken closing socket")
+                    break
+                totalsent += sent
+            sock.close()
+            self.bytessent += totalsent
 
-        # sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        # print(host, port)
-        # sock.connect((host, port))
+            print("### BYTES SENT: ", self.bytessent)
+            ### Write bytes sent to testdatafile ###
+            file = open(self.bytessentadress, "w")
+            file.write(str(self.bytessent))
+            file.close()
 
-        connection.sendall((serializeddata + ";").encode())
+
+        except Exception as e:
+            "Fail during socket connection"
 
 
     def localthread(self):
         filename = "localstates/local"+self.hostID
+
 
         ### Create local update file if it doesn't exist
         if not os.path.isfile(filename):
@@ -134,9 +166,12 @@ class Server:
             os.chmod(filename, 0o777)
             file.close()
 
+
         while True:
             reproduce = []
             action = ""
+
+
 
             ### Read file that holds local updates ###
             file = open(filename, "r")
@@ -161,17 +196,31 @@ class Server:
 
                 ### Perform the action from local machine ###
                 state = json.loads(action)
-                self.performaction(state)
+                data = {str(self.hostID): state[1]}
+                print("#### PERFORMING AN UPDATE ####")
+                if state[0] == "i":
+                    self.crdt.merge(data)
+                elif state[0] == "u":
+                    for table, entry in state[1].items():
+                        if entry:
+                            self.crdt.update(table, entry[0])
+                else:
+                    for table, entry in state[1].items():
+                        if entry:
+                            self.crdt.delete(self.hostID, [0, self.hostID, table, entry[0]])
+
 
 
             ### Perform actions received from other nodes  and saved in a buffer ###
             if not self.mergeStack.empty():
+                print("#### PERFORMING A MERGE ####")
                 state = self.mergeStack.get()
-                self.performaction(state)
+                self.crdt.merge(state)
                 self.mergeStack.task_done()
 
-    def performaction(self, state):
-        self.crdt.merge(state)
+
+
+
 
 
 
@@ -179,6 +228,7 @@ class Server:
 if __name__ == '__main__':
     server = Server()
     try:
-        server.run(sys.argv[1], sys.argv[1])
+        server.run(sys.argv[1], sys.argv[2])
     except KeyboardInterrupt:
-        print("Shutting down server")
+        print("\n###  Shutting down server  ###")
+        time.sleep(2)

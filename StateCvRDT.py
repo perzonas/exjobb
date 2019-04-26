@@ -10,8 +10,10 @@ class StateCvRDT:
         self.dbases.append(str(vehicleid))
         addnewdb(self.myvehicleid, str(vehicleid))
 
+
     def update(self, table, entry):
-        self.delete(entry)
+        print("Entry in UPDATE IS: ", entry)
+        self.delete([0, self.myvehicleid, table, entry[0]])
         dbaddentry(self.myvehicleid, self.myvehicleid, table, entry)
 
     def query(self):
@@ -31,13 +33,14 @@ class StateCvRDT:
             for table, tlist in content.items():
                 if tlist:
                     for entry in tlist:
-                        if (table == "graveyard" and not dbgraveyardcheck(self.myvehicleid, entry[0], entry[1],
-                                                                          entry[2])):
+                        if table == "graveyard":
                             self.delete(entry)
                         elif not dbentryexist(self.myvehicleid, dbid, table, entry[0]):
                             dbaddentry(self.myvehicleid, dbid, table, entry)
 
 
     def delete(self, entry):
-        if not dbgraveyardcheck(self.myvehicleid, entry[0], entry[1], entry[2]):
-            dbdeleteentry(self.myvehicleid, entry[0], entry[1], entry[2])
+
+        #### Input is __ID, DATABASE_ID, table and rowID  ####
+        if not dbgraveyardcheck(self.myvehicleid, entry[1], entry[2], entry[3]):
+            dbdeleteentry(self.myvehicleid, entry[1], entry[2], entry[3])
