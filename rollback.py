@@ -33,15 +33,6 @@ class Server:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 
-        # a thread that ask master for update and then receives the update and updates it's own state in a
-        # predefined interval
-        if int(self.hostID) == 1:
-            print("*** starting broadcast thread ***")
-            thread = Thread(target=self.broadcaststate)
-            thread.daemon = True
-            thread.start()
-            print("*** Broadcast thread is running ***")
-
         # A thread that looks at changes done by the local machine
         print("*** Starting worker thread ***")
         thread = Thread(target=self.localthread)
@@ -74,7 +65,7 @@ class Server:
     # handling incoming connection
     def handleconnection(self, connection, connectinfo):
         ip, port = connectinfo
-        id = ip[-1]
+        id = ip.splt(".")[-1]
         data = ""
         receivedMessage = False
 
@@ -98,34 +89,30 @@ class Server:
 
         connection.close()
 
-    ### Master node have received an updates from slave nodes and perform the action received to update its state
+
     def performaction(self, id, clock, received):
         (action, content) = json.loads(received)
-        if int(clock) > self.centralclockholder[int(id)]:
-            self.centralclockholder[int(id)] = clock
-            if not dbexistcheck(self.hostID, self.hostID):
-                addnewdb(self.hostID, self.hostID)
-            ### If the action is insert perform the insert ***
-            if action == "i":
-                for table, entry in content.items():
-                    if entry:
-                        dbaddentry(self.hostID, self.hostID, table, entry[0])
-
-        else:
-            print("***  Already added to  DB  ***")
-
-
-    ###  Slave node have received the state from the master node and will update its own state to this state
-    def updatestate(self, state):
-        print("***  Updating slave state based on master state  ***\n")
         if not dbexistcheck(self.hostID, self.hostID):
-            addnewdb(self.hostID, self.hostID)
-        for table, tlist in state.items():
-            if tlist:
-                for entry in tlist:
-                    if not slavedbentryexist(self.hostID, self.hostID, table, entry):
-                        dbaddentry(self.hostID, self.hostID, table, entry)
-        pass
+                addnewdb(self.hostID, self.hostID)
+        ### If the action is insert perform the insert ***
+        if action == "i":
+                performinsert(id, clock, content)
+        elif action == "u":
+                performupdate(id, clock, content)
+        else:
+                performdelete(id, clock, content)
+
+        ### perform an insert ###
+    def performinsert(self, id, clock, content):
+        return True
+
+        ### Perform an update ###
+    def performupdate(self, id, clock, content):
+        return True
+
+        ###  Perform a delete ###
+    def performdelete(self, id, clock, content):
+        return True
 
     # Broadcast a message to all other nodes
     def broadcaststate(self):
@@ -180,7 +167,6 @@ class Server:
             file.close()
 
         while True:
-            reproduce = None
             action = None
 
 
@@ -189,47 +175,16 @@ class Server:
             file = open(filename, "r")
             text = file.readlines()
             file.close()
+            
             if text:
-                action = text[0]
-                if len(text) > 1:
-                    reproduce = text[1:]
-
-
-            ### Update the file and remove the line that will be performed if there was an update in the file ###
-
                 file = open(filename, "w")
-                if reproduce:
-                    for line in reproduce:
-                        file.write(line)
-                else:
-                    file.write("")
+                file.write("")
                 file.close()
+                
 
-            ### Send the update from the local machine to the centralized machine ###
-            ### if you are a slave node you send the update to master, if you are master you perform update
-
-            if int(self.hostID) != 1:
-                if action:
+            for action in text:
                     self.logicalclock += 1
-                    sendQueue.put((self.logicalclock, action))
-
-                if currentMessage is None and not sendQueue.empty():
-                    currentMessage = sendQueue.get()
-                if currentMessage is not None:
-                    if self.sendmessage(currentMessage, self.ip + "1", 1337):
-                        currentMessage = None
-                        sendQueue.task_done()
-
-
-            ### Master node perform actions received from other nodes that are saved in a buffer ###
-            else:
-                if action:
-                    self.logicalclock += 1
-                    self.mergeStack.put((self.hostID, (self.logicalclock, action)))
-                if not self.mergeStack.empty():
-                    (id, (clock, operation)) = self.mergeStack.get()
                     self.performaction(id, clock, operation)
-                    self.mergeStack.task_done()
 
 
 
@@ -245,3 +200,5 @@ if __name__ == '__main__':
             print("Shutting down server")
         else:
             print("Too few arguments")
+
+            
