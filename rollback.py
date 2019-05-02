@@ -104,7 +104,17 @@ class Server:
 
         ### perform an insert ###
     def performinsert(self, id, clock, content):
-        return True
+        if clock > self.logicalclock:
+                self.logicalclock = clock
+                dbinsert(id, clock, content)
+        elif clock == self.logicalclock:
+                if id > self.hostID:
+                        dbinsert(id, clock, content)
+                else:
+                        dbrollback(id, clock, content)
+        else:
+                dbrollback(id, clock, content)
+        
 
         ### Perform an update ###
     def performupdate(self, id, clock, content):
