@@ -109,7 +109,7 @@ class Script:
         file.write(line1 + "\n")
 
     def updateCustomers(self):
-        line1 = json.dumps(('u', {'customers': [(3, "ericssonsuger", 22, "Fredrik Johansson", "+46727898767", 15432121836,
+        line1 = json.dumps(('u', {'customers': [(1, "ericssonsuger", 22, "Fredrik Johansson", "+46727898767", 15432121836,
                                                  "hate ericsson")], 'heaps': [], 'loads': [], 'loads_waybills': [],
                                   'materials': [],
                                   'table_properties': [], 'targets': [], 'waybills': []}))

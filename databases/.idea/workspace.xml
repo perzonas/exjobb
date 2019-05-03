@@ -19,11 +19,91 @@
     <option name="HIDDEN_KINDS">
       <set />
     </option>
-    <expand />
+    <expand>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="2" type="feb32156:DbDataSourceImpl" />
+      </path>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="2" type="feb32156:DbDataSourceImpl" />
+        <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
+      </path>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="2" type="feb32156:DbDataSourceImpl" />
+        <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
+        <item name="main: schema" type="981a47c2:SqliteImplModel$Schema" />
+      </path>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="2" type="feb32156:DbDataSourceImpl" />
+        <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
+        <item name="main: schema" type="981a47c2:SqliteImplModel$Schema" />
+        <item name="customers: table" type="3d80ac25:SqliteImplModel$Table" />
+      </path>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="2" type="feb32156:DbDataSourceImpl" />
+        <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
+        <item name="main: schema" type="981a47c2:SqliteImplModel$Schema" />
+        <item name="graveyard: table" type="3d80ac25:SqliteImplModel$Table" />
+      </path>
+    </expand>
     <select />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
+    <leaf>
+      <file pinned="false" current-in-tab="false">
+        <entry file="das://efd208fd-d034-4ac9-951c-0f3fb77a53bc/schema/main/table/graveyard">
+          <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
+            <state projectRestartId="e0999c61-89bb-4595-a79d-9c762072f10c">
+              <filtering>
+                <filter text="" />
+              </filtering>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="das://efd208fd-d034-4ac9-951c-0f3fb77a53bc/schema/main/table/materials">
+          <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
+            <state projectRestartId="e0999c61-89bb-4595-a79d-9c762072f10c">
+              <filtering>
+                <filter text="" />
+              </filtering>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="das://efd208fd-d034-4ac9-951c-0f3fb77a53bc/schema/main/table/customers">
+          <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
+            <state projectRestartId="e0999c61-89bb-4595-a79d-9c762072f10c">
+              <filtering>
+                <filter text="" />
+              </filtering>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/efd208fd-d034-4ac9-951c-0f3fb77a53bc/console.sql">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <caret column="25" selection-start-column="25" selection-end-column="25" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$APPLICATION_CONFIG_DIR$/consoles/db/efd208fd-d034-4ac9-951c-0f3fb77a53bc/console.sql" />
+      </list>
+    </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="298" />
@@ -36,6 +116,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -57,13 +138,12 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="DBE.Init.BalloonShown" value="true" />
     <property name="GoToClass.toSaveIncludeLibraries" value="true" />
-    <property name="database.console.LAST_STATE" value="false" />
+    <property name="database.console.LAST_STATE" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RunDashboard">
@@ -81,7 +161,7 @@
   <component name="ToolWindowManager">
     <frame x="67" y="25" width="1533" height="875" extended-state="6" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Database" order="0" visible="true" weight="0.24949563" />
+      <window_info content_ui="combo" id="Database" order="0" visible="true" weight="0.24949563" />
       <window_info id="Favorites" order="1" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
@@ -91,9 +171,9 @@
       <window_info anchor="bottom" id="Database Changes" order="5" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="7" />
-      <window_info anchor="bottom" id="Database Console" order="8" weight="0.328877" />
+      <window_info active="true" anchor="bottom" id="Database Console" order="8" visible="true" weight="0.328877" />
       <window_info anchor="bottom" id="Debug" order="9" />
-      <window_info anchor="right" content_ui="combo" id="Project" order="0" visible="true" weight="0.25958306" />
+      <window_info anchor="right" content_ui="combo" id="Project" order="0" visible="true" weight="0.26294553" />
       <window_info anchor="right" id="Structure" order="1" side_tool="true" weight="0.25" />
     </layout>
     <layout-to-restore>
@@ -125,120 +205,68 @@
     <entry file="das://6e97154e-94e0-449a-896a-24a43a739b44/schema/main/table/materials" />
     <entry file="das://2c96d3d2-2cd4-49d6-9355-ab4b7b40726c/schema/main/table/materials" />
     <entry file="das://ab2cf0ed-8de8-4120-9993-38fc888bc1f1/schema/main/table/materials" />
-    <entry file="das://103b6c21-de8f-44bf-8aec-0cf17408ab5d/schema/main/table/materials">
+    <entry file="das://103b6c21-de8f-44bf-8aec-0cf17408ab5d/schema/main/table/materials" />
+    <entry file="das://d208a524-d146-48bd-bb7c-e1ab4d3ac015/schema/main/table/materials" />
+    <entry file="das://103b6c21-de8f-44bf-8aec-0cf17408ab5d/schema/main/table/targets" />
+    <entry file="das://d208a524-d146-48bd-bb7c-e1ab4d3ac015/schema/main/table/work_orders" />
+    <entry file="das://d208a524-d146-48bd-bb7c-e1ab4d3ac015/schema/main/table/targets" />
+    <entry file="das://d208a524-d146-48bd-bb7c-e1ab4d3ac015/schema/main/table/customers" />
+    <entry file="das://103b6c21-de8f-44bf-8aec-0cf17408ab5d/schema/main/table/customers" />
+    <entry file="das://d208a524-d146-48bd-bb7c-e1ab4d3ac015/schema/main/table/graveyard" />
+    <entry file="das://103b6c21-de8f-44bf-8aec-0cf17408ab5d/schema/main/table/graveyard" />
+    <entry file="das://6afc24c7-8698-41a3-8e7b-f7cb4bd5f540/schema/main/table/graveyard" />
+    <entry file="das://6afc24c7-8698-41a3-8e7b-f7cb4bd5f540/schema/main/table/customers" />
+    <entry file="das://7150d8af-2722-4ea5-b34e-721906c2a464/schema/main/table/customers" />
+    <entry file="das://ed80443d-dd63-4f29-b32b-86308a6edb6f/schema/main/table/graveyard" />
+    <entry file="das://890b659d-4988-4cde-a4a0-fd212997e5db/schema/main/table/customers">
       <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true">
+        <state projectRestartId="e0999c61-89bb-4595-a79d-9c762072f10c">
+          <filtering>
             <filter text="" />
           </filtering>
         </state>
       </provider>
     </entry>
-    <entry file="das://d208a524-d146-48bd-bb7c-e1ab4d3ac015/schema/main/table/materials">
+    <entry file="das://890b659d-4988-4cde-a4a0-fd212997e5db/schema/main/table/materials">
       <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true">
+        <state projectRestartId="e0999c61-89bb-4595-a79d-9c762072f10c">
+          <filtering>
             <filter text="" />
           </filtering>
         </state>
       </provider>
     </entry>
-    <entry file="das://103b6c21-de8f-44bf-8aec-0cf17408ab5d/schema/main/table/targets">
+    <entry file="das://efd208fd-d034-4ac9-951c-0f3fb77a53bc/schema/main/table/materials">
       <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true">
+        <state projectRestartId="e0999c61-89bb-4595-a79d-9c762072f10c">
+          <filtering>
             <filter text="" />
           </filtering>
         </state>
       </provider>
     </entry>
-    <entry file="das://d208a524-d146-48bd-bb7c-e1ab4d3ac015/schema/main/table/work_orders">
+    <entry file="das://efd208fd-d034-4ac9-951c-0f3fb77a53bc/schema/main/table/graveyard">
       <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true">
+        <state projectRestartId="e0999c61-89bb-4595-a79d-9c762072f10c">
+          <filtering>
             <filter text="" />
           </filtering>
         </state>
       </provider>
     </entry>
-    <entry file="das://d208a524-d146-48bd-bb7c-e1ab4d3ac015/schema/main/table/targets">
+    <entry file="das://efd208fd-d034-4ac9-951c-0f3fb77a53bc/schema/main/table/customers">
       <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true">
+        <state projectRestartId="e0999c61-89bb-4595-a79d-9c762072f10c">
+          <filtering>
             <filter text="" />
           </filtering>
         </state>
       </provider>
     </entry>
-    <entry file="das://d208a524-d146-48bd-bb7c-e1ab4d3ac015/schema/main/table/customers">
-      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
+    <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/efd208fd-d034-4ac9-951c-0f3fb77a53bc/console.sql">
+      <provider selected="true" editor-type-id="text-editor">
         <state>
-          <filtering enabled="true">
-            <filter text="" />
-          </filtering>
-        </state>
-      </provider>
-    </entry>
-    <entry file="das://103b6c21-de8f-44bf-8aec-0cf17408ab5d/schema/main/table/customers">
-      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true">
-            <filter text="" />
-          </filtering>
-        </state>
-      </provider>
-    </entry>
-    <entry file="das://d208a524-d146-48bd-bb7c-e1ab4d3ac015/schema/main/table/graveyard">
-      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true">
-            <filter text="" />
-          </filtering>
-        </state>
-      </provider>
-    </entry>
-    <entry file="das://103b6c21-de8f-44bf-8aec-0cf17408ab5d/schema/main/table/graveyard">
-      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true">
-            <filter text="" />
-          </filtering>
-        </state>
-      </provider>
-    </entry>
-    <entry file="das://6afc24c7-8698-41a3-8e7b-f7cb4bd5f540/schema/main/table/graveyard">
-      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true">
-            <filter text="" />
-          </filtering>
-        </state>
-      </provider>
-    </entry>
-    <entry file="das://6afc24c7-8698-41a3-8e7b-f7cb4bd5f540/schema/main/table/customers">
-      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true">
-            <filter text="" />
-          </filtering>
-        </state>
-      </provider>
-    </entry>
-    <entry file="das://7150d8af-2722-4ea5-b34e-721906c2a464/schema/main/table/customers">
-      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true">
-            <filter text="" />
-          </filtering>
-        </state>
-      </provider>
-    </entry>
-    <entry file="das://ed80443d-dd63-4f29-b32b-86308a6edb6f/schema/main/table/graveyard">
-      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true">
-            <filter text="" />
-          </filtering>
+          <caret column="25" selection-start-column="25" selection-end-column="25" />
         </state>
       </provider>
     </entry>

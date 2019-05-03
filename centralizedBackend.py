@@ -8,11 +8,11 @@ from StateCvRDT import *
 from DbConnect import *
 import os.path
 import sqlite3
+import math
 
 
 class Server:
     mergeStack = Queue()
-    test = "127.0.0.1"
     ip = "20.1.90."
     port = 1337
     ownIP = "20.1.90."
@@ -22,6 +22,10 @@ class Server:
     centralclockholder = {}
     bytessent = 0
     bytessentadress = ""
+    mergetime = []
+    messagetime = []
+    dropped_messages = 0
+
 
     def run(self, hostnumber, numberofhosts=1):
         self.numberofhost = numberofhosts
@@ -81,8 +85,9 @@ class Server:
 
     # handling incoming connection
     def handleconnection(self, connection, connectinfo):
+        start_time = time.time()
         ip, port = connectinfo
-        id = ip[-1]
+        id = ip.split('.')[-1]
         data = ""
         receivedMessage = False
 
@@ -98,6 +103,10 @@ class Server:
                 break
 
         if receivedMessage:
+            end_time = time.time()
+            total_time = end_time-start_time
+            self.messagetime.append(total_time*1000)
+            print("### RECEIVED MESSAGE FROM NODE %s ###" % id)
             message = json.loads(data)
             if int(self.hostID) == 1:
                 succeded = connection.send("a".encode())
@@ -109,6 +118,8 @@ class Server:
             ### slave received state from master and should update its own database based on received state
             else:
                 self.updatestate(message)
+        else:
+            self.dropped_messages += 1
 
         connection.close()
 
@@ -120,6 +131,7 @@ class Server:
             if not dbexistcheck(self.hostID, self.hostID):
                 addnewdb(self.hostID, self.hostID)
             ### If the action is insert perform the insert ***
+            start_time = time.time()
             if action == "i":
                 for table, entry in content.items():
                     if entry:
@@ -138,6 +150,9 @@ class Server:
                 for table, entry in content.items():
                     if entry:
                         dbdeleteentry(self.hostID, self.hostID, table, entry[0])
+            end_time = time.time()
+            total_time = end_time-start_time
+            self.mergetime.append((total_time*1000))
 
         else:
             print("***  Already added to  DB  ***")
@@ -148,12 +163,15 @@ class Server:
         print("***  Updating slave state based on master state  ***\n")
         if not dbexistcheck(self.hostID, self.hostID):
             addnewdb(self.hostID, self.hostID)
+        start_time = time.time()
         for table, tlist in state.items():
             if tlist:
                 for entry in tlist:
                     if not dbentryexist(self.hostID, self.hostID, table, entry[0]):
                         dbaddentry(self.hostID, self.hostID, table, entry)
-        pass
+        end_time = time.time()
+        total_time = end_time-start_time
+        self.mergetime.append((total_time*1000))
 
     # Broadcast a message to all other nodes
     def broadcaststate(self):
@@ -212,7 +230,7 @@ class Server:
         except Exception as e:
             return received
 
-        ### antingen räkna hur lång tid det ar att ett meddelande kommer fram till den andra noden och då även räkna
+        ### antingen räkna hur lång tid det tar att ett meddelande kommer fram till den andra noden och då även räkna
         # hur många meddelanden som tappas p.g.a. i CRDT så kommer inte samma meddelande skickas flera gånger utan en
         # ny state kommer skickas nästa gång som inte säkert är samma. ska man då tolka detta som sama eller ett nytt?
         # Räkna på tiden det tar för en merge, local update, copy state etc. och jämföra dessa? vilken latency är bäst?
@@ -291,8 +309,36 @@ if __name__ == '__main__':
     server = Server()
     try:
         server.run(sys.argv[1], sys.argv[2])
-    except (KeyboardInterrupt, IndexError) as e:
-        if e == KeyboardInterrupt:
-            print("Shutting down server")
-        else:
-            print("Too few arguments")
+    except IndexError:
+        print("Too few arguments")
+
+    finally:
+        print("\n", server.mergetime)
+        inputs = len(server.mergetime)
+        sum = sum(server.mergetime)
+        if inputs != 0:
+            medel = sum/inputs
+            print("\n### MEDEL ÄR: %06.4f ###" % medel)
+            server.mergetime.sort()
+
+            if inputs % 2 == 0:
+                print("\n### MEAN VALUE IS: %06.4f & %06.4f ###" % (server.mergetime[int(inputs/2)-1], server.mergetime[int(inputs/2)]))
+            else:
+                print("\n### MEAN VALUE IS: %06.4f ###" % server.mergetime[math.floor(inputs/2)])
+        print("\n### SAVING RESULTS ###")
+
+        ### Write converge latency to testdatafile ###
+        file = open("testdata/mergelatency"+str(server.hostID), "w")
+        os.chmod("testdata/mergelatency"+str(server.hostID), 0o777)
+        file.write(json.dumps(server.mergetime))
+        file.close()
+
+        ### Write message latency to testdatafile ###
+        file = open("testdata/messagelatency" + str(server.hostID), "w")
+        os.chmod("testdata/messagelatency" + str(server.hostID), 0o777)
+        server.messagetime.append(server.dropped_messages)
+        file.write(json.dumps(server.messagetime))
+        file.close()
+
+        print("\n### Shutting down server ###")
+        time.sleep(25)
