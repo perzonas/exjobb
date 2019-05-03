@@ -1,0 +1,24 @@
+[
+   {
+     "timestamp": "1555578823274",
+     "signalStrength": 99,
+     "networkOperator": "Unknown",
+     "dataStatus": -1,
+     "location": {}
+   },
+   {
+     "timestamp": "1555578823722",
+     "signalStrength": 99,
+     "networkOperator": "Tele2",
+     "dataStatus": -1,
+     "location": {}
+   },
+   {
+     "timestamp": "1555578823749",
+     "signalStrength": 99,
+     "networkOperator": "Tele2",
+     "dataStatus": 2,
+     "location": {}
+   }
+ ]
+

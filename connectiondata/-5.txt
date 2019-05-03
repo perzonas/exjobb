@@ -1,0 +1,89 @@
+[
+    {
+      "timestamp": "1555580483077",
+      "signalStrength": 99,
+      "networkOperator": "Unknown",
+      "dataStatus": -1,
+      "location": {}
+    },
+    {
+      "timestamp": "1555580493074",
+      "signalStrength": 99,
+      "networkOperator": "Unknown",
+      "dataStatus": -1,
+      "location": {
+        "longitude": 12.005835,
+        "latitude": 57.657936
+      }
+    },
+    {
+      "timestamp": "1555580504464",
+      "signalStrength": 99,
+      "networkOperator": "Unknown",
+      "dataStatus": -1,
+      "location": {
+        "longitude": 12.004927,
+        "latitude": 57.65732
+      }
+    },
+    {
+      "timestamp": "1555580508127",
+      "signalStrength": 99,
+      "networkOperator": "Tele2",
+      "dataStatus": -1,
+      "location": {
+        "longitude": 12.004808,
+        "latitude": 57.657166
+      }
+    },
+    {
+      "timestamp": "1555580508143",
+      "signalStrength": 99,
+      "networkOperator": "Tele2",
+      "dataStatus": -1,
+      "location": {
+        "longitude": 12.004808,
+        "latitude": 57.657166
+      }
+    },
+    {
+      "timestamp": "1555580508448",
+      "signalStrength": 99,
+      "networkOperator": "Tele2",
+      "dataStatus": -1,
+      "location": {
+        "longitude": 12.004808,
+        "latitude": 57.657166
+      }
+    },
+    {
+      "timestamp": "1555580512607",
+      "signalStrength": 99,
+      "networkOperator": "Tele2",
+      "dataStatus": -1,
+      "location": {
+        "longitude": 12.004535,
+        "latitude": 57.656845
+      }
+    },
+    {
+      "timestamp": "1555580515445",
+      "signalStrength": 99,
+      "networkOperator": "Tele2",
+      "dataStatus": 2,
+      "location": {
+        "longitude": 12.0042715,
+        "latitude": 57.65651
+      }
+    },
+    {
+      "timestamp": "1555580522607",
+      "signalStrength": 21,
+      "networkOperator": "Tele2",
+      "dataStatus": 2,
+      "location": {
+        "longitude": 12.003868,
+        "latitude": 57.655643
+      }
+    }
+]

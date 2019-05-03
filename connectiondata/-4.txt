@@ -1,0 +1,303 @@
+[
+    {
+      "timestamp": "1555579733274",
+      "signalStrength": 17,
+      "networkOperator": "Tele2",
+      "dataStatus": 2,
+      "location": {
+        "longitude": 11.99843,
+        "latitude": 57.64788
+      }
+    },
+    {
+      "timestamp": "1555579743274",
+      "signalStrength": 17,
+      "networkOperator": "Tele2",
+      "dataStatus": 2,
+      "location": {
+        "longitude": 11.998518,
+        "latitude": 57.647854
+      }
+    },
+    {
+      "timestamp": "1555579753274",
+      "signalStrength": 15,
+      "networkOperator": "Tele2",
+      "dataStatus": 2,
+      "location": {
+        "longitude": 11.9983835,
+        "latitude": 57.647892
+      }
+    },
+    {
+      "timestamp": "1555579763274",
+      "signalStrength": 15,
+      "networkOperator": "Tele2",
+      "dataStatus": 2,
+      "location": {
+        "longitude": 11.99837,
+        "latitude": 57.647884
+      }
+    },
+    {
+      "timestamp": "1555579773274",
+      "signalStrength": 18,
+      "networkOperator": "Tele2",
+      "dataStatus": 2,
+      "location": {
+        "longitude": 11.998273,
+        "latitude": 57.64793
+      }
+    },
+    {
+      "timestamp": "1555579783273",
+      "signalStrength": 18,
+      "networkOperator": "Tele2",
+      "dataStatus": 2,
+      "location": {
+        "longitude": 11.998243,
+        "latitude": 57.64796
+      }
+    },
+    {
+      "timestamp": "1555579793274",
+      "signalStrength": 15,
+      "networkOperator": "Tele2",
+      "dataStatus": 2,
+      "location": {
+        "longitude": 11.998167,
+        "latitude": 57.647987
+      }
+    },
+    {
+      "timestamp": "1555579803274",
+      "signalStrength": 15,
+      "networkOperator": "Tele2",
+      "dataStatus": 2,
+      "location": {
+        "longitude": 11.998118,
+        "latitude": 57.64799
+      }
+    },
+    {
+      "timestamp": "1555579813274",
+      "signalStrength": 17,
+      "networkOperator": "Tele2",
+      "dataStatus": 2,
+      "location": {
+        "longitude": 11.998312,
+        "latitude": 57.647835
+      }
+    },
+    {
+      "timestamp": "1555579823273",
+      "signalStrength": 17,
+      "networkOperator": "Tele2",
+      "dataStatus": 2,
+      "location": {
+        "longitude": 11.998491,
+        "latitude": 57.64778
+      }
+    },
+    {
+      "timestamp": "1555579833274",
+      "signalStrength": 20,
+      "networkOperator": "Tele2",
+      "dataStatus": 2,
+      "location": {
+        "longitude": 11.9985285,
+        "latitude": 57.647816
+      }
+    },
+    {
+      "timestamp": "1555579843274",
+      "signalStrength": 20,
+      "networkOperator": "Tele2",
+      "dataStatus": 2,
+      "location": {
+        "longitude": 11.99854,
+        "latitude": 57.64781
+      }
+    },
+    {
+      "timestamp": "1555579853274",
+      "signalStrength": 21,
+      "networkOperator": "Tele2",
+      "dataStatus": 2,
+      "location": {
+        "longitude": 11.998613,
+        "latitude": 57.64782
+      }
+    },
+    {
+      "timestamp": "1555579863274",
+      "signalStrength": 21,
+      "networkOperator": "Tele2",
+      "dataStatus": 2,
+      "location": {
+        "longitude": 11.998562,
+        "latitude": 57.647854
+      }
+    },
+    {
+      "timestamp": "1555579873274",
+      "signalStrength": 20,
+      "networkOperator": "Tele2",
+      "dataStatus": 2,
+      "location": {
+        "longitude": 11.998508,
+        "latitude": 57.647823
+      }
+    },
+    {
+      "timestamp": "1555579883274",
+      "signalStrength": 20,
+      "networkOperator": "Tele2",
+      "dataStatus": 2,
+      "location": {
+        "longitude": 11.998535,
+        "latitude": 57.647846
+      }
+    },
+    {
+      "timestamp": "1555579893274",
+      "signalStrength": 17,
+      "networkOperator": "Tele2",
+      "dataStatus": 2,
+      "location": {
+        "longitude": 11.998488,
+        "latitude": 57.647873
+      }
+    },
+    {
+      "timestamp": "1555579903274",
+      "signalStrength": 17,
+      "networkOperator": "Tele2",
+      "dataStatus": 2,
+      "location": {
+        "longitude": 11.998373,
+        "latitude": 57.647892
+      }
+    },
+    {
+      "timestamp": "1555579913274",
+      "signalStrength": 19,
+      "networkOperator": "Tele2",
+      "dataStatus": 2,
+      "location": {
+        "longitude": 11.998286,
+        "latitude": 57.647915
+      }
+    },
+    {
+      "timestamp": "1555579923274",
+      "signalStrength": 19,
+      "networkOperator": "Tele2",
+      "dataStatus": 2,
+      "location": {
+        "longitude": 11.998279,
+        "latitude": 57.647926
+      }
+    },
+    {
+      "timestamp": "1555579933274",
+      "signalStrength": 16,
+      "networkOperator": "Tele2",
+      "dataStatus": 2,
+      "location": {
+        "longitude": 11.99827,
+        "latitude": 57.647903
+      }
+    },
+    {
+      "timestamp": "1555579943274",
+      "signalStrength": 16,
+      "networkOperator": "Tele2",
+      "dataStatus": 2,
+      "location": {
+        "longitude": 11.998315,
+        "latitude": 57.647892
+      }
+    },
+    {
+      "timestamp": "1555579953274",
+      "signalStrength": 21,
+      "networkOperator": "Tele2",
+      "dataStatus": 2,
+      "location": {
+        "longitude": 11.99841,
+        "latitude": 57.647892
+      }
+    },
+    {
+      "timestamp": "1555579963274",
+      "signalStrength": 21,
+      "networkOperator": "Tele2",
+      "dataStatus": 2,
+      "location": {
+        "longitude": 11.998404,
+        "latitude": 57.647907
+      }
+    },
+    {
+      "timestamp": "1555579973274",
+      "signalStrength": 14,
+      "networkOperator": "Tele2",
+      "dataStatus": 2,
+      "location": {
+        "longitude": 11.998425,
+        "latitude": 57.647877
+      }
+    },
+    {
+      "timestamp": "1555579983274",
+      "signalStrength": 14,
+      "networkOperator": "Tele2",
+      "dataStatus": 2,
+      "location": {
+        "longitude": 11.998405,
+        "latitude": 57.647877
+      }
+    },
+    {
+      "timestamp": "1555579993274",
+      "signalStrength": 17,
+      "networkOperator": "Tele2",
+      "dataStatus": 2,
+      "location": {
+        "longitude": 11.99852,
+        "latitude": 57.64781
+      }
+    },
+    {
+      "timestamp": "1555580003274",
+      "signalStrength": 17,
+      "networkOperator": "Tele2",
+      "dataStatus": 2,
+      "location": {
+        "longitude": 11.998398,
+        "latitude": 57.647873
+      }
+    },
+    {
+      "timestamp": "1555580013274",
+      "signalStrength": 21,
+      "networkOperator": "Tele2",
+      "dataStatus": 2,
+      "location": {
+        "longitude": 11.998272,
+        "latitude": 57.647804
+      }
+    },
+    {
+      "timestamp": "1555580023274",
+      "signalStrength": 21,
+      "networkOperator": "Tele2",
+      "dataStatus": 2,
+      "location": {
+        "longitude": 11.998343,
+        "latitude": 57.64753
+      }
+    }
+]
+
