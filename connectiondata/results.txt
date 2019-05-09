@@ -1,0 +1,11 @@
+Percentage of downtime: 1.353875
+Total number of seconds: 6426
+Total number of secodns disconnected: 87
+Total number of seconds connected: 6339
+Time of disconnect and Seconds each disconnect lasted: [["11:41:23", 32], ["12:28:47", 24], ["12:50:9", 31]]
+Average time between disconnects: 0:32:8
+Average signal strength: 16.132530
+dBm of average signal: -80.734940
+Lowest signal state measured: 1
+Highest signal strength recorded: 26
+Average signal strength is classified as: Medium (good voice and data)
