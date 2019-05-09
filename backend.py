@@ -223,8 +223,8 @@ class Server:
 
 
 
-
-
+    def testing(self):
+        server.crdt.crdtbasecheck()
 
 if __name__ == '__main__':
     server = Server()
@@ -262,3 +262,4 @@ if __name__ == '__main__':
 
         print("\n### Shutting down server ###")
         time.sleep(25)
+
