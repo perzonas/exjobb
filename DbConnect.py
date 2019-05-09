@@ -186,7 +186,7 @@ def dbquery(myid, dbid):  # get all of mydb
     if not dbexistcheck(myid, dbid):
         addnewdb(myid, dbid)
 
-    conn = sqlite3.connect("databases/" + myid + "/" + str(dbid))
+    conn = sqlite3.connect("databases/" + str(myid) + "/" + str(dbid))
     c = conn.cursor()
 
     for name in table_names:
@@ -218,8 +218,10 @@ def dbdeltaquery(myid, dbid, table, nrtograb):
     return final_delta_state
 
 
-def dbgetstate(myid,dbid):
+def dbgetsnapshot(myid, dbid):
     state_dict = {}
+    if not dbexistcheck(myid, dbid):
+        addnewdb(myid, dbid)
     conn = sqlite3.connect("databases/" + myid + "/" + str(dbid), isolation_level=None)
     c = conn.cursor()
 
@@ -237,7 +239,7 @@ def dbgetstate(myid,dbid):
 
 def dbexistcheck(myid, dbid):
     try:
-        c = sqlite3.connect("file:{}?mode=rw".format("databases/" + myid + "/" + str(dbid)), uri=True)
+        c = sqlite3.connect("file:{}?mode=rw".format("databases/" + str(myid) + "/" + str(dbid)), uri=True)
         c.close()
         return True
     except sqlite3.OperationalError:
@@ -281,7 +283,7 @@ def dbcheckqueryparam(param):
 
 
 def dbgraveyardcheck(myid, dbid, table, key):
-    conn = sqlite3.connect("databases/" + myid + "/" + str(myid))
+    conn = sqlite3.connect("databases/" + str(myid) + "/" + str(myid))
     c = conn.cursor()
 
     r = c.execute("SELECT COUNT(*) FROM graveyard WHERE c_databaseid='%s' AND c_tablename = '%s' AND c_rowid = '%s'" % (dbid, table, key)).fetchall()

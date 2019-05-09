@@ -220,12 +220,6 @@ class Server:
                 self.mergeStack.task_done()
 
 
-
-
-
-    def testing(self):
-        server.crdt.crdtbasecheck()
-
 if __name__ == '__main__':
     server = Server()
     try:

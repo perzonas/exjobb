@@ -15,14 +15,19 @@ class DeltaCvRDT:
 
     def query(self, snapshot):
         queryresult = {}
-        mystate = self.getstate()
+        mystate = self.getsnapshot()
+        print("MyState: ", mystate)
+        print("Snapshot: ", snapshot)
 
         for dbid, content in snapshot.items():
             if not dbexistcheck(self.myvehicleid, dbid):
+                print("DB DIDNT EXIST!")
                 self.adddb(dbid)
+                mystate = self.getsnapshot()
             else:
                 querydata = {}
                 for table, entry in content.items():
+                    print("dbid: ", dbid, " table: ", table)
                     if entry < mystate[dbid][table]:
                         nrtograb = mystate[dbid][table] - entry
                         querydata[table] = dbdeltaquery(self.myvehicleid, dbid, table, nrtograb)
@@ -46,12 +51,12 @@ class DeltaCvRDT:
                             print("SKIPPING: ", dbid, " | ", table, " | ", entry)
 
 
-    def getstate(self):
+    def getsnapshot(self):
         state = {}
-        state[self.myvehicleid] = dbgetstate(self.myvehicleid, self.myvehicleid)
-
+        state[self.myvehicleid] = dbgetsnapshot(self.myvehicleid, self.myvehicleid)
+        print("## DBASES!!! ##", self.dbases)
         for dbase in self.dbases:
-            state[dbase] = dbgetstate(self.myvehicleid, dbase)
+            state[dbase] = dbgetsnapshot(self.myvehicleid, dbase)
 
         return state
 

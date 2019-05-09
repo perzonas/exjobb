@@ -5,13 +5,14 @@ from threading import Thread
 import json
 from queue import Queue
 from StateCvRDT import *
+from DeltaCvRDT import *
 import os.path
 import math
 
 
 class Server:
-    crdt = StateCvRDT()
-    mergeStack = Queue()
+    crdt = DeltaCvRDT()
+    taskStack = Queue()
     test = "127.0.0.1"
     ip = "20.1.90."
     port = 1337
@@ -38,8 +39,8 @@ class Server:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 
-        # a thread that broadcast it's own state to all other nodes in a predefined intervall intervall
-        thread = Thread(target=self.broadcaststates)
+        # a thread that broadcast it's own snapshot to all other nodes in a predefined intervall
+        thread = Thread(target=self.broadcastsnapshots)
         thread.daemon = True
         thread.start()
 
@@ -66,8 +67,7 @@ class Server:
                 thread.daemon = True
                 thread.start()
             except Exception as exception:
-                print("Exception when creating thread.")
-                print(exception)
+                print("Exception when creating thread.", exception)
 
 
     # handling incoming connection
@@ -97,10 +97,12 @@ class Server:
             print("### RECEIVED MESSAGE FROM NODE %s ###" % id)
 
             ### Add state to TODO stack so worker thread can perform the received action ###
-            self.mergeStack.put(message)
+            self.taskStack.put(message)
+
         else:
             self.dropped_msgs += 1
 
+        connection.close()
         ### merge received state with own state ###
         # self.crdt.merge(message)
         # state = self.crdt.getState()
@@ -108,30 +110,38 @@ class Server:
 
 
     # Broadcast nodes current state
-    def broadcaststates(self):
+    def broadcastsnapshots(self):
         # sleep before starting to broadcast
         time.sleep(2)
 
         # get state from crdt
         for i in range(3):
-            state = self.crdt.query()
-            self.broadcaststate(state)
+            snapshot = self.crdt.getsnapshot()
+            self.broadcastsnapshot(snapshot)
             time.sleep(2)
 
     # Broadcast a message to all other nodes
-    def broadcaststate(self, message):
-        print("Broadcasting message to all hosts")
+    def broadcastsnapshot(self, message):
+        print("Broadcasting SNAPSHOT to all hosts")
         for host in range(1, (self.numberofhost + 1)):
             host = str(host)
             host = self.ip + host
 
+            ms = [self.hostID, message]
+
             # do not send to ourselves
             if host != self.ownIP:
-                self.sendmessage(message, host, self.port)
+                self.sendmessage(ms, host, self.port)
+    
+    def snapreply(self, task):
+        host = str(task[0])
+        host = self.ip + host
+        print("Sending a snapreply to : ", host)
+        state = self.crdt.query(task[1])
+        self.sendmessage(state, host, self.port)
 
     # sending message to another host
     def sendmessage(self, message, host, port):
-
         try:
             serializeddata = json.dumps(message)
         except (TypeError, ValueError) as e:
@@ -172,11 +182,6 @@ class Server:
 
 
         while True:
-            reproduce = []
-            action = ""
-
-
-
             ### Read file that holds local updates ###
             file = open(filename, "r")
             text = file.readlines()
@@ -209,15 +214,21 @@ class Server:
 
 
             ### Perform actions received from other nodes  and saved in a buffer ###
-            if not self.mergeStack.empty():
-                print("#### PERFORMING A MERGE ####")
-                state = self.mergeStack.get()
-                start_time = time.time()
-                self.crdt.merge(state)
-                end_time = time.time()
-                total_time = end_time - start_time
-                self.mergetime.append((total_time * 1000))
-                self.mergeStack.task_done()
+            if not self.taskStack.empty():
+                task = self.taskStack.get()
+
+                if len(task) == 2:
+                    print("#### PERFORMING A SNAPREPLY ####")
+                    self.snapreply(task)
+                    self.taskStack.task_done()
+                else:
+                    print("#### PERFORMING A MERGE ####")
+                    start_time = time.time()
+                    self.crdt.merge(task)
+                    end_time = time.time()
+                    total_time = end_time - start_time
+                    self.mergetime.append((total_time * 1000))
+                    self.taskStack.task_done()
 
 
 
@@ -261,4 +272,4 @@ if __name__ == '__main__':
         file.close()
 
         print("\n### Shutting down server ###")
-        time.sleep(25)
+        time.sleep(2)

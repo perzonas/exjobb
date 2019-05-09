@@ -34,8 +34,9 @@ def main():
     #print("RESULT: ", result)
     #result['test3']['customers'] = 0
     #result['test5']['customers'] = 0
-    crdt.crdtdbasecheck()
-    #print("End: ", crdt.query())
+
+    #crdt.crdtdbasecheck(crdt.query())
+    print("End: ", crdt.query())
 
 main()
 
