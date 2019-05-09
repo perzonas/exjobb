@@ -41,3 +41,15 @@ class StateCvRDT:
     def delete(self, entry):
         if not dbgraveyardcheck(self.myvehicleid, entry[0], entry[1], entry[2]):
             dbdeleteentry(self.myvehicleid, entry[0], entry[1], entry[2])
+
+
+    def crdtdbasecheck(self):
+        checkdict = {}
+        data = self.query()
+
+        for dbid, content in data.items():
+            for table, tlist in content.items():
+                print(tlist, table)
+                checkdict[table] = tlist
+
+        print("CHECKDICT: ", checkdict)

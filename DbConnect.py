@@ -194,7 +194,7 @@ def dbquery(myid, dbid):  # get all of mydb
         dbaste[name] = c.fetchall()
 
     for table in table_names:
-        print(dbaste[table])
+        print("DBSTUFF: ", table[0])
         final_dbaste[table] = [entry for entry in dbaste[table] if not dbgraveyardcheck(myid, dbid, table, entry[0])]
 
     conn.close()

@@ -5,8 +5,8 @@ from DeltaCvRDT import *
 def main():
     crdt = StateCvRDT()
     crdt.myvehicleid = 'test3'
-    #crdt.dbases.append("test5")
-    print("Vanlig: ", dbquery(crdt.myvehicleid, crdt.myvehicleid))
+    crdt.dbases.append("test5")
+    #print("Vanlig: ", dbquery(crdt.myvehicleid, crdt.myvehicleid))
     #print("Vanlig: ", dbquery(crdt.myvehicleid, "test5"))
     d = {'test3': {'graveyard': [], 'customers': [(1, 'six', '66', 'sectiosex', 'sixtys', 60, 'saxtio'),
                                                   (2, 'i', '8765', 'x', 's', 41, 'o'),
@@ -23,18 +23,19 @@ def main():
     crdt.merge(d)
     #dbaddentry(crdt.myvehicleid, crdt.myvehicleid, "heaps", [1, 1, 1, 1, 2, 500])
     print("------------------------------------------------------------------")
-    #crdt.merge(a)
-    crdt.delete(("test3", "customers", 1))
-    crdt.delete(("test3", "customers", 2))
+    crdt.merge(a)
+    #crdt.delete(("test3", "customers", 1))
+    #rdt.delete(("test3", "customers", 2))
     #crdt.delete(("test3", "customers", 3))
     #crdt.delete(("test5", "customers", 2))
-    print("Vanlig updated test3: ", dbquery(crdt.myvehicleid, crdt.myvehicleid))
+    #print("Vanlig updated test3: ", dbquery(crdt.myvehicleid, crdt.myvehicleid))
     #print("Vanlig updated test5: ", dbquery(crdt.myvehicleid, "test5"))
     #result = crdt.getstate()
     #print("RESULT: ", result)
     #result['test3']['customers'] = 0
     #result['test5']['customers'] = 0
-    print("End: ", crdt.query())
+    crdt.crdtdbasecheck()
+    #print("End: ", crdt.query())
 
 main()
 

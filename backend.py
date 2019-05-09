@@ -173,8 +173,8 @@ class Server:
     def performaction(self, state):
         self.crdt.merge(state)
 
-
-
+    def testing(self):
+        server.crdt.crdtbasecheck()
 
 if __name__ == '__main__':
     server = Server()
@@ -182,3 +182,4 @@ if __name__ == '__main__':
         server.run(sys.argv[1], sys.argv[1])
     except KeyboardInterrupt:
         print("Shutting down server")
+        server.testing()
