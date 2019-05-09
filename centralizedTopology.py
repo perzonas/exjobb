@@ -26,10 +26,10 @@ topos = {'customtopo': (lambda: CustomTopo())}
 
 class CustomTopology:
 
-    def startBackend(self, server, hosts, totalnohost):
+    def startBackend(self, server, hosts, totalnohost, network):
         print("starting server %s" % server.IP())
         # makeTerm(node=server, cmd="python backend/backend.py %s %d" % (server.IP().replace("10.1.0.",""), nbOfServers) )
-        makeTerm(node=server, cmd="python3 centralizedBackend.py %s %s" % (hosts, totalnohost))
+        network.terms += makeTerm(node=server, cmd="python3 centralizedBackend.py %s %s" % (hosts, totalnohost))
 
     def setup(self, no_of_hosts=10, bandwidth=1000, delay='5ms', loss=1, queue_size=1000):
 
@@ -64,15 +64,16 @@ class CustomTopology:
         # network.iperf((h1, h2))
 
         for host in network.hosts:
-            self.startBackend(host, host.name[-1], len(network.hosts))
+            self.startBackend(host, host.name[-1], len(network.hosts), network)
 
-        run()
-        CLI(network)
-
+        linkScript(network, len(network.hosts))
         network.stop()
 
         # We close the xterms (mininet.term.cleanUpScreens)
         cleanUpScreens()
+
+
+
 
 
 if __name__ == '__main__':

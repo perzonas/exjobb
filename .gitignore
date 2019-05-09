@@ -120,6 +120,11 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+# Folders to ignore
+testdata/
+databases/
+localstates/
+
 ### Python Patch ###
 .venv/
 

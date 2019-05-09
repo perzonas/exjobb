@@ -1,3 +1,0 @@
-bytesX contains a list with [bytes sent, expected bytes sent]
-mergelatencyX contains a list of the number of milliseconds each merge has taken local and other
-messagelatencyX contains a list of the time in milliseconds it has taken to send messages the last entry in the list is the number of messages that didn't get delivered entirely and thus dropped.

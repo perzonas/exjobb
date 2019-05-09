@@ -1,4 +1,5 @@
 import sys
+import signal
 import time
 import socket
 from threading import Thread
@@ -25,21 +26,20 @@ class Server:
     mergetime = []
     messagetime = []
     dropped_messages = 0
+    expectedBytes = 0
+
+
 
 
     def run(self, hostnumber, numberofhosts=1):
+
         self.numberofhost = numberofhosts
         self.ownIP += str(hostnumber)
         self.hostID = hostnumber
         for i in range(1, int(numberofhosts)+1):
             self.centralclockholder[i] = 0
-        self.bytessentadress = "testdata/bytes" + self.hostID
+        self.bytessentadress = "testdata/bytes" + str(self.hostID)
 
-        ### Create testdata file if it doesn't exist
-        if not os.path.isfile(self.bytessentadress):
-            file = open(self.bytessentadress, "w+")
-            os.chmod(self.bytessentadress, 0o777)
-            file.close()
 
         # AF_INET -> ipv4 and SOCK_STREAM -> tcp
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -121,6 +121,8 @@ class Server:
         else:
             self.dropped_messages += 1
 
+        self.writeMessage()
+
         connection.close()
 
     ### Master node have received an updates from slave nodes and perform the action received to update its state
@@ -154,6 +156,10 @@ class Server:
             total_time = end_time-start_time
             self.mergetime.append((total_time*1000))
 
+            self.writeMerge()
+
+
+
         else:
             print("***  Already added to  DB  ***")
 
@@ -172,6 +178,7 @@ class Server:
         end_time = time.time()
         total_time = end_time-start_time
         self.mergetime.append((total_time*1000))
+        self.writeMerge()
 
     # Broadcast a message to all other nodes
     def broadcaststate(self):
@@ -203,6 +210,7 @@ class Server:
             sock.connect((host, port))
             data = (serializeddata + ";").encode()
             datasize = len(data)
+            self.expectedBytes += datasize
             totalsent = 0
             while totalsent < datasize:
                 sent = sock.send(data[totalsent:])
@@ -220,13 +228,10 @@ class Server:
                     received = True
             sock.close()
             self.bytessent += totalsent
-
-            print("### BYTES SENT: ", self.bytessent)
             ### Write bytes sent to testdatafile ###
-            file = open(self.bytessentadress, "w")
-            file.write(str(self.bytessent))
-            file.close()
+            self.writeBytes()
             return received
+
         except Exception as e:
             return received
 
@@ -300,6 +305,27 @@ class Server:
                     self.performaction(id, clock, operation)
                     self.mergeStack.task_done()
 
+    def writeMerge(self):
+        ### Write results to testfile ###
+        file = open("testdata/mergelatency" + str(self.hostID), "w")
+        os.chmod("testdata/mergelatency" + str(self.hostID), 0o777)
+        file.write(json.dumps(self.mergetime))
+        file.close()
+
+    def writeBytes(self):
+        ### Create testdata file if it doesn't exist ###
+        file = open("testdata/bytes"+str(self.hostID), "w")
+        os.chmod("testdata/bytes"+str(self.hostID), 0o777)
+        file.write(json.dumps((self.bytessent, self.expectedBytes)))
+        file.close()
+
+
+    def writeMessage(self):
+        file = open("testdata/messagelatency" + str(self.hostID), "w")
+        os.chmod("testdata/messagelatency" + str(self.hostID), 0o777)
+        file.write(json.dumps((self.dropped_messages, self.messagetime)))
+        file.close()
+
 
 
 
@@ -313,19 +339,7 @@ if __name__ == '__main__':
         print("Too few arguments")
 
     finally:
-        print("\n", server.mergetime)
-        inputs = len(server.mergetime)
-        sum = sum(server.mergetime)
-        if inputs != 0:
-            medel = sum/inputs
-            print("\n### MEDEL ÄR: %06.4f ###" % medel)
-            server.mergetime.sort()
 
-            if inputs % 2 == 0:
-                print("\n### MEAN VALUE IS: %06.4f & %06.4f ###" % (server.mergetime[int(inputs/2)-1], server.mergetime[int(inputs/2)]))
-            else:
-                print("\n### MEAN VALUE IS: %06.4f ###" % server.mergetime[math.floor(inputs/2)])
-        print("\n### SAVING RESULTS ###")
 
         ### Write converge latency to testdatafile ###
         file = open("testdata/mergelatency"+str(server.hostID), "w")
@@ -341,4 +355,4 @@ if __name__ == '__main__':
         file.close()
 
         print("\n### Shutting down server ###")
-        time.sleep(25)
+        time.sleep(2)

@@ -100,11 +100,9 @@ class Server:
             self.mergeStack.put(message)
         else:
             self.dropped_msgs += 1
+        self.writeMessage()
 
-        ### merge received state with own state ###
-        # self.crdt.merge(message)
-        # state = self.crdt.getState()
-        # self.broadcast(state)
+
 
 
     # Broadcast nodes current state
@@ -151,8 +149,10 @@ class Server:
                 totalsent += sent
             sock.close()
             self.bytessent += totalsent
+            self.writeBytes()
 
-            print("### BYTES SENT: ", self.bytessent)
+
+
 
 
 
@@ -174,8 +174,6 @@ class Server:
         while True:
             reproduce = []
             action = ""
-
-
 
             ### Read file that holds local updates ###
             file = open(filename, "r")
@@ -205,6 +203,7 @@ class Server:
                     end_time = time.time()
                     total_time = end_time - start_time
                     self.mergetime.append((total_time * 1000))
+                    self.writeMerge()
 
 
 
@@ -218,6 +217,32 @@ class Server:
                 total_time = end_time - start_time
                 self.mergetime.append((total_time * 1000))
                 self.mergeStack.task_done()
+                self.writeMerge()
+
+
+    def writeMerge(self):
+        ### Write results to testfile ###
+        file = open("testdata/mergelatency" + str(self.hostID), "w")
+        os.chmod("testdata/mergelatency" + str(self.hostID), 0o777)
+        file.write(json.dumps(self.mergetime))
+        file.close()
+
+    def writeBytes(self):
+        ### Create testdata file if it doesn't exist ###
+        file = open(self.bytessentadress, "w")
+        os.chmod(self.bytessentadress, 0o777)
+        file.write(json.dumps((self.bytessent, self.expectedbytes)))
+        file.close()
+
+    def writeMessage(self):
+        file = open("testdata/messagelatency" + str(self.hostID), "w")
+        os.chmod("testdata/messagelatency" + str(self.hostID), 0o777)
+        file.write(json.dumps((self.dropped_msgs, self.messagetime)))
+        file.close()
+
+
+    def testing(self):
+        server.crdt.crdtbasecheck()
 
 
 if __name__ == '__main__':
@@ -255,5 +280,5 @@ if __name__ == '__main__':
         file.close()
 
         print("\n### Shutting down server ###")
-        time.sleep(25)
+        time.sleep(2)
 

@@ -17,6 +17,14 @@ class Test:
             os.remove(file)
             print("File removed: ", file)
 
+
+
+        files = glob.glob("testdata/*")
+        for file in files:
+            if file != "testdata/information.txt":
+                os.remove(file)
+                print("File removed: ", file)
+
         ###  Clean up databases  ###
         for i in range(1, (hosts+1)):
             files = glob.glob("databases/"+str(i)+"/*")
