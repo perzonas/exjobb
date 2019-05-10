@@ -268,5 +268,5 @@ if __name__ == '__main__':
         server.run(sys.argv[1], sys.argv[2])
     except IndexError:
         print("Too few arguments")
-        
+
 

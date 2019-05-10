@@ -142,7 +142,6 @@ class Server:
             elif action == "u":
                 for table, entry in content.items():
                     if entry:
-                        print(entry[0])
                         dbdeleteentry(self.hostID, self.hostID, table, entry[0][0])
                         dbaddentry(self.hostID, self.hostID, table, entry[0])
 
@@ -151,7 +150,7 @@ class Server:
             else:
                 for table, entry in content.items():
                     if entry:
-                        dbdeleteentry(self.hostID, self.hostID, table, entry[0])
+                        dbdeleteentry(self.hostID, self.hostID, table, entry[0][0])
             end_time = time.time()
             total_time = end_time-start_time
             self.mergetime.append((total_time*1000))

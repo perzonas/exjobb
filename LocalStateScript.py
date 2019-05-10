@@ -7,120 +7,317 @@ import time
 
 class Script:
     hosts = 0
+    target_counter = 0
+    customer_counter = 0
+    materials_counter = 0
+    waybills_counter = 0
+    heaps_counter = 0
+    workorder_counter = 0
+    loads_counter = 0
+    loadswaybills_counter = 0
+    startTime = 0
 
 
 
     def run(self, hosts=2):
-        '''
-        self.hosts = int(hosts)
-        self.addmaterials()
-        self.addcustomers()
-        time.sleep(1)
-        if self.hosts > 2:
-            self.addtargets(3)
-        else:
-            self.addtargets(2)
-        '''
-        self.addcustomers()
-        self.addworkorders()
-        self.updateCustomers()
-        return 1
+        self.startTime = time.time()
+        ### Write 5 inserts to all nodes as test starts ###
+        for i in range(1, hosts+1):
+            file = open("localstates/local"+str(i), "a")
+            file.write(self.makeLine(self.getCustomers()))
+            file.write(self.makeLine(self.getMaterial()))
+            file.write(self.makeLine(self.getTargets()))
+            file.write(self.makeLine(self.getWorkorders()))
+            file.write(self.makeLine(self.getLoads()))
+            file.close()
+
+        ### Sleep for 50 seconds ###
+        #time.sleep(50)
+        time.sleep(3)
+        for i in range(1, hosts+1):
+            file = open("localstates/local"+str(i), "a")
+            file.write(self.makeLine(self.getCustomers()))
+            file.write(self.makeLine(self.getMaterial()))
+            file.write(self.makeLine(self.getTargets()))
+            file.write(self.makeLine(self.getWorkorders()))
+            file.write(self.makeLine(self.getLoads()))
+            file.write(self.makeLine(self.getWaybills()))
+            file.write(self.makeLine(self.getWaybills()))
+            file.write(self.makeLine(self.getTargets()))
+            file.write(self.makeLine(self.getWorkorders()))
+            file.write(self.makeLine(self.getLoads()))
+            file.close()
+
+        #time.sleep(45)
+        time.sleep(3)
+        for i in range(1, hosts + 1):
+            file = open("localstates/local" + str(i), "a")
+            file.write(self.makeLine(self.getCustomers()))
+            file.write(self.makeLine(self.getMaterial()))
+            file.write(self.makeLine(self.getTargets()))
+            file.close()
+
+        #time.sleep(40)
+        time.sleep(3)
+        for i in range(1, hosts+1):
+            file = open("localstates/local"+str(i), "a")
+            file.write(self.makeLine(self.updCustomers()))
+            file.write(self.makeLine(self.updMaterial()))
+            file.write(self.makeLine(self.updTargets()))
+            file.close()
+
+        time.sleep(35)
+
+        for i in range(1, hosts+1):
+            file = open("localstates/local"+str(i), "a")
+            file.write(self.makeLine(self.delLoads()))
+            file.close()
+
+        time.sleep(30)
+
+        for i in range(1, hosts+1):
+            file = open("localstates/local"+str(i), "a")
+            file.write(self.makeLine(self.getLoadsWaybills()))
+            file.write(self.makeLine(self.getLoads()))
+            file.write(self.makeLine(self.getTargets()))
+            file.write(self.makeLine(self.getWorkorders()))
+            file.write(self.makeLine(self.getLoads()))
+            file.write(self.makeLine(self.getWaybills()))
+            file.write(self.makeLine(self.getWaybills()))
+            file.write(self.makeLine(self.getTargets()))
+            file.write(self.makeLine(self.getWorkorders()))
+            file.write(self.makeLine(self.getLoads()))
+            file.close()
+
+        time.sleep(25)
+
+        for i in range(1, hosts + 1):
+            file = open("localstates/local" + str(i), "a")
+            file.write(self.makeLine(self.getLoads()))
+            file.write(self.makeLine(self.getWorkorders()))
+            file.write(self.makeLine(self.getTargets()))
+            file.close()
+
+        time.sleep(20)
+
+        for i in range(1, hosts + 1):
+            file = open("localstates/local" + str(i), "a")
+            file.write(self.makeLine(self.delLoads()))
+            file.write(self.makeLine(self.delMaterial()))
+            file.write(self.makeLine(self.delTargets()))
+            file.write(self.makeLine(self.delWaybills()))
+            file.write(self.makeLine(self.delWorkorders()))
+            file.close()
+
+
+        time.sleep(15)
+
+        for i in range(1, hosts+1):
+            file = open("localstates/local"+str(i), "a")
+            file.write(self.makeLine(self.getLoadsWaybills()))
+            file.write(self.makeLine(self.getLoads()))
+            file.write(self.makeLine(self.getTargets()))
+            file.write(self.makeLine(self.getWorkorders()))
+            file.write(self.makeLine(self.getLoads()))
+            file.write(self.makeLine(self.getWaybills()))
+            file.write(self.makeLine(self.getWaybills()))
+            file.write(self.makeLine(self.getTargets()))
+            file.write(self.makeLine(self.getWorkorders()))
+            file.write(self.makeLine(self.getLoads()))
+            file.write(self.makeLine(self.getLoadsWaybills()))
+            file.write(self.makeLine(self.getLoads()))
+            file.write(self.makeLine(self.getTargets()))
+            file.write(self.makeLine(self.getWorkorders()))
+            file.write(self.makeLine(self.getLoads()))
+            file.write(self.makeLine(self.getWaybills()))
+            file.write(self.makeLine(self.getWaybills()))
+            file.write(self.makeLine(self.getTargets()))
+            file.write(self.makeLine(self.getWorkorders()))
+            file.write(self.makeLine(self.getLoads()))
+            file.close()
+
+        time.sleep(10)
+
+        for i in range(1, hosts+1):
+            file = open("localstates/local"+str(i), "a")
+            file.write(self.makeLine(self.getLoadsWaybills()))
+            file.write(self.makeLine(self.getLoads()))
+            file.write(self.makeLine(self.getTargets()))
+            file.write(self.makeLine(self.getWorkorders()))
+            file.write(self.makeLine(self.getLoads()))
+            file.write(self.makeLine(self.getWaybills()))
+            file.write(self.makeLine(self.getWaybills()))
+            file.write(self.makeLine(self.getTargets()))
+            file.write(self.makeLine(self.getWorkorders()))
+            file.write(self.makeLine(self.getLoads()))
+            file.write(self.makeLine(self.getLoadsWaybills()))
+            file.write(self.makeLine(self.getLoads()))
+            file.write(self.makeLine(self.getLoads()))
+            file.write(self.makeLine(self.getLoads()))
+            file.write(self.makeLine(self.getTargets()))
+            file.close()
+
+        time.sleep(5)
+
+        for i in range(1, hosts+1):
+            file = open("localstates/local"+str(i), "a")
+            file.write(self.makeLine(self.updCustomers()))
+            file.write(self.makeLine(self.updMaterial()))
+            file.write(self.makeLine(self.updTargets()))
+            file.write(self.makeLine(self.updLoads()))
+            file.write(self.makeLine(self.updLoadsWaybills()))
+            file.close()
 
 
 
-    ### Add a number of materials to machine 1
-    def addmaterials(self):
-        line1 = json.dumps(('i', {'customers': [], 'heaps': [], 'loads': [], 'loads_waybills': [],
-                                      'materials': [(1, 'gravel', 1554371143, '345')], 'table_properties': [],
-                                      'targets': [], 'waybills': []}))
-        line2 = json.dumps(('i', {'customers': [], 'heaps': [], 'loads': [], 'loads_waybills': [],
-                                      'materials': [(3, 'dirt', 1522921530, '98')], 'table_properties': [],
-                                      'targets': [], 'waybills': []}))
-        line3 = json.dumps(('i', {'customers': [], 'heaps': [], 'loads': [], 'loads_waybills': [],
-                                      'materials': [(4, 'rocks', 1543980836, '66')], 'table_properties': [],
-                                      'targets': [], 'waybills': []}))
-        line4 = json.dumps(('i', {'customers': [], 'heaps': [], 'loads': [], 'loads_waybills': [],
-                                      'materials': [(5, 'pavement', 1414985403, '35')], 'table_properties': [],
-                                      'targets': [], 'waybills': []}))
 
 
-        file = open("localstates/local1", "a")
-        file.write(line1+"\n")
-        file.write(line2+"\n")
-        file.write(line3+"\n")
-        file.write(line4+"\n")
-        file.close()
 
 
-    ### Add a number of customers to machine 2
-    def addcustomers(self):
-        line1 = json.dumps(('i', {'customers': [(0, "ericsson", 22, "Fredrik Johansson", "+46727898767",  15432121836,
-                            "hate ericsson")], 'heaps': [], 'loads': [], 'loads_waybills': [], 'materials': [],
-                                  'table_properties': [], 'targets': [], 'waybills': []}))
 
-        line2 = json.dumps(('i', {'customers': [(0, "cpac", 25, "Andre Perzon", "+46776898767", 1540836, "good stuff")],
-                                  'heaps': [], 'loads': [], 'loads_waybills': [], 'materials': [], 'table_properties': [],
-                                  'targets': [], 'waybills': []}))
 
-        line3 = json.dumps(('i', {'customers': [(0, "apotekarnes", 2, "Linus Johansson", "+46727898111", 154532236,
-                                    "bananas")], 'heaps': [], 'loads': [], 'loads_waybills': [], 'materials': [],
-                                  'table_properties': [], 'targets': [], 'waybills': []}))
 
-        line4 = json.dumps(('i', {'customers': [(0, "dtek", 12, "Elias Forsberg", "+46727823456", 1543980836,
-                                 "hate ericsson")], 'heaps': [], 'loads': [], 'loads_waybills': [], 'materials': [],
-                                  'table_properties': [], 'targets': [], 'waybills': []}))
+    def makeLine(self, tuple):
+        line = json.dumps(tuple)
+        return line+"\n"
 
-        line5 = json.dumps(('i', {'customers': [(0, "chalmers", 22, "Fredrik Johansson", "+46727898767", 1543790836,
-                                 "hate ericsson")], 'heaps': [], 'loads': [], 'loads_waybills': [], 'materials': [],
-                                  'table_properties': [], 'targets': [], 'waybills': []}))
+    ### Returns a tuple containing the insert action and the dict to be inserted ###
+    def getMaterial(self):
+        self.materials_counter += 1
+        return ('i', {'customers': [], 'heaps': [], 'loads': [], 'loads_waybills': [],
+         'materials': [(1, 'material'+str(self.materials_counter), time.time(), str(self.materials_counter))], 'table_properties': [],
+         'targets': [], 'work_orders': [], 'waybills': []})
+    def getTargets(self):
+        self.target_counter+=1
+        return ('i', {'customers': [], 'heaps': [], 'loads': [], 'loads_waybills': [], 'materials': [],
+               'table_properties': [], 'targets': [(0, self.target_counter-1, "Target"+str(self.target_counter),
+                self.target_counter*20, time.time(), "misc"+str(self.target_counter))], 'work_orders': [], 'waybills': []})
+    def getCustomers(self):
+        self.customer_counter+=1
+        return ('i', {'customers': [(0, "Customer"+str(self.customer_counter), self.customer_counter, "Firstname"+
+                   str(self.customer_counter), "Number"+str(self.customer_counter),  time.time(),
+                            "misc")], 'heaps': [], 'loads': [], 'loads_waybills': [], 'materials': [],
+                              'table_properties': [], 'targets': [], 'work_orders': [], 'waybills': []})
+    def getWaybills(self):
+        self.waybills_counter += 1
+        return ('i', {'customers': [], 'heaps': [], 'loads': [], 'loads_waybills': [], 'materials': [],
+              'table_properties': [], 'targets': [], 'waybills': [(0, time.time(), "Supplier"+str(self.waybills_counter)
+               , "Customer"+str(self.waybills_counter), "Workorder"+str(self.waybills_counter), "Target" +
+               str(self.waybills_counter), "Freetext", "Chepstow", "Operator"+str(self.waybills_counter % 13),
+                self.waybills_counter)], 'work_orders': []})
+    def getWorkorders(self):
+        self.workorder_counter += 1
+        return ('i', {'customers': [], 'heaps': [], 'loads': [], 'loads_waybills': [], 'work_orders': [(0,
+            "Name"+str(self.workorder_counter), self.customer_counter-2, self.workorder_counter*100, "misc",
+            time.time()+100, time.time(), time.time()+50, self.workorder_counter*97)], 'materials': [],
+              'table_properties': [], 'targets': [], 'waybills': []})
+    def getHeaps(self):
+        self.heaps_counter += 1
+        return ('i', {'customers': [], 'heaps': [(0, self.workorder_counter-2, self.target_counter-1, time.time(),
+                time.time()+65, self.heaps_counter*200)], 'loads': [], 'loads_waybills': [], 'work_orders': [],
+                'materials': [], 'table_properties': [], 'targets': [], 'waybills': []})
+    def getLoads(self):
+        self.loads_counter += 1
+        return ('i', {'customers': [], 'heaps': [], 'loads': [(0, self.loads_counter*300, time.time(), self.loads_counter%20,
+                 self.loads_counter*50, self.loads_counter % 4, self.heaps_counter-1, self.materials_counter-3)],
+                'loads_waybills': [], 'work_orders': [], 'materials': [], 'table_properties': [], 'targets': [],
+                'waybills': []})
+    def getLoadsWaybills(self):
+        self.loadswaybills_counter += 1
+        return ('i', {'customers': [], 'heaps': [], 'loads': [], 'loads_waybills': [(0, self.loads_counter-2,
+               self.waybills_counter-1)], 'work_orders': [], 'materials': [], 'table_properties': [], 'targets': [],
+               'waybills': []})
 
-        file = open("localstates/local2", "a")
-        file.write(line1+"\n")
-        file.write(line2+"\n")
-        file.write(line3+"\n")
-        file.write(line4+"\n")
-        file.write(line5+"\n")
-        file.close()
+    ### Returns a tuple containing the delete action and the dict to be deleted ###
+    def delCustomers(self):
+        return ('d', {'customers': [(self.customer_counter-2, "Customer" + str(self.customer_counter),
+             self.customer_counter, "Firstname" + str(self.customer_counter), "Number" + str(self.customer_counter),
+             time.time(), "misc")], 'heaps': [], 'loads': [], 'loads_waybills': [], 'materials': [],
+                      'table_properties': [], 'targets': [], 'work_orders': [], 'waybills': []})
+    def delMaterial(self):
+        return ('d', {'customers': [], 'heaps': [], 'loads': [], 'loads_waybills': [],
+                      'materials': [
+                          (self.materials_counter-2, 'material' + str(self.materials_counter), time.time(), str(self.materials_counter))],
+                      'table_properties': [],
+                      'targets': [], 'work_orders': [], 'waybills': []})
+    def delTargets(self):
+        return ('d', {'customers': [], 'heaps': [], 'loads': [], 'loads_waybills': [], 'materials': [],
+              'table_properties': [], 'targets': [(self.target_counter-2, self.target_counter - 1, "Target" +
+               str(self.target_counter), self.target_counter * 20, time.time(), "misc" + str(self.target_counter))],
+              'work_orders': [], 'waybills': []})
+    def delWaybills(self):
+        return ('d', {'customers': [], 'heaps': [], 'loads': [], 'loads_waybills': [(0, time.time(), "Supplier" +
+                str(self.waybills_counter), "Customer" + str(self.waybills_counter), "Workorder" + str(self.waybills_counter),
+                 "Target" + str(self.waybills_counter), "Freetext", "Chepstow","Operator" + str(self.waybills_counter % 13),
+                 self.waybills_counter)], 'materials': [], 'table_properties': [], 'targets': [], 'waybills': [], 'work_orders': []})
+    def delWorkorders(self):
+        return ('d', {'customers': [], 'heaps': [], 'loads': [], 'loads_waybills': [], 'work_orders':
+            [(self.workorder_counter-2, self.customer_counter - 2, self.workorder_counter * 100, "misc", time.time() + 100, time.time(),
+              time.time() + 50, self.workorder_counter * 97)], 'materials': [], 'table_properties': [], 'targets': [],
+                  'waybills': []})
+    def delHeaps(self):
+        return ('d', {'customers': [], 'heaps': [(self.heaps_counter-1, self.workorder_counter - 2, self.target_counter - 1, time.time(),
+                  time.time() + 65, self.heaps_counter * 200)], 'loads': [], 'loads_waybills': [], 'work_orders': [],
+                      'materials': [], 'table_properties': [], 'targets': [], 'waybills': []})
+    def delLoads(self):
+        return ('d', {'customers': [], 'heaps': [], 'loads': [(self.loads_counter-1, self.loads_counter * 300,
+               time.time(), self.loads_counter % 20, self.loads_counter * 50, self.loads_counter % 4, self.heaps_counter
+               - 1, self.materials_counter - 3)],'loads_waybills': [], 'work_orders': [], 'materials': [],
+                  'table_properties': [], 'targets': [], 'waybills': []})
+    def delLoadsWaybills(self):
+        return ('d', {'customers': [], 'heaps': [], 'loads': [], 'loads_waybills': [(self.loadswaybills_counter-1,
+            self.loads_counter - 2, self.waybills_counter - 1)],'work_orders': [], 'materials': [], 'table_properties':
+            [], 'targets': [], 'waybills': []})
 
-    def addtargets(self, number):
-        line1 = json.dumps(('i', {'customers': [], 'heaps': [], 'loads': [], 'loads_waybills': [], 'materials': [],
-                                  'table_properties': [], 'targets': [(0, 0, "Pappa noden", 30000, 1543984526,
-                                   "hate ericsson")], 'waybills': []}))
+    ### Returns a tuple containing the update action and the dict to be updated ###
+    def updCustomers(self):
+        self.customer_counter += 1
+        return ('u', {'customers': [(self.customer_counter-3, "Customer" + str(self.customer_counter),
+             self.customer_counter, "Firstname" + str(self.customer_counter), "Number" + str(self.customer_counter),
+             time.time(), "misc")], 'heaps': [], 'loads': [], 'loads_waybills': [], 'materials': [],
+                      'table_properties': [], 'targets': [], 'work_orders': [], 'waybills': []})
+    def updMaterial(self):
+        self.materials_counter += 1
+        return ('u', {'customers': [], 'heaps': [], 'loads': [], 'loads_waybills': [],
+                      'materials': [
+                          (self.materials_counter-2, 'material' + str(self.materials_counter), time.time(), str(self.materials_counter))],
+                      'table_properties': [],
+                      'targets': [], 'work_orders': [], 'waybills': []})
+    def updTargets(self):
+        self.target_counter += 1
+        return ('u', {'customers': [], 'heaps': [], 'loads': [], 'loads_waybills': [], 'materials': [],
+              'table_properties': [], 'targets': [(self.target_counter-2, self.target_counter - 1, "Target" +
+               str(self.target_counter), self.target_counter * 20, time.time(), "misc" + str(self.target_counter))],
+              'work_orders': [], 'waybills': []})
+    def updWaybills(self):
+        self.waybills_counter += 1
+        return ('u', {'customers': [], 'heaps': [], 'loads': [], 'loads_waybills': [(0, time.time(), "Supplier" +
+                str(self.waybills_counter), "Customer" + str(self.waybills_counter), "Workorder" + str(self.waybills_counter),
+                 "Target" + str(self.waybills_counter), "Freetext", "Chepstow","Operator" + str(self.waybills_counter % 13),
+                 self.waybills_counter)], 'materials': [], 'table_properties': [], 'targets': [], 'waybills': [], 'work_orders': []})
+    def updWorkorders(self):
+        self.workorder_counter += 1
+        return ('u', {'customers': [], 'heaps': [], 'loads': [], 'loads_waybills': [], 'work_orders':
+            [(self.workorder_counter-2, self.customer_counter - 2, self.workorder_counter * 100, "misc", time.time() + 100, time.time(),
+              time.time() + 50, self.workorder_counter * 97)], 'materials': [], 'table_properties': [], 'targets': [],
+                  'waybills': []})
+    def updHeaps(self):
+        self.heaps_counter += 1
+        return ('u', {'customers': [], 'heaps': [(self.heaps_counter-1, self.workorder_counter - 2, self.target_counter - 1, time.time(),
+                  time.time() + 65, self.heaps_counter * 200)], 'loads': [], 'loads_waybills': [], 'work_orders': [],
+                      'materials': [], 'table_properties': [], 'targets': [], 'waybills': []})
+    def updLoads(self):
+        self.loads_counter += 1
+        return ('u', {'customers': [], 'heaps': [], 'loads': [(self.loads_counter-1, self.loads_counter * 300,
+               time.time(), self.loads_counter % 20, self.loads_counter * 50, self.loads_counter % 4, self.heaps_counter - 1,
+                 self.materials_counter - 3)],'loads_waybills': [], 'work_orders': [], 'materials': [], 'table_properties': [], 'targets': [],
+                  'waybills': []})
+    def updLoadsWaybills(self):
+        self.loadswaybills_counter += 1
+        return ('u', {'customers': [], 'heaps': [], 'loads': [], 'loads_waybills': [(self.loadswaybills_counter-1,
+            self.loads_counter - 2, self.waybills_counter - 1)],'work_orders': [], 'materials': [], 'table_properties':
+            [], 'targets': [], 'waybills': []})
 
-        line2 = json.dumps(('i', {'customers': [], 'heaps': [], 'loads': [], 'loads_waybills': [], 'materials': [],
-                                  'table_properties': [], 'targets': [(0, 1, "elaka styvdottern", 3000, 15439123836,
-                                                                       "hate ericsson")], 'waybills': []}))
-
-        line3 = json.dumps(('i', {'customers': [], 'heaps': [], 'loads': [], 'loads_waybills': [], 'materials': [],
-                                  'table_properties': [], 'targets': [(0, 0, "favorit sonen", 130000, 1586980836,
-                                                                       "hate ericsson")], 'waybills': []}))
-
-        file = open(("localstates/local" + str(number)), "a")
-        file.write(line1 + "\n")
-        file.write(line2 + "\n")
-        file.write(line3 + "\n")
-
-    def addworkorders(self):
-        line1 = json.dumps(('i', {'customers': [], 'heaps': [], 'loads': [], 'loads_waybills': [], 'materials': [],
-                                  'table_properties': [], 'targets': [], 'waybills': [], 'work_orders': [(0, "krashar",
-                                  2222222, 30000, "misc", "duetime", 1543984526, 1543999526, 20)]}))
-
-        file = open(("localstates/local" + str(2)), "a")
-        file.write(line1 + "\n")
-
-    def updateCustomers(self):
-        line1 = json.dumps(('u', {'customers': [(1, "ericssonsuger", 22, "Fredrik Johansson", "+46727898767", 15432121836,
-                                                 "hate ericsson")], 'heaps': [], 'loads': [], 'loads_waybills': [],
-                                  'materials': [],
-                                  'table_properties': [], 'targets': [], 'waybills': []}))
-        line2 = json.dumps(('u', {'customers': [(2, "cpacisgut", 25, "Andre Perzon", "+46776898767", 1540836, "good stuff")],
-                                  'heaps': [], 'loads': [], 'loads_waybills': [], 'materials': [],
-                                  'table_properties': [],
-                                  'targets': [], 'waybills': []}))
-
-        file = open("localstates/local2", "a")
-        file.write(line1 + "\n")
-        file.write(line2 + "\n")
 
 
 if __name__ == '__main__':
