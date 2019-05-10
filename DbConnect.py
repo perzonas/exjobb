@@ -170,7 +170,7 @@ def dbaddentry(myid, dbid, table, entry):
     cur = c.execute("SELECT * from %s" % table)
     names = list(map(lambda x: x[0], cur.description))
     cnames = table + "(" + ",".join(names[1:]) + ")"
-
+    print("###############", cnames)
     try:
         c.execute('''INSERT INTO {tn} VALUES ({q})'''.format(tn=cnames, q=",".join(["?"]*(columns-1))), entry[1:])
     except sqlite3.IntegrityError as e:
