@@ -159,11 +159,7 @@ def addnewdb(myid, dbid):
 
 
 def dbaddentry(myid, dbid, table, entry):
-    dbcheckqueryparam(table)
-    if not dbexistcheck(myid, dbid):
-        addnewdb(myid, dbid)
-
-    conn = sqlite3.connect("databases/" + myid + "/" + str(dbid), isolation_level=None)
+    conn = sqlite3.connect("databases/" + str(myid) + "/" + str(dbid), isolation_level=None)
     c = conn.cursor()
     c.execute("PRAGMA table_info(%s)" % table)
     columns = len(c.fetchall())
@@ -183,9 +179,6 @@ def dbquery(myid, dbid):  # get all of mydb
     dbaste = {}
     final_dbaste = {}
 
-    if not dbexistcheck(myid, dbid):
-        addnewdb(myid, dbid)
-
     conn = sqlite3.connect("databases/" + str(myid) + "/" + str(dbid))
     c = conn.cursor()
 
@@ -193,38 +186,33 @@ def dbquery(myid, dbid):  # get all of mydb
         c.execute("SELECT * FROM %s" % name)
         dbaste[name] = c.fetchall()
 
-    for table in table_names:
-        final_dbaste[table] = [entry for entry in dbaste[table] if not dbgraveyardcheck(myid, dbid, table, entry[0])]
+    #for table in table_names:
+        #final_dbaste[table] = [entry for entry in dbaste[table] if not dbgraveyardcheck(myid, dbid, table, entry[0])]
 
     conn.close()
-    return final_dbaste
+    return dbaste
 
 
 
 
 def dbdeltaquery(myid, dbid, table, nrtograb):
-    if not dbexistcheck(myid, dbid):
-        addnewdb(myid, dbid)
-
-    conn = sqlite3.connect("databases/" + myid + "/" + str(dbid))
+    conn = sqlite3.connect("databases/" + str(myid) + "/" + str(dbid))
     c = conn.cursor()
 
     c.execute("SELECT * FROM %s ORDER BY _ID DESC LIMIT %s" % (table, str(nrtograb+1)))
     delta_state = c.fetchall()
     delta_state.reverse()
-    final_delta_state = [entry for entry in delta_state if not dbgraveyardcheck(myid, dbid, table, entry[0])]
+    #final_delta_state = [entry for entry in delta_state if not dbgraveyardcheck(myid, dbid, table, entry[0])]
 
     conn.close()
-    return final_delta_state
+    return delta_state
 
 
 def dbgetsnapshot(myid, dbid):
     state_dict = {}
-    if not dbexistcheck(myid, dbid):
-        addnewdb(myid, dbid)
-    conn = sqlite3.connect("databases/" + myid + "/" + str(dbid), isolation_level=None)
-    c = conn.cursor()
 
+    conn = sqlite3.connect("databases/" + str(myid) + "/" + str(dbid), isolation_level=None)
+    c = conn.cursor()
     seq = c.execute("SELECT * FROM SQLITE_SEQUENCE").fetchall()
 
     for table in table_names:
@@ -247,7 +235,7 @@ def dbexistcheck(myid, dbid):
 
 
 def dbentryexist(myid, dbid, table, key):
-    conn = sqlite3.connect("databases/" + myid + "/" + str(dbid))
+    conn = sqlite3.connect("databases/" + str(myid) + "/" + str(dbid))
     c = conn.cursor()
 
     r = c.execute("SELECT COUNT(*) FROM %s WHERE _ID = %s" % (table, key)).fetchall()
@@ -255,35 +243,8 @@ def dbentryexist(myid, dbid, table, key):
     return r[0][0]
 
 
-def dbcheckqueryparam(param):
-    if param == "android_metadata":
-        return True
-    elif param == "customers":
-        return True
-    elif param == "heaps":
-        return True
-    elif param == "loads":
-        return True
-    elif param == "loads_waybills":
-        return True
-    elif param == "materials":
-        return True
-    elif param == "table_properties":
-        return True
-    elif param == "targets":
-        return True
-    elif param == "waybills":
-        return True
-    elif param == "work_orders":
-        return True
-    elif param == "graveyard":
-        return True
-    else:
-        return False
-
-
 def dbgraveyardcheck(myid, dbid, table, key):
-    conn = sqlite3.connect("databases/" + str(myid) + "/" + str(myid))
+    conn = sqlite3.connect("databases/" + str(myid) + "/" + str(dbid))
     c = conn.cursor()
 
     r = c.execute("SELECT COUNT(*) FROM graveyard WHERE c_databaseid='%s' AND c_tablename = '%s' AND c_rowid = '%s'" % (dbid, table, key)).fetchall()
@@ -293,4 +254,4 @@ def dbgraveyardcheck(myid, dbid, table, key):
 
 def dbdeleteentry(myid, dbid, table, key):
     print("ADDING TO GRAVEYARD", dbid, table, key)
-    dbaddentry(myid, myid, "graveyard", (0, dbid, table, key))
+    dbaddentry(myid, dbid, "graveyard", (0, dbid, table, key))

@@ -6,28 +6,25 @@ class DeltaCvRDT:
     dbases = []
 
     def adddb(self, dbid):
-        self.dbases.append(str(dbid))
+        if dbid != self.myvehicleid:
+            self.dbases.append(str(dbid))
         addnewdb(self.myvehicleid, dbid)
 
     def update(self, table, entry):
-        self.delete(entry)
+        self.delete(self.myvehicleid, table, entry[0])
         dbaddentry(self.myvehicleid, self.myvehicleid, table, entry)
 
     def query(self, snapshot):
         queryresult = {}
         mystate = self.getsnapshot()
-        print("MyState: ", mystate)
-        print("Snapshot: ", snapshot)
 
         for dbid, content in snapshot.items():
             if not dbexistcheck(self.myvehicleid, dbid):
-                print("DB DIDNT EXIST!")
                 self.adddb(dbid)
                 mystate = self.getsnapshot()
             else:
                 querydata = {}
                 for table, entry in content.items():
-                    print("dbid: ", dbid, " table: ", table)
                     if entry < mystate[dbid][table]:
                         nrtograb = mystate[dbid][table] - entry
                         querydata[table] = dbdeltaquery(self.myvehicleid, dbid, table, nrtograb)
@@ -43,8 +40,8 @@ class DeltaCvRDT:
             for table, tlist in content.items():
                 if tlist:
                     for entry in tlist:
-                        if (table == "graveyard" and not dbgraveyardcheck(self.myvehicleid, entry[0], entry[1], entry[2])):
-                            self.delete(entry)
+                        if (table == "graveyard" and not dbgraveyardcheck(self.myvehicleid, dbid, entry[2], entry[3])):
+                            self.delete(dbid, entry[2], entry[3])
                         elif not dbentryexist(self.myvehicleid, dbid, table, entry[0]):
                             dbaddentry(self.myvehicleid, dbid, table, entry)
                         else:
@@ -52,15 +49,16 @@ class DeltaCvRDT:
 
 
     def getsnapshot(self):
+        if not dbexistcheck(self.myvehicleid, self.myvehicleid):
+            self.adddb(self.myvehicleid)
         state = {}
         state[self.myvehicleid] = dbgetsnapshot(self.myvehicleid, self.myvehicleid)
-        print("## DBASES!!! ##", self.dbases)
         for dbase in self.dbases:
             state[dbase] = dbgetsnapshot(self.myvehicleid, dbase)
 
         return state
 
 
-    def delete(self, entry):
-        if not dbgraveyardcheck(self.myvehicleid, entry[0], entry[1], entry[2]):
-            dbdeleteentry(self.myvehicleid, entry[0], entry[1], entry[2])
+    def delete(self, dbid, table, key):
+        if not dbgraveyardcheck(self.myvehicleid, dbid, table, key):
+            dbdeleteentry(self.myvehicleid, dbid, table, key)
