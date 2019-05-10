@@ -1,0 +1,4 @@
+Average total updates/hour: 631.938967
+Average updates per hour per vehicles: 48.610690
+Highest number of updates in a 1 hour window: 3295
+Number of active vehicles during testing: 13

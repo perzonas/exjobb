@@ -25,7 +25,7 @@ class Server:
     bytessentadress = ""
     mergetime = []
     messagetime = []
-    dropped_msgs = 0
+    dropped_messages = 0
 
     def run(self, hostnumber, numberofhosts=1):
         self.numberofhost = int(numberofhosts)
@@ -100,7 +100,9 @@ class Server:
             self.taskStack.put(message)
 
         else:
-            self.dropped_msgs += 1
+            self.dropped_messages += 1
+
+        self.writeMessage()
 
         connection.close()
         ### merge received state with own state ###
@@ -162,7 +164,7 @@ class Server:
             sock.close()
             self.bytessent += totalsent
 
-            print("### BYTES SENT: ", self.bytessent)
+            self.writeBytes()
 
 
 
@@ -211,6 +213,8 @@ class Server:
                     total_time = end_time - start_time
                     self.mergetime.append((total_time * 1000))
 
+                    self.writeMerge()
+
 
 
             ### Perform actions received from other nodes  and saved in a buffer ###
@@ -230,6 +234,27 @@ class Server:
                     self.mergetime.append((total_time * 1000))
                     self.taskStack.task_done()
 
+                    self.writeMerge()
+
+    def writeMerge(self):
+        ### Write results to testfile ###
+        file = open("testdata/mergelatency" + str(self.hostID), "w")
+        os.chmod("testdata/mergelatency" + str(self.hostID), 0o777)
+        file.write(json.dumps(self.mergetime))
+        file.close()
+
+    def writeBytes(self):
+        ### Create testdata file if it doesn't exist ###
+        file = open("testdata/bytes" + str(self.hostID), "w")
+        os.chmod("testdata/bytes" + str(self.hostID), 0o777)
+        file.write(json.dumps((self.bytessent, self.expectedBytes)))
+        file.close()
+
+    def writeMessage(self):
+        file = open("testdata/messagelatency" + str(self.hostID), "w")
+        os.chmod("testdata/messagelatency" + str(self.hostID), 0o777)
+        file.write(json.dumps((self.dropped_messages, self.messagetime)))
+        file.close()
 
 
 
@@ -243,33 +268,5 @@ if __name__ == '__main__':
         server.run(sys.argv[1], sys.argv[2])
     except IndexError:
         print("Too few arguments")
+        
 
-    finally:
-        print("\n", server.mergetime)
-        inputs = len(server.mergetime)
-        sum = sum(server.mergetime)
-        if inputs != 0:
-            medel = sum / inputs
-            print("\n### MEDEL ÄR: %06.4f ###" % medel)
-            server.mergetime.sort()
-
-            if inputs % 2 == 0:
-                print("\n### MEAN VALUE IS: %06.4f & %06.4f ###" % (
-                server.mergetime[int(inputs / 2) - 1], server.mergetime[int(inputs / 2)]))
-            else:
-                print("\n### MEAN VALUE IS: %06.4f ###" % server.mergetime[math.floor(inputs / 2)])
-        print("\n### SAVING RESULTS ###")
-        ### Write converge latency to testdatafile ###
-        file = open("testdata/mergelatency" + str(server.hostID), "w")
-        os.chmod("testdata/mergelatency" + str(server.hostID), 0o777)
-        file.write(json.dumps(server.mergetime))
-        file.close()
-
-        ### Create testdata file if it doesn't exist
-        file = open(server.bytessentadress, "w")
-        os.chmod(server.bytessentadress, 0o777)
-        file.write(json.dumps((server.bytessent, server.expectedbytes)))
-        file.close()
-
-        print("\n### Shutting down server ###")
-        time.sleep(2)
