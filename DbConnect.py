@@ -253,5 +253,5 @@ def dbgraveyardcheck(myid, dbid, table, key):
 
 
 def dbdeleteentry(myid, dbid, table, key):
-    print("ADDING TO GRAVEYARD", dbid, table, key)
-    dbaddentry(myid, dbid, "graveyard", (0, dbid, table, key))
+    if not dbgraveyardcheck(myid, dbid, table, key):
+        dbaddentry(myid, dbid, "graveyard", (0, dbid, table, key))

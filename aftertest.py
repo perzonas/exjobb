@@ -15,9 +15,11 @@ def consistensycheck(nrofnodes):
 
     iscorrect = []
 
+
     for i in range(1, nrofnodes+1):
         for j in range(1, nrofnodes+1):
             for k in range(1, nrofnodes+1):
-                
+                iscorrect.append(resultdict[i][j] == resultdict[i][k])
 
+    print(iscorrect)
 consistensycheck(2)
