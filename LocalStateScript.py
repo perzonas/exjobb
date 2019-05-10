@@ -73,8 +73,8 @@ class Script:
             file.write(self.makeLine(self.delLoads()))
             file.close()
 
-        time.sleep(30)
-
+        #time.sleep(30)
+        time.sleep(3)
         for i in range(1, hosts+1):
             file = open("localstates/local"+str(i), "a")
             file.write(self.makeLine(self.getLoadsWaybills()))
@@ -89,8 +89,8 @@ class Script:
             file.write(self.makeLine(self.getLoads()))
             file.close()
 
-        time.sleep(25)
-
+        #time.sleep(25)
+        time.sleep(3)
         for i in range(1, hosts + 1):
             file = open("localstates/local" + str(i), "a")
             file.write(self.makeLine(self.getLoads()))
@@ -98,8 +98,8 @@ class Script:
             file.write(self.makeLine(self.getTargets()))
             file.close()
 
-        time.sleep(20)
-
+        #time.sleep(20)
+        time.sleep(3)
         for i in range(1, hosts + 1):
             file = open("localstates/local" + str(i), "a")
             file.write(self.makeLine(self.delLoads()))

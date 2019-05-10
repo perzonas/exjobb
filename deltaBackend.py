@@ -208,7 +208,7 @@ class Server:
                     else:
                         for table, entry in state[1].items():
                             if entry:
-                                self.crdt.delete(self.hostID, [0, self.hostID, table, entry[0]])
+                                self.crdt.delete(self.hostID, table, entry[0][0])
                     end_time = time.time()
                     total_time = end_time - start_time
                     self.mergetime.append((total_time * 1000))
