@@ -28,10 +28,10 @@ class CustomTopology:
 
     def startBackend(self, server, hosts, totalnohost, network):
         print("starting server %s" % server.IP())
-        # makeTerm(node=server, cmd="python backend/backend.py %s %d" % (server.IP().replace("10.1.0.",""), nbOfServers) )
+
         network.terms += makeTerm(node=server, cmd="python3 centralizedBackend.py %s %s" % (hosts, totalnohost))
 
-    def setup(self, no_of_hosts=10, bandwidth=1000, delay='5ms', loss=1, queue_size=1000):
+    def setup(self, no_of_hosts=10, bandwidth=0.1, delay='50ms', loss=1, queue_size=1000):
 
         topology = CustomTopo(no_of_hosts)
         # Select TCP Reno
@@ -67,6 +67,7 @@ class CustomTopology:
             self.startBackend(host, host.name[-1], len(network.hosts), network)
 
         linkScript(network, len(network.hosts))
+        CLI(network)
         network.stop()
 
         # We close the xterms (mininet.term.cleanUpScreens)

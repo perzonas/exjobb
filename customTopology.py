@@ -8,6 +8,7 @@ from mininet.link import TCLink, TCIntf, Intf
 from mininet.term import makeTerm, cleanUpScreens  # Open xterm from mininet
 from functools import partial
 from mininet.cli import CLI
+from linkConnections import *
 
 
 class CustomTopo(Topo):
@@ -27,7 +28,7 @@ class CustomTopology:
 
     def startBackend(self, server, hosts, totalnohost):
         print("starting server %s" % server.IP())
-        # makeTerm(node=server, cmd="python backend/backend.py %s %d" % (server.IP().replace("10.1.0.",""), nbOfServers) )
+
         makeTerm(node=server, cmd="python3 backend.py %s %s" % (hosts, totalnohost))
 
     def setup(self, no_of_hosts=10, bandwidth=1000, delay='5ms', loss=1, queue_size=1000):
@@ -61,6 +62,7 @@ class CustomTopology:
         for host in network.hosts:
             self.startBackend(host, host.name[-1], len(network.hosts))
 
+        linkScript(network, len(network.hosts))
         CLI(network)
 
         network.stop()
