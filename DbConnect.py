@@ -177,7 +177,6 @@ def dbaddentry(myid, dbid, table, entry):
 
 def dbquery(myid, dbid):  # get all of mydb
     dbaste = {}
-    final_dbaste = {}
 
     conn = sqlite3.connect("databases/" + str(myid) + "/" + str(dbid))
     c = conn.cursor()
@@ -185,9 +184,6 @@ def dbquery(myid, dbid):  # get all of mydb
     for name in table_names:
         c.execute("SELECT * FROM %s" % name)
         dbaste[name] = c.fetchall()
-
-    #for table in table_names:
-        #final_dbaste[table] = [entry for entry in dbaste[table] if not dbgraveyardcheck(myid, dbid, table, entry[0])]
 
     conn.close()
     return dbaste

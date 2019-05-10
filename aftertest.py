@@ -11,15 +11,16 @@ def consistensycheck(nrofnodes):
         resultdict[i] = insidedict
 
     for name, content in resultdict.items():
-        print(name, content)
+        print("ID:", name, "| Databases: ", content)
 
     iscorrect = []
 
 
     for i in range(1, nrofnodes+1):
         for j in range(1, nrofnodes+1):
-            for k in range(1, nrofnodes+1):
-                iscorrect.append(resultdict[i][j] == resultdict[i][k])
+            iscorrect.append(resultdict[i] == resultdict[j])
+
 
     print(iscorrect)
+
 consistensycheck(2)
