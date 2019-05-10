@@ -7,7 +7,6 @@ from mininet.link import TCLink, TCIntf, Intf
 from mininet.term import makeTerm, cleanUpScreens  # Open xterm from mininet
 from functools import partial
 from mininet.cli import CLI
-from linkConnections import *
 import time
 
 
