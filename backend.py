@@ -111,7 +111,7 @@ class Server:
         time.sleep(2)
 
         # get state from crdt
-        for i in range(3):
+        while True:
             state = self.crdt.query()
             self.broadcaststate(state)
             time.sleep(2)
@@ -189,6 +189,7 @@ class Server:
                     state = json.loads(action)
                     data = {str(self.hostID): state[1]}
                     print("#### PERFORMING AN UPDATE ####")
+
                     start_time = time.time()
                     if state[0] == "i":
                         self.crdt.merge(data)
@@ -199,7 +200,7 @@ class Server:
                     else:
                         for table, entry in state[1].items():
                             if entry:
-                                self.crdt.delete(self.hostID, [0, self.hostID, table, entry[0]])
+                                self.crdt.delete((self.hostID, table, entry[0][0]))
                     end_time = time.time()
                     total_time = end_time - start_time
                     self.mergetime.append((total_time * 1000))

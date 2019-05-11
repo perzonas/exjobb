@@ -62,7 +62,7 @@ class CustomTopology:
         for host in network.hosts:
             self.startBackend(host, host.name[-1], len(network.hosts))
 
-        linkScript(network, len(network.hosts))
+        #linkScript(network, len(network.hosts))
         CLI(network)
 
         network.stop()
