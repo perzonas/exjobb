@@ -18,6 +18,11 @@ class DeltaCvRDT:
         queryresult = {}
         mystate = self.getsnapshot()
 
+        print("SNAPSHOT: ", snapshot)
+        print(" ")
+        print("MYSTATE: ", mystate)
+        print(" ")
+
         for dbid, content in snapshot.items():
             if not dbexistcheck(self.myvehicleid, dbid):
                 self.adddb(dbid)
@@ -44,8 +49,6 @@ class DeltaCvRDT:
                             self.delete(dbid, entry[2], entry[3])
                         elif not dbentryexist(self.myvehicleid, dbid, table, entry[0]):
                             dbaddentry(self.myvehicleid, dbid, table, entry)
-                        else:
-                            print("SKIPPING: ", dbid, " | ", table, " | ", entry)
 
 
     def getsnapshot(self):

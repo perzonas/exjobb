@@ -117,10 +117,10 @@ class Server:
         time.sleep(2)
 
         # get state from crdt
-        for i in range(3):
+        for i in range(10):
             snapshot = self.crdt.getsnapshot()
             self.broadcastsnapshot(snapshot)
-            time.sleep(2)
+            time.sleep(4)
 
     # Broadcast a message to all other nodes
     def broadcastsnapshot(self, message):
@@ -139,8 +139,14 @@ class Server:
         host = str(task[0])
         host = self.ip + host
         print("Sending a snapreply to : ", host)
+        print(" ")
+        print("TASK: ", task[1])
+        print(" ")
         state = self.crdt.query(task[1])
-        self.sendmessage(state, host, self.port)
+        print("STATE: ", state)
+        print(" ")
+        if not len(state) == 0:
+            self.sendmessage(state, host, self.port)
 
     # sending message to another host
     def sendmessage(self, message, host, port):
@@ -192,10 +198,18 @@ class Server:
             file.write("")
             file.close()
             if text:
+                #print("TEXT: ", text)
                 for action in text:
 
                     ### Perform the action from local machine ###
-                    state = json.loads(action)
+                    try:
+                        state = json.loads(action)
+                    except:
+                        print("-----------------------------------------")
+                        print("deltaBackend: json.loads(action)  ACTION: ", action, " TEXT: ", text)
+                        print(" ")
+                        print()
+                        print("-----------------------------------------")
                     data = {str(self.hostID): state[1]}
                     print("#### PERFORMING AN UPDATE ####")
                     start_time = time.time()

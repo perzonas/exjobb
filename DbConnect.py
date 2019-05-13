@@ -166,7 +166,6 @@ def dbaddentry(myid, dbid, table, entry):
     cur = c.execute("SELECT * from %s" % table)
     names = list(map(lambda x: x[0], cur.description))
     cnames = table + "(" + ",".join(names[1:]) + ")"
-    print("###############", cnames)
     try:
         c.execute('''INSERT INTO {tn} VALUES ({q})'''.format(tn=cnames, q=",".join(["?"]*(columns-1))), entry[1:])
     except sqlite3.IntegrityError as e:
@@ -240,8 +239,8 @@ def dbentryexist(myid, dbid, table, key):
 
 
 def dbgraveyardcheck(myid, dbid, table, key):
-    print("The IDS ARE: ", myid, dbid)
-    conn = sqlite3.connect("databases/" + str(myid) + "/" + "1")
+    #print("The IDS ARE: ", myid, dbid)
+    conn = sqlite3.connect("databases/" + str(myid) + "/" + str(dbid))
     c = conn.cursor()
 
     r = c.execute("SELECT COUNT(*) FROM graveyard WHERE c_databaseid='%s' AND c_tablename = '%s' AND c_rowid = '%s'" % (dbid, table, key)).fetchall()
@@ -253,4 +252,4 @@ def dbdeleteentry(myid, dbid, table, key):
     if not dbexistcheck(myid, dbid):
         addnewdb(myid, dbid)
     if not dbgraveyardcheck(myid, dbid, table, key):
-        dbaddentry(myid, 1, "graveyard", (0, dbid, table, key))
+        dbaddentry(myid, dbid, "graveyard", (0, dbid, table, key))

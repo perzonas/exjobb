@@ -66,7 +66,7 @@ class Script:
             file.write(self.makeLine(self.updTargets()))
             file.close()
 
-        time.sleep(35)
+        time.sleep(3) #35
 
         for i in range(1, hosts+1):
             file = open("localstates/local"+str(i), "a")
@@ -110,7 +110,7 @@ class Script:
             file.close()
 
 
-        time.sleep(15)
+        time.sleep(3) #15
 
         for i in range(1, hosts+1):
             file = open("localstates/local"+str(i), "a")
@@ -136,7 +136,7 @@ class Script:
             file.write(self.makeLine(self.getLoads()))
             file.close()
 
-        time.sleep(10)
+        time.sleep(3) #10
 
         for i in range(1, hosts+1):
             file = open("localstates/local"+str(i), "a")
@@ -157,7 +157,7 @@ class Script:
             file.write(self.makeLine(self.getTargets()))
             file.close()
 
-        time.sleep(5)
+        time.sleep(3) #5
 
         for i in range(1, hosts+1):
             file = open("localstates/local"+str(i), "a")
