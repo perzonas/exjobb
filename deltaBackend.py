@@ -188,27 +188,28 @@ class Server:
             os.chmod(filename, 0o777)
             file.close()
 
+        position = 0
 
         while True:
             ### Read file that holds local updates ###
             file = open(filename, "r")
             text = file.readlines()
             file.close()
-            file = open(filename, "w")
-            file.write("")
-            file.close()
+
             if text:
                 #print("TEXT: ", text)
-                for action in text:
+                for i in range(position, len(text)):
+                    action = text[i]
 
                     ### Perform the action from local machine ###
                     try:
                         state = json.loads(action)
                     except:
                         print("-----------------------------------------")
+                        print(" ")
                         print("deltaBackend: json.loads(action)  ACTION: ", action, " TEXT: ", text)
                         print(" ")
-                        print()
+                        #print(error)
                         print("-----------------------------------------")
                     data = {str(self.hostID): state[1]}
                     print("#### PERFORMING AN UPDATE ####")
@@ -229,7 +230,7 @@ class Server:
 
                     self.writeMerge()
 
-
+                position = len(text)
 
             ### Perform actions received from other nodes  and saved in a buffer ###
             if not self.taskStack.empty():
