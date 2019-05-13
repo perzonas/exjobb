@@ -169,7 +169,7 @@ class Server:
             file = open(filename, "w+")
             os.chmod(filename, 0o777)
             file.close()
-
+        position = 0
 
         while True:
             reproduce = []
@@ -179,12 +179,9 @@ class Server:
             file = open(filename, "r")
             text = file.readlines()
             file.close()
-            file = open(filename, "w")
-            file.write("")
-            file.close()
             if text:
-                for action in text:
-
+                for i in range(position, len(text)):
+                    action = text[i]
                     ### Perform the action from local machine ###
                     state = json.loads(action)
                     data = {str(self.hostID): state[1]}
@@ -205,7 +202,7 @@ class Server:
                     total_time = end_time - start_time
                     self.mergetime.append((total_time * 1000))
                     self.writeMerge()
-
+            position = len(text)
 
 
             ### Perform actions received from other nodes  and saved in a buffer ###
