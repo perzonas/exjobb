@@ -41,6 +41,7 @@ class Server:
         self.bytessentadress = "testdata/bytes" + str(self.hostID)
 
 
+
         # AF_INET -> ipv4 and SOCK_STREAM -> tcp
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 

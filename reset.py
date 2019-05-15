@@ -7,7 +7,7 @@ from LocalStateScript import Script
 class Test:
 
 
-    def run(self, hosts=2):
+    def run(self, hosts=8):
         hosts = int(hosts)
         ###  Clean up from last test ###
 
@@ -24,6 +24,7 @@ class Test:
             if file != "testdata/information.txt":
                 os.remove(file)
                 print("File removed: ", file)
+
 
         ###  Clean up databases  ###
         for i in range(1, (hosts+1)):

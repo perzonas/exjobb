@@ -32,6 +32,8 @@ class Server:
         self.hostID = hostnumber
         self.crdt.myvehicleid = hostnumber
         self.bytessentadress = "testdata/bytes" + self.hostID
+        for i in range(1, self.numberofhost+1):
+            addnewdb(self.hostID, i)
 
 
         # AF_INET -> ipv4 and SOCK_STREAM -> tcp

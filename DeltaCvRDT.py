@@ -18,10 +18,6 @@ class DeltaCvRDT:
         queryresult = {}
         mystate = self.getsnapshot()
 
-        print("SNAPSHOT: ", snapshot)
-        print(" ")
-        print("MYSTATE: ", mystate)
-        print(" ")
 
         for dbid, content in snapshot.items():
             if not dbexistcheck(self.myvehicleid, dbid):

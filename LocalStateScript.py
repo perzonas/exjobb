@@ -57,6 +57,7 @@ class Script:
             file.write(self.makeLine(self.getTargets()))
             file.close()
 
+
         #time.sleep(40)
         time.sleep(3)
         for i in range(1, hosts+1):

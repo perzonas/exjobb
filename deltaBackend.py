@@ -98,6 +98,8 @@ class Server:
 
             ### Add state to TODO stack so worker thread can perform the received action ###
             self.taskStack.put(message)
+            print("MESSAGE IS: ", message)
+            print("  ")
 
         else:
             self.dropped_messages += 1
@@ -117,10 +119,11 @@ class Server:
         time.sleep(2)
 
         # get state from crdt
-        for i in range(10):
+        while True:
             snapshot = self.crdt.getsnapshot()
+            print("SNAPSHOT IS : ", snapshot)
             self.broadcastsnapshot(snapshot)
-            time.sleep(4)
+            time.sleep(10)
 
     # Broadcast a message to all other nodes
     def broadcastsnapshot(self, message):
@@ -136,17 +139,12 @@ class Server:
                 self.sendmessage(ms, host, self.port)
     
     def snapreply(self, task):
+        print("TASK = ", task)
         host = str(task[0])
         host = self.ip + host
-        print("Sending a snapreply to : ", host)
-        print(" ")
-        print("TASK: ", task[1])
-        print(" ")
         state = self.crdt.query(task[1])
-        print("STATE: ", state)
-        print(" ")
         if not len(state) == 0:
-            self.sendmessage(state, host, self.port)
+            self.sendmessage([0, state], host, self.port)
 
     # sending message to another host
     def sendmessage(self, message, host, port):
@@ -197,7 +195,6 @@ class Server:
             file.close()
 
             if text:
-                #print("TEXT: ", text)
                 for i in range(position, len(text)):
                     action = text[i]
 
@@ -205,14 +202,8 @@ class Server:
                     try:
                         state = json.loads(action)
                     except:
-                        print("-----------------------------------------")
-                        print(" ")
-                        print("deltaBackend: json.loads(action)  ACTION: ", action, " TEXT: ", text)
-                        print(" ")
-                        #print(error)
-                        print("-----------------------------------------")
+                            pass
                     data = {str(self.hostID): state[1]}
-                    print("#### PERFORMING AN UPDATE ####")
                     start_time = time.time()
                     if state[0] == "i":
                         self.crdt.merge(data)
@@ -236,14 +227,14 @@ class Server:
             if not self.taskStack.empty():
                 task = self.taskStack.get()
 
-                if len(task) == 2:
+                if task[0] != 0:
                     print("#### PERFORMING A SNAPREPLY ####")
                     self.snapreply(task)
                     self.taskStack.task_done()
                 else:
                     print("#### PERFORMING A MERGE ####")
                     start_time = time.time()
-                    self.crdt.merge(task)
+                    self.crdt.merge(task[1])
                     end_time = time.time()
                     total_time = end_time - start_time
                     self.mergetime.append((total_time * 1000))

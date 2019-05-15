@@ -175,6 +175,8 @@ def dbaddentry(myid, dbid, table, entry):
 
 
 def dbquery(myid, dbid):  # get all of mydb
+    if not dbexistcheck(myid, dbid):
+        addnewdb(myid, dbid)
     dbaste = {}
 
     conn = sqlite3.connect("databases/" + str(myid) + "/" + str(dbid))
@@ -239,7 +241,8 @@ def dbentryexist(myid, dbid, table, key):
 
 
 def dbgraveyardcheck(myid, dbid, table, key):
-    #print("The IDS ARE: ", myid, dbid)
+    if not dbexistcheck(myid, dbid):
+        addnewdb(myid, dbid)
     conn = sqlite3.connect("databases/" + str(myid) + "/" + str(dbid))
     c = conn.cursor()
 
