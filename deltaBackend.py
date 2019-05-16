@@ -8,7 +8,6 @@ from StateCvRDT import *
 from DeltaCvRDT import *
 import os.path
 import math
-import numpy as np
 
 
 class Server:
