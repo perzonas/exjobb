@@ -8,6 +8,7 @@ from StateCvRDT import *
 from DeltaCvRDT import *
 import os.path
 import math
+import numpy as np
 
 
 class Server:
@@ -31,7 +32,7 @@ class Server:
         self.numberofhost = int(numberofhosts)
         self.ownIP += str(hostnumber)
         self.hostID = hostnumber
-        self.crdt.myvehicleid = hostnumber
+        self.crdt.myid = hostnumber
         self.bytessentadress = "testdata/bytes" + self.hostID
 
 
@@ -98,8 +99,8 @@ class Server:
 
             ### Add state to TODO stack so worker thread can perform the received action ###
             self.taskStack.put(message)
-            print("MESSAGE IS: ", message)
-            print("  ")
+            #print("MESSAGE IS: ", message)
+            #print("  ")
 
         else:
             self.dropped_messages += 1
@@ -121,7 +122,7 @@ class Server:
         # get state from crdt
         while True:
             snapshot = self.crdt.getsnapshot()
-            print("SNAPSHOT IS : ", snapshot)
+            #print("SNAPSHOT IS : ", snapshot)
             self.broadcastsnapshot(snapshot)
             time.sleep(10)
 
@@ -131,18 +132,21 @@ class Server:
         for host in range(1, (self.numberofhost + 1)):
             host = str(host)
             host = self.ip + host
-
-            ms = [self.hostID, message]
+            ms = [self.hostID, message, (self.hostID, self.crdt.messagecounter)]
 
             # do not send to ourselves
             if host != self.ownIP:
                 self.sendmessage(ms, host, self.port)
-    
+
+        self.crdt.messagecounter += 1
+
+
     def snapreply(self, task):
-        print("TASK = ", task)
+        #print("TASK = ", task)
         host = str(task[0])
         host = self.ip + host
-        state = self.crdt.query(task[1])
+        state = self.crdt.query(task[1:3])
+        #print("\n State: ", state, "\n")
         if not len(state) == 0:
             self.sendmessage([0, state], host, self.port)
 
