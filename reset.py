@@ -34,7 +34,7 @@ class Test:
                 print("File removed: ", file)
 
         script = Script()
-        script.run()
+        script.run(hosts)
 
 if __name__ == '__main__':
 
