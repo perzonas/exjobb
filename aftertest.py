@@ -1,7 +1,9 @@
 import sqlite3
 from DbConnect import *
 
+
 def consistensycheck(nrofnodes):
+
     resultdict = {}
 
 
@@ -26,4 +28,4 @@ def consistensycheck(nrofnodes):
 
 
 
-consistensycheck(8)
+consistensycheck(1)

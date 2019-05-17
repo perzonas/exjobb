@@ -8,6 +8,8 @@ from mininet.link import TCLink, TCIntf, Intf
 from mininet.term import makeTerm, cleanUpScreens  # Open xterm from mininet
 from functools import partial
 from mininet.cli import CLI
+from threading import Thread
+from reset import Test
 
 
 class CustomTopo(Topo):
@@ -25,10 +27,10 @@ topos = {'customtopo': (lambda: CustomTopo())}
 
 class CustomTopology:
 
-    def startBackend(self, server, hosts, totalnohost):
+    def startBackend(self, server, hosts, totalnohost, network):
         print("starting server %s" % server.IP())
-        # makeTerm(node=server, cmd="python backend/backend.py %s %d" % (server.IP().replace("10.1.0.",""), nbOfServers) )
-        makeTerm(node=server, cmd="python3 deltaBackend.py %s %s" % (hosts, totalnohost))
+
+        network.hosts += makeTerm(node=server, cmd="python3 deltaBackend.py %s %s" % (hosts, totalnohost))
 
     def setup(self, no_of_hosts=10, bandwidth=1000, delay='5ms', loss=1, queue_size=1000):
 
@@ -58,15 +60,27 @@ class CustomTopology:
         h1, h2 = network.get('Host1', 'Host2')
         # network.iperf((h1, h2))
 
-        for host in network.hosts:
-            self.startBackend(host, host.name[-1], len(network.hosts))
+        thread = Thread(target=self.restartTest, args=[len(network.hosts)])
+        thread.daemon = True
+        thread.start()
+        time.sleep(1)
 
-        CLI(network)
+        for host in network.hosts:
+            self.startBackend(host, host.name[-1], len(network.hosts), network)
+
+        linkScript(network, len(network.hosts))
+
+        ### If you want to start the mininet console remove this commented line below ###
+        # CLI(network)
 
         network.stop()
 
-        # We close the xterms (mininet.term.cleanUpScreens)
+        # We close the xterms
         cleanUpScreens()
+
+    def restartTest(self, hosts):
+        test = Test()
+        test.run(hosts)
 
 
 if __name__ == '__main__':

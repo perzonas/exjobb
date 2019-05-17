@@ -17,7 +17,7 @@ def linkScript(network, hosts):
     host = "Host"
     loops = 0
     starttime = time.time()
-    while time.time()-starttime < 300:
+    while time.time()-starttime < 310:
         for i in range(1, hosts+1):
             args = [host + str(i), switch, down]
             if not (i % 2 == 0 and loops == 2):

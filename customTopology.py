@@ -9,6 +9,9 @@ from mininet.term import makeTerm, cleanUpScreens  # Open xterm from mininet
 from functools import partial
 from mininet.cli import CLI
 from linkConnections import *
+from threading import Thread
+from reset import Test
+import time
 
 
 class CustomTopo(Topo):
@@ -26,10 +29,10 @@ topos = {'customtopo': (lambda: CustomTopo())}
 
 class CustomTopology:
 
-    def startBackend(self, server, hosts, totalnohost):
+    def startBackend(self, server, hosts, totalnohost, network):
         print("starting server %s" % server.IP())
 
-        makeTerm(node=server, cmd="python3 backend.py %s %s" % (hosts, totalnohost))
+        network.terms += makeTerm(node=server, cmd="python3 backend.py %s %s" % (hosts, totalnohost))
 
     def setup(self, no_of_hosts=10, bandwidth=1000, delay='5ms', loss=1, queue_size=1000):
 
@@ -41,7 +44,6 @@ class CustomTopology:
         links = partial(TCLink, delay=delay, bw=bandwidth, loss=loss, max_queue_size=queue_size, use_htb=True)
         ovsswitch = partial(OVSSwitch, protocol='OpenFlow13')
 
-        # remoteController = partial(RemoteController, ip='127.0.0.1', port=6653)
         # Set the topology, the class for links and interfaces, the mininet environment must be cleaned up before
         # launching, we should build now the topology
         network = Mininet(topo=topology, switch=ovsswitch, controller=Controller, intf=TCIntf,
@@ -49,26 +51,42 @@ class CustomTopology:
 
         network.start()
 
+
+
         info("*** Dumping host connections\n")
         dumpNodeConnections(network.hosts)
-
         info("*** testing basic connectivity\n")
         # network.pingAll()
-
         info("*** testing bandwith between host 1 & 2\n")
         h1, h2 = network.get('Host1', 'Host2')
         # network.iperf((h1, h2))
 
-        for host in network.hosts:
-            self.startBackend(host, host.name[-1], len(network.hosts))
 
-        #linkScript(network, len(network.hosts))
-        CLI(network)
+
+        thread = Thread(target=self.restartTest, args=[len(network.hosts)])
+        thread.daemon = True
+        thread.start()
+        time.sleep(1)
+
+
+        for host in network.hosts:
+            self.startBackend(host, host.name[-1], len(network.hosts), network)
+
+        linkScript(network, len(network.hosts))
+
+        ### If you want to start the mininet console remove this commented line below ###
+        #CLI(network)
 
         network.stop()
 
-        # We close the xterms (mininet.term.cleanUpScreens)
+        # We close the xterms
         cleanUpScreens()
+
+
+
+    def restartTest(self, hosts):
+        test = Test()
+        test.run(hosts)
 
 
 if __name__ == '__main__':

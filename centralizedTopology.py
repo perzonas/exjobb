@@ -9,6 +9,8 @@ from mininet.term import makeTerm, cleanUpScreens  # Open xterm from mininet
 from functools import partial
 from mininet.cli import CLI
 from linkConnections import *
+from threading import Thread
+from reset import Test
 
 
 class CustomTopo(Topo):
@@ -31,7 +33,7 @@ class CustomTopology:
 
         network.terms += makeTerm(node=server, cmd="python3 centralizedBackend.py %s %s" % (hosts, totalnohost))
 
-    def setup(self, no_of_hosts=10, bandwidth=0.1, delay='50ms', loss=1, queue_size=1000):
+    def setup(self, no_of_hosts=10, bandwidth=1000, delay='50ms', loss=1, queue_size=1000):
 
         topology = CustomTopo(no_of_hosts)
         # Select TCP Reno
@@ -63,17 +65,28 @@ class CustomTopology:
         h1, h2 = network.get('Host1', 'Host2')
         # network.iperf((h1, h2))
 
+        thread = Thread(target=self.restartTest, args=[len(network.hosts)])
+        thread.daemon = True
+        thread.start()
+        time.sleep(1)
+
         for host in network.hosts:
             self.startBackend(host, host.name[-1], len(network.hosts), network)
 
+
         linkScript(network, len(network.hosts))
+
+        ### If you want to start the mininet console remove this commented line below ###
         CLI(network)
+
         network.stop()
 
-        # We close the xterms (mininet.term.cleanUpScreens)
+        # We close the xterms
         cleanUpScreens()
 
-
+    def restartTest(self, hosts):
+        test = Test()
+        test.run(hosts)
 
 
 

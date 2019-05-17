@@ -27,6 +27,7 @@ class Server:
     messagetime = []
     dropped_messages = 0
     expectedBytes = 0
+    messageSizes = []
 
 
 
@@ -167,14 +168,14 @@ class Server:
     ###  Slave node have received the state from the master node and will update its own state to this state
     def updatestate(self, state):
         print("***  Updating slave state based on master state  ***\n")
-        if not dbexistcheck(self.hostID, self.hostID):
-            addnewdb(self.hostID, self.hostID)
+        if not dbexistcheck(self.hostID, 1):
+            addnewdb(self.hostID, 1)
         start_time = time.time()
         for table, tlist in state.items():
             if tlist:
                 for entry in tlist:
-                    if not dbentryexist(self.hostID, self.hostID, table, entry[0]):
-                        dbaddentry(self.hostID, self.hostID, table, entry)
+                    if not dbentryexist(self.hostID, 1, table, entry[0]):
+                        dbaddentry(self.hostID, 1, table, entry)
         end_time = time.time()
         total_time = end_time-start_time
         self.mergetime.append((total_time*1000))
@@ -186,7 +187,7 @@ class Server:
 
         while True:
 
-            time.sleep(15)
+            time.sleep(8)
             message = dbquery(self.hostID, self.hostID)
             print("***  Broadcasting master state: %s  ***\n")
             for host in range(1, (int(self.numberofhost) + 1)):
@@ -210,6 +211,7 @@ class Server:
             sock.connect((host, port))
             data = (serializeddata + ";").encode()
             datasize = len(data)
+            self.messageSizes.append(datasize)
             self.expectedBytes += datasize
             totalsent = 0
             while totalsent < datasize:
@@ -318,6 +320,12 @@ class Server:
         os.chmod("testdata/bytes"+str(self.hostID), 0o777)
         file.write(json.dumps((self.bytessent, self.expectedBytes)))
         file.close()
+
+        file = open("testdata/messagesize" + str(self.hostID), "w")
+        os.chmod("testdata/messagesize" + str(self.hostID), 0o777)
+        file.write(json.dumps(self.messageSizes))
+        file.close()
+
 
 
     def writeMessage(self):
