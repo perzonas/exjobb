@@ -36,6 +36,7 @@ class Test:
         script = Script()
         script.run(hosts)
 
+
 if __name__ == '__main__':
 
     test = Test()

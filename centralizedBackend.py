@@ -129,7 +129,7 @@ class Server:
 
     ### Master node have received an updates from slave nodes and perform the action received to update its state
     def performaction(self, id, clock, received):
-        (action, content) = json.loads(received)
+        (action, content) = received
         if int(clock) > self.centralclockholder[int(id)]:
             self.centralclockholder[int(id)] = clock
             if not dbexistcheck(self.hostID, self.hostID):
@@ -189,7 +189,7 @@ class Server:
 
             time.sleep(8)
             message = dbquery(self.hostID, self.hostID)
-            print("***  Broadcasting master state: %s  ***\n")
+            print("***  Broadcasting master state ***\n")
             for host in range(1, (int(self.numberofhost) + 1)):
                 host = self.ip + str(host)
 
@@ -248,6 +248,7 @@ class Server:
         filename = "localstates/local"+self.hostID
         sendQueue = Queue()
         currentMessage = None
+        position = 0
 
         ### Create local update file if it doesn't exist
         if not os.path.isfile(filename):
@@ -256,8 +257,7 @@ class Server:
             file.close()
 
         while True:
-            reproduce = None
-            action = None
+
 
 
 
@@ -266,46 +266,44 @@ class Server:
             text = file.readlines()
             file.close()
             if text:
-                action = text[0]
-                if len(text) > 1:
-                    reproduce = text[1:]
+                for i in range(position, len(text)):
+                    action = text[i]
+                    try:
+                        action = json.loads(action)
 
 
-            ### Update the file and remove the line that will be performed if there was an update in the file ###
+                ### Send the update from the local machine to the centralized machine ###
+                ### if you are a slave node you send the update to master, if you are master you perform update
 
-                file = open(filename, "w")
-                if reproduce:
-                    for line in reproduce:
-                        file.write(line)
+                        if int(self.hostID) != 1:
+                            if action:
+                                self.logicalclock += 1
+                                sendQueue.put((self.logicalclock, action))
+
+                        ### Master node perform actions received from other nodes that are saved in a buffer ###
+                        else:
+                            if action:
+                                self.logicalclock += 1
+                                self.mergeStack.put((self.hostID, (self.logicalclock, action)))
+                    except:
+                        pass
+                position = len(text)
+
+                if int(self.hostID) != 1:
+                    if currentMessage is None and not sendQueue.empty():
+                        currentMessage = sendQueue.get()
+                    if currentMessage is not None:
+                        if self.sendmessage(currentMessage, self.ip + "1", 1337):
+                            currentMessage = None
+                            sendQueue.task_done()
                 else:
-                    file.write("")
-                file.close()
-
-            ### Send the update from the local machine to the centralized machine ###
-            ### if you are a slave node you send the update to master, if you are master you perform update
-
-            if int(self.hostID) != 1:
-                if action:
-                    self.logicalclock += 1
-                    sendQueue.put((self.logicalclock, action))
-
-                if currentMessage is None and not sendQueue.empty():
-                    currentMessage = sendQueue.get()
-                if currentMessage is not None:
-                    if self.sendmessage(currentMessage, self.ip + "1", 1337):
-                        currentMessage = None
-                        sendQueue.task_done()
+                    if not self.mergeStack.empty():
+                        (id, (clock, operation)) = self.mergeStack.get()
+                        self.performaction(id, clock, operation)
+                        self.mergeStack.task_done()
 
 
-            ### Master node perform actions received from other nodes that are saved in a buffer ###
-            else:
-                if action:
-                    self.logicalclock += 1
-                    self.mergeStack.put((self.hostID, (self.logicalclock, action)))
-                if not self.mergeStack.empty():
-                    (id, (clock, operation)) = self.mergeStack.get()
-                    self.performaction(id, clock, operation)
-                    self.mergeStack.task_done()
+
 
     def writeMerge(self):
         ### Write results to testfile ###
@@ -346,21 +344,3 @@ if __name__ == '__main__':
     except IndexError:
         print("Too few arguments")
 
-    finally:
-
-
-        ### Write converge latency to testdatafile ###
-        file = open("testdata/mergelatency"+str(server.hostID), "w")
-        os.chmod("testdata/mergelatency"+str(server.hostID), 0o777)
-        file.write(json.dumps(server.mergetime))
-        file.close()
-
-        ### Write message latency to testdatafile ###
-        file = open("testdata/messagelatency" + str(server.hostID), "w")
-        os.chmod("testdata/messagelatency" + str(server.hostID), 0o777)
-        server.messagetime.append(server.dropped_messages)
-        file.write(json.dumps(server.messagetime))
-        file.close()
-
-        print("\n### Shutting down server ###")
-        time.sleep(2)

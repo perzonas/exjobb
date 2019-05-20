@@ -27,5 +27,5 @@ def consistensycheck(nrofnodes):
 
 
 consistensycheck(1)
-consistensycheck(2)
+#consistensycheck(2)
 

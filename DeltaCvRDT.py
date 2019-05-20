@@ -1,5 +1,5 @@
 from DbConnect import *
-import numpy as np
+
 
 class DeltaCvRDT:
     myid = None
