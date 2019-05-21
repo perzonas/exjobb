@@ -1,11 +1,16 @@
 from DbConnect import *
 import numpy as np
+import json
 
 class DeltaCvRDT:
     myid = None
     dbases = []
     messagecounter = 1
-    divergematrix = [[1,0], [2,0], [3,0], [4,0], [5,0], [6,0], [7,0], [8,0]]
+    nrofhosts = 0
+
+    ### Y-axis is nodes in ascending order (node 1 top of matrix, node 8 bottom) ###
+    ### and X-axis is messagenumber 1-infitiny ###
+    divergematrix = []
 
     def adddb(self, dbid):
         if dbid != self.myid:
@@ -16,15 +21,9 @@ class DeltaCvRDT:
         self.delete(self.myid, table, entry[0])
         dbaddentry(self.myid, self.myid, table, entry)
 
-    def query(self, tuperu):
-        #print("\nTUPERU: ", tuperu, "\n")
-        snapshot = tuperu[0]
+    def query(self, snapshot):
         queryresult = {}
         mystate = self.getsnapshot()
-
-        if tuperu[1][0] != 0:
-            self.matrixupdate(tuperu[1][0], tuperu[1][1])
-
 
         for dbid, content in snapshot.items():
             if not dbexistcheck(self.myid, dbid):
@@ -70,26 +69,32 @@ class DeltaCvRDT:
             dbdeleteentry(self.myid, dbid, table, key)
 
 
-    #def updatematrix(self, sender, messagenumber):
-    #    if self.divergematrix.shape < (8, messagenumber):
-    #        self.divergematrix = np.pad(self.divergematrix, (0,messagenumber), 'constant', constant_values=0)
-    #        self.divergematrix.resize(8, messagenumber+3)
-
-        #self.divergematrix[sender][messagenumber] = messagenumber
-
-    #    print(self.divergematrix)
+    def creatematrix(self, nrofhosts):
+        for i in range(0, nrofhosts):
+            self.divergematrix.append([0])
 
 
-    def matrixupdate(self, sender, messagenumber):
-        while len(self.divergematrix[0])-1 < messagenumber:
-            for i in range(0,8):
+    def matrixupdate(self, sender, messagenumber, prnt):
+        while len(self.divergematrix[0]) < messagenumber:
+            for i in range(0, len(self.divergematrix)):
                 self.divergematrix[i].append(0)
+        print("\nSENDER: ", sender, "MESSAGENUMBER: ", messagenumber, "\n" )
+        self.divergematrix[int(sender)-1][messagenumber-1] = 1
 
-        self.divergematrix[int(sender)-1][messagenumber] = "X"
+        if prnt == True:
+            for li in self.divergematrix:
+                toprint = "|"
+                for x in li:
+                    toprint += " " + str(x)
+                toprint += " |"
+                print(toprint)
 
-        for li in self.divergematrix:
-            toprint = "|"
-            for x in li:
-                toprint += " " + str(x)
-            toprint += " |"
-            print(toprint)
+        self.writeDivergeMatrix()
+
+
+    def writeDivergeMatrix(self):
+        file = open("testdata/divergematrix" + str(self.myid), "w")
+        os.chmod("testdata/divergematrix" + str(self.myid), 0o777)
+        file.write(json.dumps(self.divergematrix) + "\n")
+        file.write(json.dumps(self.messagecounter))
+        file.close()

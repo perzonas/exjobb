@@ -8,6 +8,7 @@ from mininet.link import TCLink, TCIntf, Intf
 from mininet.term import makeTerm, cleanUpScreens  # Open xterm from mininet
 from functools import partial
 from mininet.cli import CLI
+from linkConnections import *
 from threading import Thread
 from reset import Test
 
@@ -27,19 +28,22 @@ topos = {'customtopo': (lambda: CustomTopo())}
 
 class CustomTopology:
 
-    def startBackend(self, server, hosts, totalnohost, network):
+    def startBackend(self, server, hosts, totalnohost, network, domatrix):
         print("starting server %s" % server.IP())
 
-        network.hosts += makeTerm(node=server, cmd="python3 deltaBackend.py %s %s" % (hosts, totalnohost))
+        network.terms += makeTerm(node=server, cmd="python3 deltaBackend.py %s %s %s" % (hosts, totalnohost, str(domatrix)))
 
-    def setup(self, no_of_hosts=10, bandwidth=1000, delay='5ms', loss=1, queue_size=1000):
+    def setup(self, no_of_hosts=10, bandwidth=1000, delay='50ms', loss=1, queue_size=1000, domatrix=0):
 
         topology = CustomTopo(no_of_hosts)
         # Select TCP Reno
         # output = quietRun('sysctl -w net.ipv4.tcp_congestion_control=reno')
         # assert 'reno' in output
 
-        links = partial(TCLink, delay=delay, bw=bandwidth, loss=loss, max_queue_size=queue_size, use_htb=True)
+
+
+        # links = partial(TCLink, delay=delay, bw=bandwidth, loss=loss, max_queue_size=queue_size, use_htb=True)
+        links = partial(TCLink, delay=delay, bw=bandwidth, max_queue_size=queue_size, use_htb=True)
         ovsswitch = partial(OVSSwitch, protocol='OpenFlow13')
 
         # remoteController = partial(RemoteController, ip='127.0.0.1', port=6653)
@@ -49,6 +53,7 @@ class CustomTopology:
                           host=CPULimitedHost, link=links, cleanup=True, build=True, ipBase='20.1.90.0/24')
 
         network.start()
+
 
         info("*** Dumping host connections\n")
         dumpNodeConnections(network.hosts)
@@ -66,12 +71,13 @@ class CustomTopology:
         time.sleep(1)
 
         for host in network.hosts:
-            self.startBackend(host, host.name[-1], len(network.hosts), network)
+            self.startBackend(host, host.name[-1], len(network.hosts), network, domatrix)
+
 
         linkScript(network, len(network.hosts))
 
         ### If you want to start the mininet console remove this commented line below ###
-        # CLI(network)
+        #CLI(network)
 
         network.stop()
 
@@ -83,6 +89,7 @@ class CustomTopology:
         test.run(hosts)
 
 
+
 if __name__ == '__main__':
     setLogLevel('info')
     simulation = CustomTopology()
@@ -90,5 +97,5 @@ if __name__ == '__main__':
         simulation.setup()
     else:
         hosts = int(sys.argv[1])
-        simulation.setup(hosts)
+        simulation.setup(hosts, domatrix=sys.argv[2])
 

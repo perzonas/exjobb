@@ -26,14 +26,16 @@ class Server:
     mergetime = []
     messagetime = []
     dropped_messages = 0
+    domatrix = 0
 
-    def run(self, hostnumber, numberofhosts=1):
+    def run(self, hostnumber, numberofhosts=1, matrix=0):
         self.numberofhost = int(numberofhosts)
         self.ownIP += str(hostnumber)
         self.hostID = hostnumber
         self.crdt.myid = hostnumber
+        self.crdt.creatematrix(int(numberofhosts))
         self.bytessentadress = "testdata/bytes" + self.hostID
-
+        self.domatrix = int(matrix)
 
         # AF_INET -> ipv4 and SOCK_STREAM -> tcp
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -94,12 +96,10 @@ class Server:
             total_time = end_time - start_time
             self.messagetime.append(total_time*1000)
             message = json.loads(data)
-            print("### RECEIVED MESSAGE FROM NODE %s ###" % id)
+            #print("### RECEIVED MESSAGE FROM NODE %s ###" % id)
 
             ### Add state to TODO stack so worker thread can perform the received action ###
             self.taskStack.put(message)
-            #print("MESSAGE IS: ", message)
-            #print("  ")
 
         else:
             self.dropped_messages += 1
@@ -121,13 +121,12 @@ class Server:
         # get state from crdt
         while True:
             snapshot = self.crdt.getsnapshot()
-            #print("SNAPSHOT IS : ", snapshot)
             self.broadcastsnapshot(snapshot)
             time.sleep(10)
 
     # Broadcast a message to all other nodes
     def broadcastsnapshot(self, message):
-        print("Broadcasting SNAPSHOT to all hosts")
+        #print("Broadcasting SNAPSHOT to all hosts")
         for host in range(1, (self.numberofhost + 1)):
             host = str(host)
             host = self.ip + host
@@ -136,16 +135,19 @@ class Server:
             # do not send to ourselves
             if host != self.ownIP:
                 self.sendmessage(ms, host, self.port)
-
+        if self.domatrix == 1:
+            self.crdt.matrixupdate(self.crdt.myid, self.crdt.messagecounter, True)
         self.crdt.messagecounter += 1
 
 
     def snapreply(self, task):
-        #print("TASK = ", task)
         host = str(task[0])
         host = self.ip + host
-        state = self.crdt.query(task[1:3])
-        #print("\n State: ", state, "\n")
+        state = self.crdt.query(task[1])
+
+        if self.domatrix == 1:
+            self.crdt.matrixupdate(task[2][0], task[2][1], False)
+
         if not len(state) == 0:
             self.sendmessage([0, state], host, self.port)
 
@@ -231,11 +233,11 @@ class Server:
                 task = self.taskStack.get()
 
                 if task[0] != 0:
-                    print("#### PERFORMING A SNAPREPLY ####")
+                    #print("#### PERFORMING A SNAPREPLY ####")
                     self.snapreply(task)
                     self.taskStack.task_done()
                 else:
-                    print("#### PERFORMING A MERGE ####")
+                    #print("#### PERFORMING A MERGE ####")
                     start_time = time.time()
                     self.crdt.merge(task[1])
                     end_time = time.time()
@@ -252,12 +254,14 @@ class Server:
         file.write(json.dumps(self.mergetime))
         file.close()
 
+
     def writeBytes(self):
         ### Create testdata file if it doesn't exist ###
         file = open("testdata/bytes" + str(self.hostID), "w")
         os.chmod("testdata/bytes" + str(self.hostID), 0o777)
         file.write(json.dumps((self.bytessent, self.expectedBytes)))
         file.close()
+
 
     def writeMessage(self):
         file = open("testdata/messagelatency" + str(self.hostID), "w")
@@ -274,7 +278,8 @@ class Server:
 if __name__ == '__main__':
     server = Server()
     try:
-        server.run(sys.argv[1], sys.argv[2])
+        print("SYSARG: ", sys.argv[3])
+        server.run(sys.argv[1], sys.argv[2], sys.argv[3])
     except IndexError:
         print("Too few arguments")
 

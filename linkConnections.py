@@ -11,6 +11,7 @@ import time
 
 
 def linkScript(network, hosts):
+    print("----------------------------\n STARTING linkScript\n ----------------------------")
     switch = "Switch1"
     up = "up"
     down = "down"
@@ -20,13 +21,13 @@ def linkScript(network, hosts):
     while time.time()-starttime < 310:
         for i in range(1, hosts+1):
             args = [host + str(i), switch, down]
-            if not (i % 2 == 0 and loops == 2):
+            if not (i % 2 == 0 and loops == 10):
                 network.configLinkStatus(*args)
                 print("Connection to Host %s lost." % str(i))
-                if i % 2 == 0 and loops < 2:
-                    time.sleep(3)
-                elif i % 2 != 0 and loops < 3:
-                    time.sleep(2)
+                if i % 2 == 0 and loops < 10:
+                    time.sleep(20)
+                elif i % 2 != 0 and loops < 10:
+                    time.sleep(1)
                 args[2] = up
                 network.configLinkStatus(*args)
                 print("Connection to Host %s reestablished." % str(i))
