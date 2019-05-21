@@ -18,20 +18,19 @@ def linkScript(network, hosts):
     host = "Host"
     loops = 0
     starttime = time.time()
-    while time.time()-starttime < 310:
+    while time.time()-starttime < 300:
         for i in range(1, hosts+1):
             args = [host + str(i), switch, down]
-            if not (i % 2 == 0 and loops == 10):
-                network.configLinkStatus(*args)
-                print("Connection to Host %s lost." % str(i))
-                if i % 2 == 0 and loops < 10:
-                    time.sleep(20)
-                elif i % 2 != 0 and loops < 10:
-                    time.sleep(1)
-                args[2] = up
-                network.configLinkStatus(*args)
-                print("Connection to Host %s reestablished." % str(i))
-                time.sleep(i)
+            network.configLinkStatus(*args)
+            print("Connection to Host %s lost." % str(i))
+            if i % 2 == 0 and loops < 3:
+                time.sleep(4/3)
+            elif i % 2 != 0 and loops < 2:
+                time.sleep(2)
+            args[2] = up
+            network.configLinkStatus(*args)
+            print("Connection to Host %s reestablished." % str(i))
+            time.sleep(i)
         loops += 1
 
 

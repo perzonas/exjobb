@@ -33,7 +33,7 @@ class CustomTopology:
 
         network.terms += makeTerm(node=server, cmd="python3 centralizedBackend.py %s %s" % (hosts, totalnohost))
 
-    def setup(self, no_of_hosts=10, bandwidth=1000, delay='50ms', loss=1, queue_size=1000):
+    def setup(self, no_of_hosts=10, bandwidth=1.5, delay='150ms', loss=1, queue_size=1000):
 
         topology = CustomTopo(no_of_hosts)
         # Select TCP Reno
@@ -43,7 +43,7 @@ class CustomTopology:
 
 
         # links = partial(TCLink, delay=delay, bw=bandwidth, loss=loss, max_queue_size=queue_size, use_htb=True)
-        links = partial(TCLink, delay=delay, bw=bandwidth, loss=0.8, max_queue_size=queue_size, use_htb=True)
+        links = partial(TCLink, delay=delay, bw=bandwidth, max_queue_size=queue_size, use_htb=True)
         ovsswitch = partial(OVSSwitch, protocol='OpenFlow13')
 
         # remoteController = partial(RemoteController, ip='127.0.0.1', port=6653)
@@ -78,7 +78,7 @@ class CustomTopology:
         linkScript(network, len(network.hosts))
 
         ### If you want to start the mininet console remove this commented line below ###
-        CLI(network)
+        # CLI(network)
 
         network.stop()
 

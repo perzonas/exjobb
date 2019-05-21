@@ -34,7 +34,7 @@ class CustomTopology:
 
         network.terms += makeTerm(node=server, cmd="python3 backend.py %s %s" % (hosts, totalnohost))
 
-    def setup(self, no_of_hosts=10, bandwidth=1000, delay='5ms', loss=1, queue_size=1000):
+    def setup(self, no_of_hosts=10, bandwidth=1.5, delay='150ms', loss=1, queue_size=1000):
 
         topology = CustomTopo(no_of_hosts)
         # Select TCP Reno

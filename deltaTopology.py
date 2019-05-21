@@ -35,12 +35,9 @@ class CustomTopology:
 
         network.terms += makeTerm(node=server, cmd="python3 deltaBackend.py %s %s %s" % (hosts, totalnohost, str(domatrix)))
 
-<<<<<<< HEAD
-    def setup(self, no_of_hosts=10, bandwidth=1000, delay='50ms', loss=1, queue_size=1000, domatrix=0):
 
-=======
-    def setup(self, no_of_hosts=10, bandwidth=1000, delay='5ms', loss=1, queue_size=1000):
->>>>>>> 4e4681ef79abc607070a273c80d945614e796a88
+    def setup(self, no_of_hosts=10, bandwidth=1.5, delay='150ms', loss=1, queue_size=1000, domatrix=0):
+
         topology = CustomTopo(no_of_hosts)
         # Select TCP Reno
         # output = quietRun('sysctl -w net.ipv4.tcp_congestion_control=reno')
