@@ -124,6 +124,7 @@ dmypy.json
 testdata/
 databases/
 localstates/
+results/
 
 ### Python Patch ###
 .venv/

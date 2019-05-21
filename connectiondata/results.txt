@@ -1,4 +1,4 @@
-Percentage of downtime: 1.353875
+Percentage of downtime: 1.353875%
 Total number of seconds: 6426
 Total number of secodns disconnected: 87
 Total number of seconds connected: 6339

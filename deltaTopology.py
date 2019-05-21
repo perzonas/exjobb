@@ -11,6 +11,8 @@ from mininet.cli import CLI
 from linkConnections import *
 from threading import Thread
 from reset import Test
+import time
+from linkConnections import *
 
 
 class CustomTopo(Topo):
@@ -33,8 +35,12 @@ class CustomTopology:
 
         network.terms += makeTerm(node=server, cmd="python3 deltaBackend.py %s %s %s" % (hosts, totalnohost, str(domatrix)))
 
+<<<<<<< HEAD
     def setup(self, no_of_hosts=10, bandwidth=1000, delay='50ms', loss=1, queue_size=1000, domatrix=0):
 
+=======
+    def setup(self, no_of_hosts=10, bandwidth=1000, delay='5ms', loss=1, queue_size=1000):
+>>>>>>> 4e4681ef79abc607070a273c80d945614e796a88
         topology = CustomTopo(no_of_hosts)
         # Select TCP Reno
         # output = quietRun('sysctl -w net.ipv4.tcp_congestion_control=reno')
@@ -46,7 +52,6 @@ class CustomTopology:
         links = partial(TCLink, delay=delay, bw=bandwidth, max_queue_size=queue_size, use_htb=True)
         ovsswitch = partial(OVSSwitch, protocol='OpenFlow13')
 
-        # remoteController = partial(RemoteController, ip='127.0.0.1', port=6653)
         # Set the topology, the class for links and interfaces, the mininet environment must be cleaned up before
         # launching, we should build now the topology
         network = Mininet(topo=topology, switch=ovsswitch, controller=Controller, intf=TCIntf,
@@ -57,10 +62,8 @@ class CustomTopology:
 
         info("*** Dumping host connections\n")
         dumpNodeConnections(network.hosts)
-
         info("*** testing basic connectivity\n")
         # network.pingAll()
-
         info("*** testing bandwith between host 1 & 2\n")
         h1, h2 = network.get('Host1', 'Host2')
         # network.iperf((h1, h2))
@@ -70,6 +73,7 @@ class CustomTopology:
         thread.start()
         time.sleep(1)
 
+<<<<<<< HEAD
         for host in network.hosts:
             self.startBackend(host, host.name[-1], len(network.hosts), network, domatrix)
 
@@ -77,6 +81,12 @@ class CustomTopology:
         linkScript(network, len(network.hosts))
 
         ### If you want to start the mininet console remove this commented line below ###
+
+        for i in range(1, len(network.hosts)):
+            self.startBackend(network.hosts[i], i, len(network.hosts), network)
+
+        linkScript(network, len(network.hosts))
+
         #CLI(network)
 
         network.stop()

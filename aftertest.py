@@ -83,6 +83,11 @@ def divergematrixcheck(nrofnodes):
     print("Size: ", npmatrices[1].size)
 
 
+
 #consistensycheck(2)
 divergematrixcheck(8)
+
+consistensycheck(1)
+#consistensycheck(2)
+
 

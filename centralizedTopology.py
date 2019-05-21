@@ -43,7 +43,7 @@ class CustomTopology:
 
 
         # links = partial(TCLink, delay=delay, bw=bandwidth, loss=loss, max_queue_size=queue_size, use_htb=True)
-        links = partial(TCLink, delay=delay, bw=bandwidth, max_queue_size=queue_size, use_htb=True)
+        links = partial(TCLink, delay=delay, bw=bandwidth, loss=0.8, max_queue_size=queue_size, use_htb=True)
         ovsswitch = partial(OVSSwitch, protocol='OpenFlow13')
 
         # remoteController = partial(RemoteController, ip='127.0.0.1', port=6653)
@@ -72,6 +72,7 @@ class CustomTopology:
 
         for host in network.hosts:
             self.startBackend(host, host.name[-1], len(network.hosts), network)
+
 
 
         linkScript(network, len(network.hosts))

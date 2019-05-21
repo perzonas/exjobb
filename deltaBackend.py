@@ -257,6 +257,7 @@ class Server:
 
     def writeBytes(self):
         ### Create testdata file if it doesn't exist ###
+        print(self.bytessent)
         file = open("testdata/bytes" + str(self.hostID), "w")
         os.chmod("testdata/bytes" + str(self.hostID), 0o777)
         file.write(json.dumps((self.bytessent, self.expectedBytes)))
