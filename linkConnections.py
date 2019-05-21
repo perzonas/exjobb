@@ -18,7 +18,7 @@ def linkScript(network, hosts, seconds):
     host = "Host"
     loops = 0
     starttime = time.time()
-    while time.time()-starttime < 300:
+    while time.time()-starttime < 320:
         for i in range(1, hosts+1):
             args = [host + str(i), switch, down]
             network.configLinkStatus(*args)
@@ -29,7 +29,7 @@ def linkScript(network, hosts, seconds):
                 time.sleep(seconds/2)
             args[2] = up
             network.configLinkStatus(*args)
-            print("Connection to Host %s reestablished." % str(i))
+            print("Connection to Host %s reestablished.\n Elapsed time: %s" % (str(i), str(time.time()-starttime)))
             time.sleep(i)
         loops += 1
 

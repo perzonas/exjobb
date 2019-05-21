@@ -12,6 +12,11 @@ class Draw:
     CENTRALIZED = 1
     STATE = 2
     DELTA = 3
+    bytes_average = []
+    messagesize_average = []
+    messagelatency_average = []
+    mergelatency_average = []
+
 
 
     def perform_writes(self, type):
@@ -47,6 +52,10 @@ class Draw:
             os.chmod(self.path, 0o777)
 
         ### Create the right graphs for the solutions that has been used ###
+        self.write_bytes()
+        self.write_messagesize()
+        self.write_messagelatency()
+        self.write_mergelatency()
         if type == self.CENTRALIZED:
             self.write_master_mergelatency()
             self.write_slave_messagelatency()
@@ -54,10 +63,6 @@ class Draw:
             self.write_master_messagelatency()
             self.write_slave_mergelatency()
             self.write_slave_messagesize()
-        self.write_bytes()
-        self.write_messagesize()
-        self.write_messagelatency()
-        self.write_mergelatency()
 
 
 
@@ -105,6 +110,21 @@ class Draw:
             xrange = list(range(1, len(bytes[i-1])+1))
             data.append(go.Scatter(x=xrange, y=bytes[i-1], mode='lines', name=("Node"+str(i))))
 
+        max_length = 0
+        for input in bytes:
+            if len(input)>max_length:
+                max_length = len(input)
+
+        for i in range(max_length):
+            total = 0
+            for j in range(len(bytes)):
+                try:
+                    total += bytes[j][i]
+                except:
+                    pass
+            self.messagesize_average.append(total/len(bytes))
+        data.append(go.Scatter(x=xrange, y=self.messagesize_average, mode='lines', name="Average message size"))
+
         layout = dict(title='Size of messages sent by nodes',
                       xaxis=dict(title='Number of sent messages'),
                       yaxis=dict(title='Message size (bytes)'),
@@ -125,6 +145,20 @@ class Draw:
             file.close()
             xrange = list(range(1, len(bytes[i - 1]) + 1))
             data.append(go.Scatter(x=xrange, y=bytes[i - 1], mode='lines', name=("Node" + str(i))))
+
+        max_length = 0
+        for input in bytes:
+            if len(input)>max_length:
+                max_length = len(input)
+        for i in range(max_length):
+            total = 0
+            for j in range(len(bytes)):
+                try:
+                    total += bytes[j][i]
+                except:
+                    pass
+            self.messagelatency_average.append(total/len(bytes))
+        data.append(go.Scatter(x=xrange, y=self.messagelatency_average, mode='lines', name="Average message latency"))
 
         layout = dict(title='Time for an entire message to be received by the receiver',
                       yaxis=dict(title='Time for message to be received (milliseconds)'),
@@ -147,6 +181,20 @@ class Draw:
             xrange = list(range(1, len(bytes[i - 1]) + 1))
             data.append(go.Scatter(x=xrange, y=bytes[i - 1], mode='lines', name=("Node" + str(i))))
 
+        max_length = 0
+        for input in bytes:
+            if len(input)>max_length:
+                max_length = len(input)
+        for i in range(max_length):
+            total = 0
+            for j in range(len(bytes)):
+                try:
+                    total += bytes[j][i]
+                except:
+                    pass
+            self.mergelatency_average.append(total/len(bytes))
+        data.append(go.Scatter(x=xrange, y=self.mergelatency_average, mode='lines', name="Average message size"))
+
         layout = dict(title='Time for a node to perform an action/merge',
                       yaxis=dict(title='Time for action/merge(milliseconds)'),
                       xaxis=dict(title='Action/merge sequence'),
@@ -168,6 +216,7 @@ class Draw:
             file.close()
             xrange = list(range(1, len(bytes[i - 2]) + 1))
             data.append(go.Scatter(x=xrange, y=bytes[i - 2], mode='lines', name=("Node" + str(i))))
+        data.append(go.Scatter(x=xrange, y=self.mergelatency_average, mode='lines', name="Average message size"))
 
         layout = dict(title='Time for slave-nodes to perform an action/merge in centralized configuration',
                       yaxis=dict(title='Time for action/merge(milliseconds)'),
@@ -187,6 +236,7 @@ class Draw:
         file.close()
         xrange = list(range(1, len(bytes[0]) + 1))
         data.append(go.Scatter(x=xrange, y=bytes[0], mode='lines', name="Node1"))
+        data.append(go.Scatter(x=xrange, y=self.mergelatency_average, mode='lines', name="Average message size"))
 
         layout = dict(title='Time for the master-node to perform an action/merge in centralized configuration',
                       yaxis=dict(title='Time for action/merge(milliseconds)'),
@@ -208,6 +258,7 @@ class Draw:
             file.close()
             xrange = list(range(1, len(bytes[i - 2][1]) + 1))
             data.append(go.Scatter(x=xrange, y=bytes[i - 2][1], mode='lines', name=("Node" + str(i))))
+        data.append(go.Scatter(x=xrange, y=self.messagelatency_average, mode='lines', name="Average message size"))
 
         layout = dict(title='Time for an entire message to be received by the receiver which are slave-nodes',
                       yaxis=dict(title='Time for message to be received (milliseconds)'),
@@ -227,6 +278,7 @@ class Draw:
         file.close()
         xrange = list(range(1, len(bytes[0][1]) + 1))
         data.append(go.Scatter(x=xrange, y=bytes[0][1], mode='lines', name="Node1"))
+        data.append(go.Scatter(x=xrange, y=self.messagelatency_average, mode='lines', name="Average message size"))
 
         layout = dict(title='Time for an entire message to be received by the receiver which is the master-node',
                       yaxis=dict(title='Time for message to be received (milliseconds)'),
@@ -248,6 +300,7 @@ class Draw:
             file.close()
             xrange = list(range(1, len(bytes[i - 2]) + 1))
             data.append(go.Scatter(x=xrange, y=bytes[i - 2], mode='lines', name=("Node" + str(i))))
+        data.append(go.Scatter(x=xrange, y=self.messagesize_average, mode='lines', name="Average message size"))
 
         layout = dict(title='Size of messages sent by slave-nodes',
                       yaxis=dict(title='Message size (bytes)'),
@@ -267,6 +320,7 @@ class Draw:
         file.close()
         xrange = list(range(1, len(bytes[0]) + 1))
         data.append(go.Scatter(x=xrange, y=bytes[0], mode='lines', name="Node1"))
+        data.append(go.Scatter(x=xrange, y=self.messagesize_average, mode='lines', name="Average message size"))
 
         layout = dict(title='Size of messages sent by slave-nodes',
                       yaxis=dict(title='Message size (bytes)'),

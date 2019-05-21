@@ -22,6 +22,7 @@ def consistensycheck(nrofnodes):
             iscorrect.append(resultdict[i] == resultdict[j])
 
     print("\nAll datbases are identical: ", all(iscorrect))
+    return all(iscorrect)
 
 
 def divergematrixcheck(nrofnodes):
@@ -85,9 +86,9 @@ def divergematrixcheck(nrofnodes):
 
 
 #consistensycheck(2)
-divergematrixcheck(8)
+#divergematrixcheck(8)
 
-consistensycheck(1)
+#consistensycheck(1)
 #consistensycheck(2)
 
 

@@ -11,6 +11,8 @@ from mininet.cli import CLI
 from linkConnections import *
 from threading import Thread
 from reset import Test
+from aftertest import *
+from createFigures import *
 
 
 class CustomTopo(Topo):
@@ -63,7 +65,7 @@ class CustomTopology:
 
         info("*** testing bandwith between host 1 & 2\n")
         h1, h2 = network.get('Host1', 'Host2')
-        # network.iperf((h1, h2))
+        network.iperf((h1, h2))
 
         thread = Thread(target=self.restartTest, args=[len(network.hosts)])
         thread.daemon = True
@@ -74,7 +76,7 @@ class CustomTopology:
             self.startBackend(host, host.name[-1], len(network.hosts), network)
 
 
-
+        # the int is the number of seconds of total downtime during a test
         linkScript(network, len(network.hosts), 4)
 
         ### If you want to start the mininet console remove this commented line below ###
@@ -85,9 +87,13 @@ class CustomTopology:
         # We close the xterms
         cleanUpScreens()
 
+        if consistensycheck(1):
+           draw = Draw()
+
     def restartTest(self, hosts):
         test = Test()
         test.run(hosts)
+
 
 
 
