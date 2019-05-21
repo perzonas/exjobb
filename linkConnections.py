@@ -10,7 +10,7 @@ from mininet.cli import CLI
 import time
 
 
-def linkScript(network, hosts):
+def linkScript(network, hosts, seconds):
     print("----------------------------\n STARTING linkScript\n ----------------------------")
     switch = "Switch1"
     up = "up"
@@ -24,9 +24,9 @@ def linkScript(network, hosts):
             network.configLinkStatus(*args)
             print("Connection to Host %s lost." % str(i))
             if i % 2 == 0 and loops < 3:
-                time.sleep(4/3)
+                time.sleep(seconds/3)
             elif i % 2 != 0 and loops < 2:
-                time.sleep(2)
+                time.sleep(seconds/2)
             args[2] = up
             network.configLinkStatus(*args)
             print("Connection to Host %s reestablished." % str(i))
