@@ -25,93 +25,135 @@ class Script:
         for i in range(1, hosts+1):
             file = open("localstates/local"+str(i), "a")
             file.write(self.makeLine(self.getCustomers()))
+            time.sleep(50/(5*hosts))
             file.write(self.makeLine(self.getMaterial()))
+            time.sleep(50 / (5 * hosts))
             file.write(self.makeLine(self.getTargets()))
+            time.sleep(50/(5*hosts))
             file.write(self.makeLine(self.getWorkorders()))
+            time.sleep(50/(5*hosts))
             file.write(self.makeLine(self.getLoads()))
+            time.sleep(50/(5*hosts))
             file.close()
 
-        ### Sleep for 50 seconds ###
-        #time.sleep(50)
-        time.sleep(3)
+
+
         for i in range(1, hosts+1):
             file = open("localstates/local"+str(i), "a")
             file.write(self.makeLine(self.getCustomers()))
+            time.sleep(45 / (5 * hosts))
             file.write(self.makeLine(self.getMaterial()))
             file.write(self.makeLine(self.getTargets()))
+            time.sleep(45 / (5 * hosts))
             file.write(self.makeLine(self.getWorkorders()))
             file.write(self.makeLine(self.getLoads()))
+            time.sleep(45 / (5 * hosts))
             file.write(self.makeLine(self.getWaybills()))
             file.write(self.makeLine(self.getWaybills()))
+            time.sleep(45 / (5 * hosts))
             file.write(self.makeLine(self.getTargets()))
             file.write(self.makeLine(self.getWorkorders()))
             file.write(self.makeLine(self.getLoads()))
+            time.sleep(45 / (5 * hosts))
             file.close()
 
-        #time.sleep(45)
-        time.sleep(3)
         for i in range(1, hosts + 1):
             file = open("localstates/local" + str(i), "a")
             file.write(self.makeLine(self.getCustomers()))
+            time.sleep(40 / (2 * hosts))
             file.write(self.makeLine(self.getMaterial()))
+            time.sleep(40 / (2 * hosts))
             file.write(self.makeLine(self.getTargets()))
             file.close()
 
 
-        #time.sleep(40)
-        time.sleep(3)
         for i in range(1, hosts+1):
             file = open("localstates/local"+str(i), "a")
             file.write(self.makeLine(self.updCustomers()))
+            time.sleep(35 / (2 * hosts))
             file.write(self.makeLine(self.updMaterial()))
+            time.sleep(35 / (2 * hosts))
             file.write(self.makeLine(self.updTargets()))
             file.close()
 
-        time.sleep(3) #35
 
         for i in range(1, hosts+1):
             file = open("localstates/local"+str(i), "a")
             file.write(self.makeLine(self.delLoads()))
             file.close()
 
-        #time.sleep(30)
-        time.sleep(3)
+        time.sleep(30)
+
         for i in range(1, hosts+1):
             file = open("localstates/local"+str(i), "a")
             file.write(self.makeLine(self.getLoadsWaybills()))
             file.write(self.makeLine(self.getLoads()))
+            time.sleep(25 / (5 * hosts))
             file.write(self.makeLine(self.getTargets()))
             file.write(self.makeLine(self.getWorkorders()))
+            time.sleep(25 / (5 * hosts))
             file.write(self.makeLine(self.getLoads()))
             file.write(self.makeLine(self.getWaybills()))
+            time.sleep(25 / (5 * hosts))
             file.write(self.makeLine(self.getWaybills()))
             file.write(self.makeLine(self.getTargets()))
+            time.sleep(25 / (5 * hosts))
             file.write(self.makeLine(self.getWorkorders()))
             file.write(self.makeLine(self.getLoads()))
+            time.sleep(25 / (5 * hosts))
             file.close()
 
-        #time.sleep(25)
-        time.sleep(3)
         for i in range(1, hosts + 1):
             file = open("localstates/local" + str(i), "a")
             file.write(self.makeLine(self.getLoads()))
+            time.sleep(20 / (2 * hosts))
             file.write(self.makeLine(self.getWorkorders()))
+            time.sleep(20 / (2 * hosts))
             file.write(self.makeLine(self.getTargets()))
             file.close()
 
-        #time.sleep(20)
-        time.sleep(3)
         for i in range(1, hosts + 1):
             file = open("localstates/local" + str(i), "a")
             file.write(self.makeLine(self.delLoads()))
+            time.sleep(15 / (5 * hosts))
             file.write(self.makeLine(self.delMaterial()))
+            time.sleep(15 / (5 * hosts))
             file.write(self.makeLine(self.delTargets()))
+            time.sleep(15 / (5 * hosts))
             file.write(self.makeLine(self.delWaybills()))
+            time.sleep(15 / (5 * hosts))
             file.write(self.makeLine(self.delWorkorders()))
+            time.sleep(15 / (5 * hosts))
             file.close()
 
 
-        time.sleep(3) #15
+
+
+        for i in range(1, hosts+1):
+            file = open("localstates/local"+str(i), "a")
+            file.write(self.makeLine(self.getLoadsWaybills()))
+            file.write(self.makeLine(self.getLoads()))
+            file.write(self.makeLine(self.getTargets()))
+            file.write(self.makeLine(self.getWorkorders()))
+            file.write(self.makeLine(self.getLoads()))
+            file.write(self.makeLine(self.getWaybills()))
+            file.write(self.makeLine(self.getWaybills()))
+            file.write(self.makeLine(self.getTargets()))
+            file.write(self.makeLine(self.getWorkorders()))
+            file.write(self.makeLine(self.getLoads()))
+            time.sleep(10 / (hosts))
+            file.write(self.makeLine(self.getLoadsWaybills()))
+            file.write(self.makeLine(self.getLoads()))
+            file.write(self.makeLine(self.getTargets()))
+            file.write(self.makeLine(self.getWorkorders()))
+            file.write(self.makeLine(self.getLoads()))
+            file.write(self.makeLine(self.getWaybills()))
+            file.write(self.makeLine(self.getWaybills()))
+            file.write(self.makeLine(self.getTargets()))
+            file.write(self.makeLine(self.getWorkorders()))
+            file.write(self.makeLine(self.getLoads()))
+            file.close()
+
 
         for i in range(1, hosts+1):
             file = open("localstates/local"+str(i), "a")
@@ -127,38 +169,12 @@ class Script:
             file.write(self.makeLine(self.getLoads()))
             file.write(self.makeLine(self.getLoadsWaybills()))
             file.write(self.makeLine(self.getLoads()))
-            file.write(self.makeLine(self.getTargets()))
-            file.write(self.makeLine(self.getWorkorders()))
-            file.write(self.makeLine(self.getLoads()))
-            file.write(self.makeLine(self.getWaybills()))
-            file.write(self.makeLine(self.getWaybills()))
-            file.write(self.makeLine(self.getTargets()))
-            file.write(self.makeLine(self.getWorkorders()))
-            file.write(self.makeLine(self.getLoads()))
-            file.close()
-
-        time.sleep(3) #10
-
-        for i in range(1, hosts+1):
-            file = open("localstates/local"+str(i), "a")
-            file.write(self.makeLine(self.getLoadsWaybills()))
-            file.write(self.makeLine(self.getLoads()))
-            file.write(self.makeLine(self.getTargets()))
-            file.write(self.makeLine(self.getWorkorders()))
-            file.write(self.makeLine(self.getLoads()))
-            file.write(self.makeLine(self.getWaybills()))
-            file.write(self.makeLine(self.getWaybills()))
-            file.write(self.makeLine(self.getTargets()))
-            file.write(self.makeLine(self.getWorkorders()))
-            file.write(self.makeLine(self.getLoads()))
-            file.write(self.makeLine(self.getLoadsWaybills()))
-            file.write(self.makeLine(self.getLoads()))
             file.write(self.makeLine(self.getLoads()))
             file.write(self.makeLine(self.getLoads()))
             file.write(self.makeLine(self.getTargets()))
             file.close()
 
-        time.sleep(3) #5
+        time.sleep(5)
 
         for i in range(1, hosts+1):
             file = open("localstates/local"+str(i), "a")
