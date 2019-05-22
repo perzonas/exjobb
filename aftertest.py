@@ -7,25 +7,28 @@ import numpy as np
 def consistensycheck(nrofnodes, type):
     resultdict = {}
     iscorrect = []
+    try:
 
-    for i in range(1, nrofnodes+1):
-        insidedict = {}
-        if type == 1:
-            insidedict[1] = dbquery(i, 1)
-        else:
-            for j in range(1, nrofnodes+1):
-                insidedict[j] = dbquery(i, j)
-        resultdict[i] = insidedict
+        for i in range(1, nrofnodes+1):
+            insidedict = {}
+            if type == 1:
+                insidedict[1] = dbquery(i, 1)
+            else:
+                for j in range(1, nrofnodes+1):
+                    insidedict[j] = dbquery(i, j)
+            resultdict[i] = insidedict
 
-    #for name, content in resultdict.items():
-    #    print("ID:", name, "| Databases: ", content)
+        #for name, content in resultdict.items():
+        #    print("ID:", name, "| Databases: ", content)
 
-    for i in range(1, nrofnodes+1):
-            for j in range(1, nrofnodes+1):
-                iscorrect.append(resultdict[i] == resultdict[j])
+        for i in range(1, nrofnodes+1):
+                for j in range(1, nrofnodes+1):
+                    iscorrect.append(resultdict[i] == resultdict[j])
 
-    print("\nAll datbases are identical: ", all(iscorrect))
-    return all(iscorrect)
+        print(iscorrect)
+        return all(iscorrect)
+    except sqlite3.OperationalError:
+        return False
 
 
 def divergematrixcheck(nrofnodes):

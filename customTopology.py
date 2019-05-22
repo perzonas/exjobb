@@ -68,11 +68,10 @@ class CustomTopology:
         thread.start()
         time.sleep(1)
 
-
         for host in network.hosts:
-            self.startBackend(host, host.name[-1], len(network.hosts), network)
+            self.startBackend(host, host.IP().split(".")[-1], len(network.hosts), network)
 
-        linkScript(network, len(network.hosts), 4)
+        linkScript(network, len(network.hosts), 4, 2)
 
         ### If you want to start the mininet console remove this commented line below ###
         #CLI(network)

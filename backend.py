@@ -116,7 +116,7 @@ class Server:
         while True:
             state = self.crdt.query()
             self.broadcaststate(state)
-            time.sleep(2)
+            time.sleep(5)
 
     # Broadcast a message to all other nodes
     def broadcaststate(self, message):
@@ -127,7 +127,10 @@ class Server:
 
             # do not send to ourselves
             if host != self.ownIP:
-                self.sendmessage(message, host, self.port)
+                thread = Thread(target=self.sendmessage, args=[message, host, self.port])
+                thread.daemon = True
+                thread.start()
+                #self.sendmessage(message, host, self.port)
 
     # sending message to another host
     def sendmessage(self, message, host, port):

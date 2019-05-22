@@ -201,7 +201,10 @@ class Server:
 
                 # do not send to ourselves
                 if host != self.ownIP:
-                    self.sendmessage(message, host, self.port)
+                    thread = Thread(target=self.sendmessage, args=[message, host, self.port])
+                    thread.daemon = True
+                    thread.start()
+                    #self.sendmessage(message, host, self.port)
 
     # sending message to another host
     def sendmessage(self, message, host, port):

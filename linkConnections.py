@@ -66,7 +66,7 @@ def linkScript(network, hosts, seconds, type):
                     break
 
         else:
-            time.sleep(5)
+
             if consistensycheck(hosts, type):
                 con_time = time.time()-starttime
                 print("Reached consistency after %f seconds." % con_time)
@@ -76,6 +76,7 @@ def linkScript(network, hosts, seconds, type):
                 file.write(str(con_time))
                 file.close()
                 break
+
 
 
 
