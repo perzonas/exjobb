@@ -18,7 +18,7 @@ from createFigures import *
 class CustomTopo(Topo):
 
     def build(self, no_of_hosts, cpu=0.5, cores=2):
-        hosts = [self.addHost("Host%s" % h, cpu=cpu, cores=cores, ip=("20.1.90.%d/24" % h)) for h in range(1, no_of_hosts+1)]
+        hosts = [self.addHost("Host%s" % h, cpu=cpu, cores=cores, ip=("20.1.90.%d" % h)) for h in range(1, no_of_hosts+1)]
         switch = self.addSwitch("Switch1")
 
         for host in hosts:
@@ -67,17 +67,18 @@ class CustomTopology:
         h1, h2 = network.get('Host1', 'Host2')
         network.iperf((h1, h2))
 
+
         thread = Thread(target=self.restartTest, args=[len(network.hosts)])
         thread.daemon = True
         thread.start()
         time.sleep(1)
 
         for host in network.hosts:
-            self.startBackend(host, host.name[-1], len(network.hosts), network)
+            self.startBackend(host, host.IP().split(".")[-1], len(network.hosts), network)
 
 
         # the int is the number of seconds of total downtime during a test
-        linkScript(network, len(network.hosts), 4)
+        linkScript(network, len(network.hosts), 4, 1)
 
         ### If you want to start the mininet console remove this commented line below ###
         # CLI(network)
@@ -87,8 +88,9 @@ class CustomTopology:
         # We close the xterms
         cleanUpScreens()
 
-        if consistensycheck(1):
-           draw = Draw()
+        if consistensycheck(int(no_of_hosts), 1):
+            draw = Draw()
+            draw.perform_writes(1)
 
     def restartTest(self, hosts):
         test = Test()

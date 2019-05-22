@@ -52,6 +52,7 @@ class Draw:
             os.chmod(self.path, 0o777)
 
         ### Create the right graphs for the solutions that has been used ###
+        print("### CREATING GRAPHS FROM RESULTS ###")
         self.write_bytes()
         self.write_messagesize()
         self.write_messagelatency()
@@ -63,6 +64,8 @@ class Draw:
             self.write_master_messagelatency()
             self.write_slave_mergelatency()
             self.write_slave_messagesize()
+        print("### FINISHED MAKING GRAPHS ###")
+        print("### TEST FINISHED -> CLOSING DOWN ###")
 
 
 
@@ -94,8 +97,8 @@ class Draw:
         layout = go.Layout(barmode='group', title='Number of bytes sent during test')
         figure = go.Figure(data=data, layout=layout)
         files = glob.glob(self.path+"/bytes*")
-        print(self.path)
         plot(figure, filename=(self.path+"/bytes%s.html" % str(len(files) + 1)), auto_open=False)
+        os.chmod(self.path+"/bytes%s.html" % str(len(files) + 1), 0o777)
 
 
     def write_messagesize(self):
@@ -132,6 +135,7 @@ class Draw:
         figure = go.Figure(data=data, layout=layout)
         files = glob.glob(self.path + "/messagesize*")
         plot(figure, filename=(self.path + "/messagesize%s.html" % str(len(files) + 1)), auto_open=False)
+        os.chmod(self.path + "/messagesize%s.html" % str(len(files) + 1), 0o777)
 
 
     def write_messagelatency(self):
@@ -167,6 +171,7 @@ class Draw:
         figure = go.Figure(data=data, layout=layout)
         files = glob.glob(self.path + "/messagelatency*")
         plot(figure, filename=(self.path + "/messagelatency%s.html" % str(len(files) + 1)), auto_open=False)
+        os.chmod(self.path + "/messagelatency%s.html" % str(len(files) + 1), 0o777)
 
 
     def write_mergelatency(self):
@@ -202,13 +207,13 @@ class Draw:
         figure = go.Figure(data=data, layout=layout)
         files = glob.glob(self.path + "/mergelatency*")
         plot(figure, filename=(self.path + "/mergelatency%s.html" % str(len(files) + 1)), auto_open=False)
+        os.chmod(self.path + "/mergelatency%s.html" % str(len(files) + 1), 0o777)
 
 
     def write_slave_mergelatency(self):
         files = glob.glob("testdata/mergelatency*")
         data = []
         bytes = []
-        print(files)
         for i in range(2, len(files) + 1):
             file = open("testdata/mergelatency" + str(i), "r")
             line = file.read()
@@ -225,6 +230,7 @@ class Draw:
         figure = go.Figure(data=data, layout=layout)
         files = glob.glob(self.path + "/slavemergelatency*")
         plot(figure, filename=(self.path + "/slavemergelatency%s.html" % str(len(files)+1)), auto_open=False)
+        os.chmod(self.path + "/slavemergelatency%s.html" % str(len(files) + 1), 0o777)
 
 
     def write_master_mergelatency(self):
@@ -245,6 +251,7 @@ class Draw:
         figure = go.Figure(data=data, layout=layout)
         files = glob.glob(self.path + "/mastermergelatency*")
         plot(figure, filename=(self.path + "/mastermergelatency%s.html" % str(len(files)+1)), auto_open=False)
+        os.chmod(self.path + "/mastermergelatency%s.html" % str(len(files) + 1), 0o777)
 
 
     def write_slave_messagelatency(self):
@@ -267,6 +274,7 @@ class Draw:
         figure = go.Figure(data=data, layout=layout)
         files = glob.glob(self.path + "/slavemessagelatency*")
         plot(figure, filename=(self.path + "/slavemessagelatency%s.html" % str(len(files)+1)), auto_open=False)
+        os.chmod(self.path + "/slavemessagelatency%s.html" % str(len(files) + 1), 0o777)
 
 
     def write_master_messagelatency(self):
@@ -287,6 +295,7 @@ class Draw:
         figure = go.Figure(data=data, layout=layout)
         files = glob.glob(self.path + "/mastermessagelatency*")
         plot(figure, filename=(self.path + "/mastermessagelatency%s.html" % str(len(files)+1)), auto_open=False)
+        os.chmod(self.path + "/mastermessagelatency%s.html" % str(len(files) + 1), 0o777)
 
 
     def write_slave_messagesize(self):
@@ -309,6 +318,7 @@ class Draw:
         figure = go.Figure(data=data, layout=layout)
         files = glob.glob(self.path + "/slavemessagesize*")
         plot(figure, filename=(self.path + "/slavemessagesize%s.html" % str(len(files)+1)), auto_open=False)
+        os.chmod(self.path + "/slavemessagesize%s.html" % str(len(files) + 1), 0o777)
 
 
     def write_master_messagesize(self):
@@ -329,6 +339,7 @@ class Draw:
         figure = go.Figure(data=data, layout=layout)
         files = glob.glob(self.path + "/mastermessagesize*")
         plot(figure, filename=(self.path + "/mastermessagesize%s.html" % str(len(files)+1)), auto_open=False)
+        os.chmod(self.path + "/mastermessagesize%s.html" % str(len(files) + 1), 0o777)
 
 
 if __name__ == '__main__':

@@ -4,22 +4,25 @@ import json
 import numpy as np
 
 
-def consistensycheck(nrofnodes):
+def consistensycheck(nrofnodes, type):
     resultdict = {}
     iscorrect = []
 
     for i in range(1, nrofnodes+1):
         insidedict = {}
-        for j in range(1, nrofnodes+1):
-            insidedict[j] = dbquery(i, j)
+        if type == 1:
+            insidedict[1] = dbquery(i, 1)
+        else:
+            for j in range(1, nrofnodes+1):
+                insidedict[j] = dbquery(i, j)
         resultdict[i] = insidedict
 
-    for name, content in resultdict.items():
-        print("ID:", name, "| Databases: ", content)
+    #for name, content in resultdict.items():
+    #    print("ID:", name, "| Databases: ", content)
 
     for i in range(1, nrofnodes+1):
-        for j in range(1, nrofnodes+1):
-            iscorrect.append(resultdict[i] == resultdict[j])
+            for j in range(1, nrofnodes+1):
+                iscorrect.append(resultdict[i] == resultdict[j])
 
     print("\nAll datbases are identical: ", all(iscorrect))
     return all(iscorrect)
@@ -85,7 +88,7 @@ def divergematrixcheck(nrofnodes):
 
 
 
-#consistensycheck(2)
+#consistensycheck(4, 1)
 #divergematrixcheck(8)
 
 #consistensycheck(1)

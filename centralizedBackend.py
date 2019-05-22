@@ -66,6 +66,9 @@ class Server:
         thread.start()
         print("*** Worker thread is running ***")
 
+
+        print("IP IS: ", self.ownIP)
+        time.sleep(5)
         print("Starting server")
         sock.bind((self.ownIP, self.port))
         (ip, po) = sock.getsockname()

@@ -2,6 +2,7 @@ import os
 import sys
 import glob
 from LocalStateScript import Script
+import shutil
 
 
 class Test:
@@ -27,11 +28,14 @@ class Test:
 
 
         ###  Clean up databases  ###
-        for i in range(1, (hosts+1)):
-            files = glob.glob("databases/"+str(i)+"/*")
-            for file in files:
-                os.remove(file)
-                print("File removed: ", file)
+        directories = os.listdir("databases/")
+        for id in directories:
+            shutil.rmtree("databases/" + id)
+            print("File removed: ", id)
+            #files = glob.glob("databases/"+str(id)+"/*")
+            #for file in files:
+            #    os.remove(file)
+
 
         script = Script()
         script.run(hosts)
