@@ -22,8 +22,9 @@ def consistensycheck(nrofnodes, type):
         #    print("ID:", name, "| Databases: ", content)
 
         for i in range(1, nrofnodes+1):
-                for j in range(1, nrofnodes+1):
-                    iscorrect.append(resultdict[i] == resultdict[j])
+
+            for j in range(1, nrofnodes+1):
+                iscorrect.append(resultdict[i] == resultdict[j])
 
         print(iscorrect)
         return all(iscorrect)

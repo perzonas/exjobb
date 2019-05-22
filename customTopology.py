@@ -59,7 +59,7 @@ class CustomTopology:
         # network.pingAll()
         info("*** testing bandwith between host 1 & 2\n")
         h1, h2 = network.get('Host1', 'Host2')
-        # network.iperf((h1, h2))
+        network.iperf((h1, h2))
 
 
 
