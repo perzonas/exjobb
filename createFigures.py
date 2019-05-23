@@ -43,7 +43,7 @@ class Draw:
             os.mkdir(self.path)
             os.chmod(self.path, 0o777)
 
-        elif type == DELTA:
+        elif type == self.DELTA:
             files = os.listdir("results/")
             count = 0
             for file in files:
@@ -360,5 +360,5 @@ class Draw:
 if __name__ == '__main__':
     #write_bytes()
     data = Draw()
-    data.perform_writes(1)
+    data.perform_writes(3)
 
