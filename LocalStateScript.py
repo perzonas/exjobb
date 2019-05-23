@@ -20,6 +20,7 @@ class Script:
 
 
     def run(self, hosts=2):
+        time.sleep(5)
         self.startTime = time.time()
         ### Write 5 inserts to all nodes as test starts ###
         for i in range(1, hosts+1):

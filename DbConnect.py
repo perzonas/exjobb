@@ -205,16 +205,19 @@ def dbdeltaquery(myid, dbid, table, nrtograb):
 
 def dbgetsnapshot(myid, dbid):
     state_dict = {}
+    try:
+        conn = sqlite3.connect("databases/" + str(myid) + "/" + str(dbid), isolation_level=None)
+        c = conn.cursor()
+        seq = c.execute("SELECT * FROM SQLITE_SEQUENCE").fetchall()
 
-    conn = sqlite3.connect("databases/" + str(myid) + "/" + str(dbid), isolation_level=None)
-    c = conn.cursor()
-    seq = c.execute("SELECT * FROM SQLITE_SEQUENCE").fetchall()
+        for table in table_names:
+            state_dict[table] = 0
 
-    for table in table_names:
-        state_dict[table] = 0
-
-    for table, entry in seq:
-        state_dict[table] = entry
+        for table, entry in seq:
+            state_dict[table] = entry
+    except sqlite3.OperationalError as e:
+        for table in table_names:
+            state_dict[table] = 0
 
     conn.close()
     return state_dict

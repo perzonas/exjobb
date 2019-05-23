@@ -135,7 +135,7 @@ def divergematrixcheck(nrofnodes):
 
 
 
-#consistensycheck(4, 1)
+#consistensycheck(16, 3)
 #divergematrixcheck(8)
 
 #consistensycheck(1)

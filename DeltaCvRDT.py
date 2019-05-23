@@ -32,7 +32,7 @@ class DeltaCvRDT:
             else:
                 querydata = {}
                 for table, entry in content.items():
-                    if entry < mystate[dbid][table]:
+                    if int(entry) < mystate[dbid][table]:
                         nrtograb = mystate[dbid][table] - entry
                         querydata[table] = dbdeltaquery(self.myid, dbid, table, nrtograb)
                         queryresult[dbid] = querydata
@@ -47,7 +47,7 @@ class DeltaCvRDT:
             for table, tlist in content.items():
                 if tlist:
                     for entry in tlist:
-                        if (table == "graveyard" and not dbgraveyardcheck(self.myid, dbid, entry[2], entry[3])):
+                        if table == "graveyard" and not dbgraveyardcheck(self.myid, dbid, entry[2], entry[3]):
                             self.delete(dbid, entry[2], entry[3])
                         elif not dbentryexist(self.myid, dbid, table, entry[0]):
                             dbaddentry(self.myid, dbid, table, entry)
