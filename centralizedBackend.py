@@ -338,7 +338,12 @@ class Server:
     def writeMessage(self):
         file = open("testdata/messagelatency" + str(self.hostID), "w")
         os.chmod("testdata/messagelatency" + str(self.hostID), 0o777)
-        file.write(json.dumps((self.dropped_messages, self.messagetime)))
+        file.write(json.dumps(self.messagetime))
+        file.close()
+
+        file = open("testdata/droppedmessages" + str(self.hostID), "w")
+        os.chmod("testdata/droppedmessages" + str(self.hostID), 0o777)
+        file.write(str(self.dropped_messages))
         file.close()
 
 

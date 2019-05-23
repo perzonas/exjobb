@@ -12,6 +12,8 @@ from linkConnections import *
 from threading import Thread
 from reset import Test
 import time
+from createFigures import *
+from aftertest import *
 
 
 class CustomTopo(Topo):
@@ -41,7 +43,7 @@ class CustomTopology:
         # output = quietRun('sysctl -w net.ipv4.tcp_congestion_control=reno')
         # assert 'reno' in output
 
-        links = partial(TCLink, delay=delay, bw=bandwidth, loss=loss, max_queue_size=queue_size, use_htb=True)
+        links = partial(TCLink, delay=delay, bw=bandwidth, max_queue_size=queue_size, use_htb=True)
         ovsswitch = partial(OVSSwitch, protocol='OpenFlow13')
 
         # Set the topology, the class for links and interfaces, the mininet environment must be cleaned up before
@@ -80,6 +82,9 @@ class CustomTopology:
 
         # We close the xterms
         cleanUpScreens()
+        if consistensycheck(int(no_of_hosts), 2):
+            draw = Draw()
+            draw.perform_writes(2)
 
 
 

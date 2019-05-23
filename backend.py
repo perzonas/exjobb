@@ -25,6 +25,7 @@ class Server:
     mergetime = []
     messagetime = []
     dropped_msgs = 0
+    messagesize = []
 
     def run(self, hostnumber, numberofhosts=1):
         self.numberofhost = int(numberofhosts)
@@ -144,6 +145,7 @@ class Server:
             sock.connect((host, port))
             data = (serializeddata+";").encode()
             datasize = len(data)
+            self.messagesize.append(datasize)
             self.expectedbytes += datasize
             totalsent = 0
             while totalsent < datasize:
@@ -186,27 +188,30 @@ class Server:
             file.close()
             if text:
                 for i in range(position, len(text)):
-                    action = text[i]
-                    ### Perform the action from local machine ###
-                    state = json.loads(action)
-                    data = {str(self.hostID): state[1]}
-                    print("#### PERFORMING AN UPDATE ####")
+                    try:
+                        action = text[i]
+                        ### Perform the action from local machine ###
+                        state = json.loads(action)
+                        data = {str(self.hostID): state[1]}
+                        print("#### PERFORMING AN UPDATE ####")
 
-                    start_time = time.time()
-                    if state[0] == "i":
-                        self.crdt.merge(data)
-                    elif state[0] == "u":
-                        for table, entry in state[1].items():
-                            if entry:
-                                self.crdt.update(table, entry[0])
-                    else:
-                        for table, entry in state[1].items():
-                            if entry:
-                                self.crdt.delete((self.hostID, table, entry[0][0]))
-                    end_time = time.time()
-                    total_time = end_time - start_time
-                    self.mergetime.append((total_time * 1000))
-                    self.writeMerge()
+                        start_time = time.time()
+                        if state[0] == "i":
+                            self.crdt.merge(data)
+                        elif state[0] == "u":
+                            for table, entry in state[1].items():
+                                if entry:
+                                    self.crdt.update(table, entry[0])
+                        else:
+                            for table, entry in state[1].items():
+                                if entry:
+                                    self.crdt.delete((self.hostID, table, entry[0][0]))
+                        end_time = time.time()
+                        total_time = end_time - start_time
+                        self.mergetime.append((total_time * 1000))
+                        self.writeMerge()
+                    except:
+                        pass
             position = len(text)
 
 
@@ -237,10 +242,20 @@ class Server:
         file.write(json.dumps((self.bytessent, self.expectedbytes)))
         file.close()
 
+        file = open("testdata/messagesize" + str(self.hostID), "w")
+        os.chmod("testdata/messagesize" + str(self.hostID), 0o777)
+        file.write(json.dumps(self.messagesize))
+        file.close()
+
     def writeMessage(self):
         file = open("testdata/messagelatency" + str(self.hostID), "w")
         os.chmod("testdata/messagelatency" + str(self.hostID), 0o777)
-        file.write(json.dumps((self.dropped_msgs, self.messagetime)))
+        file.write(json.dumps(self.messagetime))
+        file.close()
+
+        file = open("testdata/droppedmessages" + str(self.hostID), "w")
+        os.chmod("testdata/droppedmessages" + str(self.hostID), 0o777)
+        file.write(str(self.dropped_msgs))
         file.close()
 
 

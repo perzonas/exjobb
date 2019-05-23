@@ -13,6 +13,8 @@ from threading import Thread
 from reset import Test
 import time
 from linkConnections import *
+from aftertest import *
+from createFigures import *
 
 
 class CustomTopo(Topo):
@@ -75,21 +77,19 @@ class CustomTopology:
             self.startBackend(host, host.name[-1], len(network.hosts), network, domatrix)
 
 
-        linkScript(network, len(network.hosts), 4)
+        linkScript(network, len(network.hosts), 4, 3)
 
         ### If you want to start the mininet console remove this commented line below ###
-
-        for i in range(1, len(network.hosts)):
-            self.startBackend(network.hosts[i], i, len(network.hosts), network)
-
-        linkScript(network, len(network.hosts))
-
         #CLI(network)
 
         network.stop()
 
         # We close the xterms
         cleanUpScreens()
+
+        if consistensycheck(int(no_of_hosts), 3):
+            draw = Draw()
+            draw.perform_writes(3)
 
     def restartTest(self, hosts):
         test = Test()

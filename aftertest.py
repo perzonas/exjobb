@@ -5,6 +5,49 @@ import numpy as np
 
 
 def consistensycheck(nrofnodes, type):
+
+    resultdict = {}
+    iscorrect = []
+    wrong = []
+    try:
+        # centralized solution testing
+        if type == 1:
+            first = dbquery(1, 1)
+            for i in range(2, nrofnodes + 1):
+                if first == dbquery(i, 1):
+                    iscorrect.append(True)
+                else:
+                    iscorrect.append(False)
+                    wrong.append("Node %d differs from Node%d\n" % (1, i))
+
+        # CRDT solutions
+        else:
+            first = {}
+
+            for i in range(1, nrofnodes + 1):
+                for j in range(1, nrofnodes + 1):
+                    if j == 1:
+                        first = dbquery(j, i)
+                    else:
+                        if first == dbquery(j, i):
+                            iscorrect.append(True)
+                        else:
+                            iscorrect.append(False)
+                            wrong.append("Node%d db %d differs from Node%d db %d\n" % (1, i, j, i))
+
+        if all(iscorrect):
+            print("ALL NODES HAVE CONVERGED!!")
+            return True
+        else:
+            for line in wrong:
+                print(line)
+            return False
+
+    except sqlite3.OperationalError as e:
+        print("ERROR", e)
+        return False
+'''
+
     resultdict = {}
     iscorrect = []
     try:
@@ -30,7 +73,7 @@ def consistensycheck(nrofnodes, type):
         return all(iscorrect)
     except sqlite3.OperationalError:
         return False
-
+'''
 
 def divergematrixcheck(nrofnodes):
     percentresult = 0

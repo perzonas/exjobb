@@ -27,6 +27,7 @@ class Server:
     messagetime = []
     dropped_messages = 0
     domatrix = 0
+    messageSizes = []
 
     def run(self, hostnumber, numberofhosts=1, matrix=0):
         self.numberofhost = int(numberofhosts)
@@ -122,7 +123,7 @@ class Server:
         while True:
             snapshot = self.crdt.getsnapshot()
             self.broadcastsnapshot(snapshot)
-            time.sleep(10)
+            time.sleep(5)
 
     # Broadcast a message to all other nodes
     def broadcastsnapshot(self, message):
@@ -134,7 +135,10 @@ class Server:
 
             # do not send to ourselves
             if host != self.ownIP:
-                self.sendmessage(ms, host, self.port)
+                thread = Thread(target=self.sendmessage, args=[ms, host, self.port])
+                thread.daemon = True
+                thread.start()
+                #self.sendmessage(ms, host, self.port)
         if self.domatrix == 1:
             self.crdt.matrixupdate(self.crdt.myid, self.crdt.messagecounter, True)
         self.crdt.messagecounter += 1
@@ -162,6 +166,7 @@ class Server:
             sock.connect((host, port))
             data = (serializeddata+";").encode()
             datasize = len(data)
+            self.messageSizes.append(datasize)
             self.expectedbytes += datasize
             totalsent = 0
             while totalsent < datasize:
@@ -259,14 +264,24 @@ class Server:
         ### Create testdata file if it doesn't exist ###
         file = open("testdata/bytes" + str(self.hostID), "w")
         os.chmod("testdata/bytes" + str(self.hostID), 0o777)
-        file.write(json.dumps((self.bytessent, self.expectedBytes)))
+        file.write("[" + str(self.expectedbytes) + ", " + str(self.bytessent) + "]")
+        file.close()
+
+        file = open("testdata/messagesize" + str(self.hostID), "w")
+        os.chmod("testdata/messagesize" + str(self.hostID), 0o777)
+        file.write(json.dumps(self.messageSizes))
         file.close()
 
 
     def writeMessage(self):
         file = open("testdata/messagelatency" + str(self.hostID), "w")
         os.chmod("testdata/messagelatency" + str(self.hostID), 0o777)
-        file.write(json.dumps((self.dropped_messages, self.messagetime)))
+        file.write(json.dumps(self.messagetime))
+        file.close()
+
+        file = open("testdata/droppedmessages" + str(self.hostID), "w")
+        os.chmod("testdata/droppedmessages" + str(self.hostID), 0o777)
+        file.write(str(self.dropped_messages))
         file.close()
 
 
