@@ -33,8 +33,6 @@ class Server:
         self.hostID = hostnumber
         self.crdt.myvehicleid = hostnumber
         self.bytessentadress = "testdata/bytes" + self.hostID
-        for i in range(1, self.numberofhost+1):
-            addnewdb(self.hostID, i)
 
 
         # AF_INET -> ipv4 and SOCK_STREAM -> tcp
@@ -62,7 +60,7 @@ class Server:
             # someone connected to the socket
             try:
                 connection, connectioninfo = sock.accept()
-                print("Connection established with", connectioninfo)
+                print("CONNECTION ESTABLISHED WITH: ", connectioninfo)
 
                 # Creates a thread for each connection
                 thread = Thread(target=self.handleconnection, args=[connection, connectioninfo])
@@ -97,8 +95,6 @@ class Server:
             total_time = end_time - start_time
             self.messagetime.append(total_time*1000)
             message = json.loads(data)
-            print("### RECEIVED MESSAGE FROM NODE %s ###" % id)
-
             ### Add state to TODO stack so worker thread can perform the received action ###
             self.mergeStack.put(message)
         else:
@@ -121,7 +117,6 @@ class Server:
 
     # Broadcast a message to all other nodes
     def broadcaststate(self, message):
-        print("Broadcasting message to all hosts")
         for host in range(1, (self.numberofhost + 1)):
             host = str(host)
             host = self.ip + host
@@ -145,6 +140,7 @@ class Server:
             sock.connect((host, port))
             data = (serializeddata+";").encode()
             datasize = len(data)
+            print("DATASIZE IS: ",datasize)
             self.messagesize.append(datasize)
             self.expectedbytes += datasize
             totalsent = 0
@@ -193,9 +189,9 @@ class Server:
                         ### Perform the action from local machine ###
                         state = json.loads(action)
                         data = {str(self.hostID): state[1]}
-                        print("#### PERFORMING AN UPDATE ####")
 
                         start_time = time.time()
+                        print("&&&&&UPDATING DATA &&&&&&&")
                         if state[0] == "i":
                             self.crdt.merge(data)
                         elif state[0] == "u":
@@ -217,7 +213,6 @@ class Server:
 
             ### Perform actions received from other nodes  and saved in a buffer ###
             if not self.mergeStack.empty():
-                print("#### PERFORMING A MERGE ####")
                 state = self.mergeStack.get()
                 start_time = time.time()
                 self.crdt.merge(state)
@@ -270,33 +265,4 @@ if __name__ == '__main__':
     except IndexError:
         print("Too few arguments")
 
-    finally:
-        print("\n", server.mergetime)
-        inputs = len(server.mergetime)
-        sum = sum(server.mergetime)
-        if inputs != 0:
-            medel = sum / inputs
-            print("\n### MEDEL ÄR: %06.4f ###" % medel)
-            server.mergetime.sort()
-
-            if inputs % 2 == 0:
-                print("\n### MEAN VALUE IS: %06.4f & %06.4f ###" % (
-                server.mergetime[int(inputs / 2) - 1], server.mergetime[int(inputs / 2)]))
-            else:
-                print("\n### MEAN VALUE IS: %06.4f ###" % server.mergetime[math.floor(inputs / 2)])
-        print("\n### SAVING RESULTS ###")
-        ### Write converge latency to testdatafile ###
-        file = open("testdata/mergelatency" + str(server.hostID), "w")
-        os.chmod("testdata/mergelatency" + str(server.hostID), 0o777)
-        file.write(json.dumps(server.mergetime))
-        file.close()
-
-        ### Create testdata file if it doesn't exist
-        file = open(server.bytessentadress, "w")
-        os.chmod(server.bytessentadress, 0o777)
-        file.write(json.dumps((server.bytessent, server.expectedbytes)))
-        file.close()
-
-        print("\n### Shutting down server ###")
-        time.sleep(2)
 

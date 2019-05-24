@@ -1,5 +1,6 @@
 from DbConnect import *
 import time
+import sqlite3
 
 
 class StateCvRDT:
@@ -11,17 +12,29 @@ class StateCvRDT:
         addnewdb(self.myvehicleid, str(vehicleid))
 
 
+
     def update(self, table, entry):
-        print("Entry in UPDATE IS: ", entry)
+        if not dbexistcheck(self.myvehicleid, self.myvehicleid):
+            self.adddb(self.myvehicleid)
         self.delete([self.myvehicleid, table, entry[0]])
         dbaddentry(self.myvehicleid, self.myvehicleid, table, entry)
 
     def query(self):
         querydata = {}
+        if not dbexistcheck(self.myvehicleid, self.myvehicleid):
+            self.adddb(self.myvehicleid)
         querydata[self.myvehicleid] = dbquery(self.myvehicleid, self.myvehicleid)
 
         for dbase in self.dbases:
-            querydata[dbase] = dbquery(self.myvehicleid, dbase)
+            try:
+                if not dbexistcheck(self.myvehicleid, dbase):
+                    self.adddb(dbase)
+
+                querydata[dbase] = dbquery(self.myvehicleid, dbase)
+            except sqlite3.OperationalError as e:
+                print("####################################")
+                print("ERROR WHEN QUERYING DB %s" % dbase)
+                print("####################################")
 
         return querydata
 
@@ -34,13 +47,13 @@ class StateCvRDT:
                 if tlist:
                     for entry in tlist:
                         if table == "graveyard":
-                            print("##### GRAVEYARD ENTRY: ", entry)
                             self.delete(entry[1:])
                         elif not dbentryexist(self.myvehicleid, dbid, table, entry[0]):
                             dbaddentry(self.myvehicleid, dbid, table, entry)
 
 
     def delete(self, entry):
-        print("¤#¤#¤#¤#¤#¤#¤¤#", entry)
+        if not dbexistcheck(self.myvehicleid, self.myvehicleid):
+            self.adddb(self.myvehicleid)
         dbdeleteentry(self.myvehicleid, entry[0], entry[1], entry[2])
 

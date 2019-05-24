@@ -18,7 +18,7 @@ from aftertest import *
 
 class CustomTopo(Topo):
 
-    def build(self, no_of_hosts, cpu=0.5, cores=2):
+    def build(self, no_of_hosts, cpu=1, cores=2):
         hosts = [self.addHost("Host%s" % h, cpu=cpu, cores=cores, ip=("20.1.90.%d/24" % h)) for h in range(1, no_of_hosts+1)]
         switch = self.addSwitch("Switch1")
 
@@ -61,7 +61,7 @@ class CustomTopology:
         # network.pingAll()
         info("*** testing bandwith between host 1 & 2\n")
         h1, h2 = network.get('Host1', 'Host2')
-        network.iperf((h1, h2))
+        #network.iperf((h1, h2))
 
 
 

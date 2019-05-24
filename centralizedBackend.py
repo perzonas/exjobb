@@ -40,8 +40,8 @@ class Server:
         for i in range(1, int(numberofhosts)+1):
             self.centralclockholder[i] = 0
         self.bytessentadress = "testdata/bytes" + str(self.hostID)
-        if not dbexistcheck(self.hostID, 1):
-            addnewdb(self.hostID, 1)
+        #if not dbexistcheck(self.hostID, 1):
+          #  addnewdb(self.hostID, 1)
 
 
 
