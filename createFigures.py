@@ -23,13 +23,15 @@ class Draw:
 
     def perform_writes(self, type):
         ### Create a directory for all the graphs
+        files = glob.glob("testdata/bytes*")
+        numberofhosts = len(files)
         if type == self.CENTRALIZED:
             files = os.listdir("results/")
             count = 0
             for file in files:
                 if "centralized" in file:
                     count += 1
-            self.path = "results/centralized" + str(count+1)
+            self.path = "results/centralized_%dhosts" % numberofhosts
             os.mkdir(self.path)
             os.chmod(self.path, 0o777)
 
@@ -39,7 +41,7 @@ class Draw:
             for file in files:
                 if "state" in file:
                     count += 1
-            self.path = "results/state" + str(count + 1)
+            self.path = "results/state_%dhosts" % numberofhosts
             os.mkdir(self.path)
             os.chmod(self.path, 0o777)
 
@@ -49,7 +51,7 @@ class Draw:
             for file in files:
                 if "delta" in file:
                     count += 1
-            self.path = "results/delta" + str(count + 1)
+            self.path = "results/delta_%dhosts" % numberofhosts
             os.mkdir(self.path)
             os.chmod(self.path, 0o777)
 
@@ -107,8 +109,24 @@ class Draw:
         for i in range(1, len(files)+1):
             file = open("testdata/messagesize"+str(i), "r")
             line = file.read()
-            bytes.append(json.loads(line))
             file.close()
+            try:
+                bytes.append(json.loads(line))
+            except:
+                line = line.replace("[", "")
+                line = line.replace("]", "")
+                line = line.replace(" ", "")
+                line = line.split(",")
+                newList = []
+                for element in line:
+                    try:
+                        newList.append(float(element))
+                    except:
+                        print("################")
+                        print(element)
+                        print("################")
+                bytes.append(newList)
+
             self.xrange = list(range(1, len(bytes[i-1])+1))
             data.append(go.Scatter(x=self.xrange, y=bytes[i-1], mode='lines', name=("Node"+str(i))))
 

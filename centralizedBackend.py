@@ -114,7 +114,6 @@ class Server:
             end_time = time.time()
             total_time = end_time-start_time
             self.messagetime.append(total_time*1000)
-            print("### RECEIVED MESSAGE FROM NODE %s ###" % id)
             message = json.loads(data)
             if int(self.hostID) == 1:
                 succeded = connection.send("a".encode())
@@ -173,7 +172,6 @@ class Server:
 
     ###  Slave node have received the state from the master node and will update its own state to this state
     def updatestate(self, state):
-        print("***  Updating slave state based on master state  ***\n")
         if not dbexistcheck(self.hostID, 1):
             addnewdb(self.hostID, 1)
         start_time = time.time()
@@ -194,8 +192,12 @@ class Server:
         while True:
 
             time.sleep(5)
+            if not dbexistcheck(self.hostID, self.hostID):
+                addnewdb(self.hostID, self.hostID)
+
             message = dbquery(self.hostID, self.hostID)
-            print("***  Broadcasting master state ***\n")
+
+
             for host in range(1, (int(self.numberofhost) + 1)):
                 host = self.ip + str(host)
 
@@ -235,7 +237,6 @@ class Server:
                 byte = sock.recv(1)
                 byte = byte.decode()
                 if byte == "a":
-                    print("*** Received ACK ***")
                     received = True
             sock.close()
             self.bytessent += totalsent

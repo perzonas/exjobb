@@ -115,6 +115,7 @@ class Server:
             self.broadcaststate(state)
             time.sleep(5)
 
+
     # Broadcast a message to all other nodes
     def broadcaststate(self, message):
         for host in range(1, (self.numberofhost + 1)):
