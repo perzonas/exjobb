@@ -82,10 +82,29 @@ class Draw:
         for i in range(1, len(files)+1):
             file = open("testdata/bytes"+str(i), "r")
             line = file.read()
-            bytes.append(json.loads(line))
             file.close()
-            data.append(go.Bar(x=["Bytes actually sent", "Total bytes attempted to send"], y=bytes[i-1], name=("Node"+str(i)),
-                               text=bytes[i-1], textposition='auto'))
+            try:
+                bytes.append(json.loads(line))
+            except:
+                line = line.replace("[", "")
+                line = line.replace("]", "")
+                line = line.replace(" ", "")
+                line = line.split(",")
+                newList = []
+                for element in line:
+                    try:
+                        newList.append(float(element))
+                    except:
+                        print("################")
+                        print(element)
+                        print("################")
+                if not newList == []:
+                    bytes.append(newList)
+
+
+        for i in range(len(bytes)):
+            data.append(go.Bar(x=["Bytes actually sent", "Total bytes attempted to send"], y=bytes[i], name=("Node"+str(i)),
+                               text=bytes[i], textposition='auto'))
 
         for input in bytes:
             sum1 += input[0]
@@ -214,8 +233,23 @@ class Draw:
         for i in range(1, len(files) + 1):
             file = open("testdata/mergelatency" + str(i), "r")
             line = file.read()
-            bytes.append(json.loads(line))
             file.close()
+            try:
+                bytes.append(json.loads(line))
+            except:
+                line = line.replace("[", "")
+                line = line.replace("]", "")
+                line = line.replace(" ", "")
+                line = line.split(",")
+                newList = []
+                for element in line:
+                    try:
+                        newList.append(float(element))
+                    except:
+                        print("################")
+                        print(element)
+                        print("################")
+                bytes.append(newList)
             self.xrange = list(range(1, len(bytes[i - 1]) + 1))
             data.append(go.Scatter(x=self.xrange, y=bytes[i - 1], mode='lines', name=("Node" + str(i))))
 
@@ -250,8 +284,23 @@ class Draw:
         for i in range(2, len(files) + 1):
             file = open("testdata/mergelatency" + str(i), "r")
             line = file.read()
-            bytes.append(json.loads(line))
             file.close()
+            try:
+                bytes.append(json.loads(line))
+            except:
+                line = line.replace("[", "")
+                line = line.replace("]", "")
+                line = line.replace(" ", "")
+                line = line.split(",")
+                newList = []
+                for element in line:
+                    try:
+                        newList.append(float(element))
+                    except:
+                        print("################")
+                        print(element)
+                        print("################")
+                bytes.append(newList)
             self.xrange = list(range(1, len(bytes[i - 2]) + 1))
             data.append(go.Scatter(x=self.xrange, y=bytes[i - 2], mode='lines', name=("Node" + str(i))))
         data.append(go.Scatter(x=self.xrange, y=self.mergelatency_average, mode='lines', name="Average message size"))
@@ -271,8 +320,23 @@ class Draw:
         bytes = []
         file = open("testdata/mergelatency1", "r")
         line = file.read()
-        bytes.append(json.loads(line))
         file.close()
+        try:
+            bytes.append(json.loads(line))
+        except:
+            line = line.replace("[", "")
+            line = line.replace("]", "")
+            line = line.replace(" ", "")
+            line = line.split(",")
+            newList = []
+            for element in line:
+                try:
+                    newList.append(float(element))
+                except:
+                    print("################")
+                    print(element)
+                    print("################")
+            bytes.append(newList)
         self.xrange = list(range(1, len(bytes[0]) + 1))
         data.append(go.Scatter(x=self.xrange, y=bytes[0], mode='lines', name="Node1"))
         data.append(go.Scatter(x=self.xrange, y=self.mergelatency_average, mode='lines', name="Average message size"))
@@ -294,8 +358,23 @@ class Draw:
         for i in range(2, len(files) + 1):
             file = open("testdata/messagelatency" + str(i), "r")
             line = file.read()
-            bytes.append(json.loads(line))
             file.close()
+            try:
+                bytes.append(json.loads(line))
+            except:
+                line = line.replace("[", "")
+                line = line.replace("]", "")
+                line = line.replace(" ", "")
+                line = line.split(",")
+                newList = []
+                for element in line:
+                    try:
+                        newList.append(float(element))
+                    except:
+                        print("################")
+                        print(element)
+                        print("################")
+                bytes.append(newList)
             self.xrange = list(range(1, len(bytes[i - 2]) + 1))
             data.append(go.Scatter(x=self.xrange, y=bytes[i - 2], mode='lines', name=("Node" + str(i))))
         data.append(go.Scatter(x=self.xrange, y=self.messagelatency_average, mode='lines', name="Average message size"))
@@ -315,8 +394,23 @@ class Draw:
         bytes = []
         file = open("testdata/messagelatency1", "r")
         line = file.read()
-        bytes.append(json.loads(line))
         file.close()
+        try:
+            bytes.append(json.loads(line))
+        except:
+            line = line.replace("[", "")
+            line = line.replace("]", "")
+            line = line.replace(" ", "")
+            line = line.split(",")
+            newList = []
+            for element in line:
+                try:
+                    newList.append(float(element))
+                except:
+                    print("################")
+                    print(element)
+                    print("################")
+            bytes.append(newList)
         self.xrange = list(range(1, len(bytes[0]) + 1))
         data.append(go.Scatter(x=self.xrange, y=bytes[0], mode='lines', name="Node1"))
         data.append(go.Scatter(x=self.xrange, y=self.messagelatency_average, mode='lines', name="Average message size"))
@@ -338,8 +432,23 @@ class Draw:
         for i in range(2, len(files) + 1):
             file = open("testdata/messagesize" + str(i), "r")
             line = file.read()
-            bytes.append(json.loads(line))
             file.close()
+            try:
+                bytes.append(json.loads(line))
+            except:
+                line = line.replace("[", "")
+                line = line.replace("]", "")
+                line = line.replace(" ", "")
+                line = line.split(",")
+                newList = []
+                for element in line:
+                    try:
+                        newList.append(float(element))
+                    except:
+                        print("################")
+                        print(element)
+                        print("################")
+                bytes.append(newList)
             self.xrange = list(range(1, len(bytes[i - 2]) + 1))
             data.append(go.Scatter(x=self.xrange, y=bytes[i - 2], mode='lines', name=("Node" + str(i))))
         data.append(go.Scatter(x=self.xrange, y=self.messagesize_average, mode='lines', name="Average message size"))
@@ -359,8 +468,23 @@ class Draw:
         bytes = []
         file = open("testdata/messagesize1", "r")
         line = file.read()
-        bytes.append(json.loads(line))
         file.close()
+        try:
+            bytes.append(json.loads(line))
+        except:
+            line = line.replace("[", "")
+            line = line.replace("]", "")
+            line = line.replace(" ", "")
+            line = line.split(",")
+            newList = []
+            for element in line:
+                try:
+                    newList.append(float(element))
+                except:
+                    print("################")
+                    print(element)
+                    print("################")
+            bytes.append(newList)
         self.xrange = list(range(1, len(bytes[0]) + 1))
         data.append(go.Scatter(x=self.xrange, y=bytes[0], mode='lines', name="Node1"))
         data.append(go.Scatter(x=self.xrange, y=self.messagesize_average, mode='lines', name="Average message size"))
@@ -378,5 +502,5 @@ class Draw:
 if __name__ == '__main__':
     #write_bytes()
     data = Draw()
-    data.perform_writes(2)
+    data.perform_writes(1)
 

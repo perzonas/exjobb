@@ -65,7 +65,7 @@ class CustomTopology:
         # network.pingAll()
         info("*** testing bandwith between host 1 & 2\n")
         h1, h2 = network.get('Host1', 'Host2')
-        # network.iperf((h1, h2))
+        network.iperf((h1, h2))
 
         thread = Thread(target=self.restartTest, args=[len(network.hosts)])
         thread.daemon = True
@@ -77,7 +77,7 @@ class CustomTopology:
             self.startBackend(host, host.IP().split(".")[-1], len(network.hosts), network, domatrix)
 
 
-        linkScript(network, len(network.hosts), 4, 3)
+        linkScript(network, len(network.hosts), 8, 3)
 
         ### If you want to start the mininet console remove this commented line below ###
         #CLI(network)

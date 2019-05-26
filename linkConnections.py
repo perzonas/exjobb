@@ -21,8 +21,19 @@ def linkScript(network, hosts, seconds, type):
     starttime = time.time()
     while True:
         cur_time = time.time() - starttime
-        if cur_time % 25 == 0:
+        if cur_time % 10 == 0:
             print("Elapsed time on test: ", cur_time)
+
+        if time.time()-starttime > 300:
+            if consistensycheck(hosts, type):
+                con_time = time.time()-starttime
+                print("Reached consistency after %f seconds." % con_time)
+                path = "results/convergetime-%d-%d" % (type, hosts)
+                file = open(path, "w")
+                os.chmod(path, 0o777)
+                file.write(str(con_time))
+                file.close()
+                break
 
         if cur_time % 300 < 5:
             for j in range(3):
@@ -56,16 +67,8 @@ def linkScript(network, hosts, seconds, type):
                     break
 
 
-        if time.time()-starttime > 300:
-            if consistensycheck(hosts, type):
-                con_time = time.time()-starttime
-                print("Reached consistency after %f seconds." % con_time)
-                path = "results/convergetime-%d-%d" % (type, hosts)
-                file = open(path, "w")
-                os.chmod(path, 0o777)
-                file.write(str(con_time))
-                file.close()
-                break
+
+
 
 
 

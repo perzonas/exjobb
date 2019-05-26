@@ -35,7 +35,7 @@ class CustomTopology:
 
         network.terms += makeTerm(node=server, cmd="python3 centralizedBackend.py %s %s" % (hosts, totalnohost))
 
-    def setup(self, no_of_hosts=10, bandwidth=100000, delay='20ms', loss=1, queue_size=1000):
+    def setup(self, no_of_hosts=10, bandwidth=1.5, delay='150ms', loss=1, queue_size=1000):
 
         topology = CustomTopo(no_of_hosts)
         # Select TCP Reno
@@ -78,7 +78,7 @@ class CustomTopology:
 
 
         # the int is the number of seconds of total downtime during a test
-        linkScript(network, len(network.hosts), 4, 1)
+        linkScript(network, len(network.hosts), 8, 1)
 
         ### If you want to start the mininet console remove this commented line below ###
         # CLI(network)

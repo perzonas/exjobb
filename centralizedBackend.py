@@ -178,8 +178,11 @@ class Server:
         for table, tlist in state.items():
             if tlist:
                 for entry in tlist:
-                    if not dbentryexist(self.hostID, 1, table, entry[0]):
-                        dbaddentry(self.hostID, 1, table, entry)
+                    try:
+                        if not dbentryexist(self.hostID, 1, table, entry[0]):
+                            dbaddentry(self.hostID, 1, table, entry)
+                    except sqlite3.OperationalError:
+                        self.updatestate(state)
         end_time = time.time()
         total_time = end_time-start_time
         self.mergetime.append((total_time*1000))
@@ -194,19 +197,25 @@ class Server:
             time.sleep(5)
             if not dbexistcheck(self.hostID, self.hostID):
                 addnewdb(self.hostID, self.hostID)
+            try:
+                message = dbquery(self.hostID, self.hostID)
 
-            message = dbquery(self.hostID, self.hostID)
 
+                for host in range(1, (int(self.numberofhost) + 1)):
+                    host = self.ip + str(host)
 
-            for host in range(1, (int(self.numberofhost) + 1)):
-                host = self.ip + str(host)
-
-                # do not send to ourselves
-                if host != self.ownIP:
-                    thread = Thread(target=self.sendmessage, args=[message, host, self.port])
-                    thread.daemon = True
-                    thread.start()
-                    #self.sendmessage(message, host, self.port)
+                    # do not send to ourselves
+                    if host != self.ownIP:
+                        thread = Thread(target=self.sendmessage, args=[message, host, self.port])
+                        thread.daemon = True
+                        thread.start()
+                        #self.sendmessage(message, host, self.port)
+            except sqlite3.OperationalError:
+                print("*"*20)
+                print(" ")
+                print(" ")
+                print("*"*20)
+                pass
 
     # sending message to another host
     def sendmessage(self, message, host, port):
