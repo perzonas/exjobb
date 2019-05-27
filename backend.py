@@ -26,16 +26,20 @@ class Server:
     messagetime = []
     dropped_msgs = 0
     messagesize = []
+    domatrix = 0
 
-    def run(self, hostnumber, numberofhosts=1):
+    def run(self, hostnumber, numberofhosts=1, domatrix=0):
+        print("Domatrix: ", domatrix, type(domatrix))
         self.numberofhost = int(numberofhosts)
         self.ownIP += str(hostnumber)
         self.hostID = hostnumber
-        self.crdt.myvehicleid = hostnumber
+        self.crdt.myid = hostnumber
         self.bytessentadress = "testdata/bytes" + self.hostID
         for i in range(1, self.numberofhost+1):
             addnewdb(self.hostID, i)
-
+        self.crdt.creatematrix(int(numberofhosts))
+        self.domatrix = int(domatrix)
+        self.crdt.nrofhosts = (int(numberofhosts))
 
         # AF_INET -> ipv4 and SOCK_STREAM -> tcp
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -97,10 +101,13 @@ class Server:
             total_time = end_time - start_time
             self.messagetime.append(total_time*1000)
             message = json.loads(data)
-            print("### RECEIVED MESSAGE FROM NODE %s ###" % id)
+            #print("### RECEIVED MESSAGE FROM NODE %s ###" % id)
 
             ### Add state to TODO stack so worker thread can perform the received action ###
             self.mergeStack.put(message)
+
+            if self.domatrix == 1:
+                self.crdt.matrixupdate(message[1][0], message[1][1], True)
         else:
             self.dropped_msgs += 1
         self.writeMessage()
@@ -121,17 +128,24 @@ class Server:
 
     # Broadcast a message to all other nodes
     def broadcaststate(self, message):
-        print("Broadcasting message to all hosts")
+        #print("Broadcasting message to all hosts")
         for host in range(1, (self.numberofhost + 1)):
             host = str(host)
             host = self.ip + host
 
+            ms = [message, (self.hostID, self.crdt.messagecounter)]
+
             # do not send to ourselves
             if host != self.ownIP:
-                thread = Thread(target=self.sendmessage, args=[message, host, self.port])
+                thread = Thread(target=self.sendmessage, args=[ms, host, self.port])
                 thread.daemon = True
                 thread.start()
                 #self.sendmessage(message, host, self.port)
+
+        if self.domatrix == 1:
+            self.crdt.matrixupdate(self.hostID, self.crdt.messagecounter, 0)
+        self.crdt.messagecounter += 1
+
 
     # sending message to another host
     def sendmessage(self, message, host, port):
@@ -157,19 +171,12 @@ class Server:
             sock.close()
             self.bytessent += totalsent
             self.writeBytes()
-
-
-
-
-
-
         except Exception as e:
             "Fail during socket connection"
 
 
     def localthread(self):
         filename = "localstates/local"+self.hostID
-
 
         ### Create local update file if it doesn't exist
         if not os.path.isfile(filename):
@@ -179,9 +186,6 @@ class Server:
         position = 0
 
         while True:
-            reproduce = []
-            action = ""
-
             ### Read file that holds local updates ###
             file = open(filename, "r")
             text = file.readlines()
@@ -193,7 +197,7 @@ class Server:
                         ### Perform the action from local machine ###
                         state = json.loads(action)
                         data = {str(self.hostID): state[1]}
-                        print("#### PERFORMING AN UPDATE ####")
+                        #print("#### PERFORMING AN UPDATE ####")
 
                         start_time = time.time()
                         if state[0] == "i":
@@ -217,10 +221,10 @@ class Server:
 
             ### Perform actions received from other nodes  and saved in a buffer ###
             if not self.mergeStack.empty():
-                print("#### PERFORMING A MERGE ####")
-                state = self.mergeStack.get()
+                #print("#### PERFORMING A MERGE ####")
+                task = self.mergeStack.get()
                 start_time = time.time()
-                self.crdt.merge(state)
+                self.crdt.merge(task[0])
                 end_time = time.time()
                 total_time = end_time - start_time
                 self.mergetime.append((total_time * 1000))
@@ -266,7 +270,7 @@ class Server:
 if __name__ == '__main__':
     server = Server()
     try:
-        server.run(sys.argv[1], sys.argv[2])
+        server.run(sys.argv[1], sys.argv[2], sys.argv[3])
     except IndexError:
         print("Too few arguments")
 

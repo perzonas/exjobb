@@ -82,6 +82,7 @@ def divergematrixcheck(nrofnodes):
     rdict = {}
     mdict = {}
     largestmatrix = 0
+    smallestmatrix = 0
 
     ### Reads matrices, makes them the same size if necessary and checks ###
     ### how similar they are.                                            ###
@@ -99,6 +100,8 @@ def divergematrixcheck(nrofnodes):
 
         if largestmatrix < len(mtrx[0]):
             largestmatrix = len(mtrx[0])
+        elif smallestmatrix == 0 or smallestmatrix > len(mtrx[0]):
+            smallestmatrix = len(mtrx[0])
 
     ### Pad matrices to be the same size ###
     for i in range(1, nrofnodes+1):
@@ -126,17 +129,27 @@ def divergematrixcheck(nrofnodes):
         rdict[i] = rlist
 
     tsize = npmatrices[1].size
-    for i in range(1, nrofnodes-1):
+    for i in range(1, nrofnodes+1):
         for j in range(0, nrofnodes-1):
             rdict[i][j] = round(100-rdict[i][j]/tsize*100, 2)
 
+    for id, matrix in matrices.items():
+        for li in matrix:
+            toprint = "|"
+            for x in li:
+                toprint += " " + str(x)
+            toprint += " |"
+            print(toprint)
+        print("\n")
+    print("Number of messages sent: ", mdict)
     print("Divergence in procent:", rdict, "\n")
+    print("Number of messages sent divergence:", largestmatrix-smallestmatrix)
     print("Size: ", npmatrices[1].size)
 
 
 
 #consistensycheck(16, 3)
-#divergematrixcheck(8)
+divergematrixcheck(4)
 
 #consistensycheck(1)
 #consistensycheck(2)

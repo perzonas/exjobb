@@ -89,6 +89,7 @@ class DeltaCvRDT:
                 toprint += " |"
                 print(toprint)
 
+        print("\n")
         self.writeDivergeMatrix()
 
 

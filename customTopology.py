@@ -31,12 +31,12 @@ topos = {'customtopo': (lambda: CustomTopo())}
 
 class CustomTopology:
 
-    def startBackend(self, server, hosts, totalnohost, network):
+    def startBackend(self, server, hosts, totalnohost, network, domatrix=0):
         print("starting server %s" % server.IP())
 
-        network.terms += makeTerm(node=server, cmd="python3 backend.py %s %s" % (hosts, totalnohost))
+        network.terms += makeTerm(node=server, cmd="python3 backend.py %s %s %s" % (hosts, totalnohost, domatrix))
 
-    def setup(self, no_of_hosts=10, bandwidth=1.5, delay='150ms', loss=1, queue_size=1000):
+    def setup(self, no_of_hosts=10, bandwidth=1.5, delay='150ms', loss=1, queue_size=1000, domatrix=0):
 
         topology = CustomTopo(no_of_hosts)
         # Select TCP Reno
@@ -61,7 +61,7 @@ class CustomTopology:
         # network.pingAll()
         info("*** testing bandwith between host 1 & 2\n")
         h1, h2 = network.get('Host1', 'Host2')
-        network.iperf((h1, h2))
+        #network.iperf((h1, h2))
 
 
 
@@ -71,7 +71,7 @@ class CustomTopology:
         time.sleep(1)
 
         for host in network.hosts:
-            self.startBackend(host, host.IP().split(".")[-1], len(network.hosts), network)
+            self.startBackend(host, host.IP().split(".")[-1], len(network.hosts), network, domatrix)
 
         linkScript(network, len(network.hosts), 4, 2)
 
@@ -100,5 +100,5 @@ if __name__ == '__main__':
         simulation.setup()
     else:
         hosts = int(sys.argv[1])
-        simulation.setup(hosts)
+        simulation.setup(hosts, domatrix=sys.argv[2])
 
