@@ -17,7 +17,7 @@ from createFigures import *
 
 class CustomTopo(Topo):
 
-    def build(self, no_of_hosts, cpu=0.5, cores=2):
+    def build(self, no_of_hosts, cpu=1, cores=2):
         hosts = [self.addHost("Host%s" % h, cpu=cpu, cores=cores, ip=("20.1.90.%d" % h)) for h in range(1, no_of_hosts+1)]
         switch = self.addSwitch("Switch1")
 
@@ -78,7 +78,7 @@ class CustomTopology:
 
 
         # the int is the number of seconds of total downtime during a test
-        linkScript(network, len(network.hosts), 4, 1)
+        linkScript(network, len(network.hosts), 8, 1)
 
         ### If you want to start the mininet console remove this commented line below ###
         # CLI(network)

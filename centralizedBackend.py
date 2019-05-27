@@ -40,8 +40,8 @@ class Server:
         for i in range(1, int(numberofhosts)+1):
             self.centralclockholder[i] = 0
         self.bytessentadress = "testdata/bytes" + str(self.hostID)
-        if not dbexistcheck(self.hostID, 1):
-            addnewdb(self.hostID, 1)
+        #if not dbexistcheck(self.hostID, 1):
+          #  addnewdb(self.hostID, 1)
 
 
 
@@ -114,7 +114,6 @@ class Server:
             end_time = time.time()
             total_time = end_time-start_time
             self.messagetime.append(total_time*1000)
-            print("### RECEIVED MESSAGE FROM NODE %s ###" % id)
             message = json.loads(data)
             if int(self.hostID) == 1:
                 succeded = connection.send("a".encode())
@@ -173,15 +172,17 @@ class Server:
 
     ###  Slave node have received the state from the master node and will update its own state to this state
     def updatestate(self, state):
-        print("***  Updating slave state based on master state  ***\n")
         if not dbexistcheck(self.hostID, 1):
             addnewdb(self.hostID, 1)
         start_time = time.time()
         for table, tlist in state.items():
             if tlist:
                 for entry in tlist:
-                    if not dbentryexist(self.hostID, 1, table, entry[0]):
-                        dbaddentry(self.hostID, 1, table, entry)
+                    try:
+                        if not dbentryexist(self.hostID, 1, table, entry[0]):
+                            dbaddentry(self.hostID, 1, table, entry)
+                    except sqlite3.OperationalError:
+                        self.updatestate(state)
         end_time = time.time()
         total_time = end_time-start_time
         self.mergetime.append((total_time*1000))
@@ -194,17 +195,27 @@ class Server:
         while True:
 
             time.sleep(5)
-            message = dbquery(self.hostID, self.hostID)
-            print("***  Broadcasting master state ***\n")
-            for host in range(1, (int(self.numberofhost) + 1)):
-                host = self.ip + str(host)
+            if not dbexistcheck(self.hostID, self.hostID):
+                addnewdb(self.hostID, self.hostID)
+            try:
+                message = dbquery(self.hostID, self.hostID)
 
-                # do not send to ourselves
-                if host != self.ownIP:
-                    thread = Thread(target=self.sendmessage, args=[message, host, self.port])
-                    thread.daemon = True
-                    thread.start()
-                    #self.sendmessage(message, host, self.port)
+
+                for host in range(1, (int(self.numberofhost) + 1)):
+                    host = self.ip + str(host)
+
+                    # do not send to ourselves
+                    if host != self.ownIP:
+                        thread = Thread(target=self.sendmessage, args=[message, host, self.port])
+                        thread.daemon = True
+                        thread.start()
+                        #self.sendmessage(message, host, self.port)
+            except sqlite3.OperationalError:
+                print("*"*20)
+                print(" ")
+                print(" ")
+                print("*"*20)
+                pass
 
     # sending message to another host
     def sendmessage(self, message, host, port):
@@ -235,7 +246,6 @@ class Server:
                 byte = sock.recv(1)
                 byte = byte.decode()
                 if byte == "a":
-                    print("*** Received ACK ***")
                     received = True
             sock.close()
             self.bytessent += totalsent

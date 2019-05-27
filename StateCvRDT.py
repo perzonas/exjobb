@@ -1,6 +1,7 @@
 from DbConnect import *
 import time
 import json
+import sqlite3
 
 
 class StateCvRDT:
@@ -17,16 +18,29 @@ class StateCvRDT:
         addnewdb(self.myid, str(vehicleid))
 
 
+
     def update(self, table, entry):
-        self.delete([self.myid, table, entry[0]])
-        dbaddentry(self.myid, self.myid, table, entry)
+        if not dbexistcheck(self.myvehicleid, self.myvehicleid):
+            self.adddb(self.myvehicleid)
+        self.delete([self.myvehicleid, table, entry[0]])
+        dbaddentry(self.myvehicleid, self.myvehicleid, table, entry)
 
     def query(self):
         querydata = {}
-        querydata[self.myid] = dbquery(self.myid, self.myid)
+        if not dbexistcheck(self.myvehicleid, self.myvehicleid):
+            self.adddb(self.myvehicleid)
+        querydata[self.myvehicleid] = dbquery(self.myvehicleid, self.myvehicleid)
 
         for dbase in self.dbases:
-            querydata[dbase] = dbquery(self.myid, dbase)
+            try:
+                if not dbexistcheck(self.myvehicleid, dbase):
+                    self.adddb(dbase)
+
+                querydata[dbase] = dbquery(self.myvehicleid, dbase)
+            except sqlite3.OperationalError as e:
+                print("####################################")
+                print("ERROR WHEN QUERYING DB %s" % dbase)
+                print("####################################")
 
         return querydata
 
@@ -45,7 +59,9 @@ class StateCvRDT:
 
 
     def delete(self, entry):
-        dbdeleteentry(self.myid, entry[0], entry[1], entry[2])
+        if not dbexistcheck(self.myvehicleid, self.myvehicleid):
+            self.adddb(self.myvehicleid)
+        dbdeleteentry(self.myvehicleid, entry[0], entry[1], entry[2])
 
     def creatematrix(self, nrofhosts):
         for i in range(0, nrofhosts):

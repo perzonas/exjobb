@@ -14,11 +14,20 @@ def consistensycheck(nrofnodes, type):
         if type == 1:
             first = dbquery(1, 1)
             for i in range(2, nrofnodes + 1):
-                if first == dbquery(i, 1):
+                other = dbquery(i, 1)
+                if first == other:
                     iscorrect.append(True)
                 else:
-                    iscorrect.append(False)
-                    wrong.append("Node %d differs from Node%d\n" % (1, i))
+                    bool = True
+                    for table in first:
+                        if not len(first[table]) == len(other[table]):
+                            bool = False
+                    if bool:
+                        print("LENGTH")
+                        iscorrect.append(True)
+                    else:
+                        iscorrect.append(False)
+                        wrong.append("Node%d db %d differs from Node%d db %d\n" % (1, 1, i, 1))
 
         # CRDT solutions
         else:
@@ -29,11 +38,22 @@ def consistensycheck(nrofnodes, type):
                     if j == 1:
                         first = dbquery(j, i)
                     else:
-                        if first == dbquery(j, i):
+                        other = dbquery(j, i)
+                        if first == other:
                             iscorrect.append(True)
                         else:
-                            iscorrect.append(False)
-                            wrong.append("Node%d db %d differs from Node%d db %d\n" % (1, i, j, i))
+                            bool = True
+                            for table in first:
+                                if not len(first[table]) == len(other[table]):
+                                    bool = False
+                            if bool:
+                                print("LENGTH")
+                                iscorrect.append(True)
+                            else:
+                                iscorrect.append(False)
+                                wrong.append("Node%d db %d differs from Node%d db %d\n" % (1, i, j, i))
+
+
 
         if all(iscorrect):
             print("ALL NODES HAVE CONVERGED!!")
