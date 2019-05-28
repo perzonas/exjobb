@@ -78,7 +78,7 @@ class CustomTopology:
 
 
         # the int is the number of seconds of total downtime during a test
-        linkScript(network, len(network.hosts), 8, 1)
+        linkScript(network, len(network.hosts), 16, 1)
 
         ### If you want to start the mininet console remove this commented line below ###
         # CLI(network)
@@ -88,9 +88,9 @@ class CustomTopology:
         # We close the xterms
         cleanUpScreens()
 
-        if consistensycheck(int(no_of_hosts), 1):
-            draw = Draw()
-            draw.perform_writes(1)
+        #if consistensycheck(int(no_of_hosts), 1):
+        draw = Draw()
+        draw.perform_writes(1)
 
     def restartTest(self, hosts):
         test = Test()

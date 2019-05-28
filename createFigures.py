@@ -502,5 +502,5 @@ class Draw:
 if __name__ == '__main__':
     #write_bytes()
     data = Draw()
-    data.perform_writes(1)
+    data.perform_writes(2)
 

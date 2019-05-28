@@ -118,6 +118,7 @@ class Server:
             if int(self.hostID) == 1:
                 succeded = connection.send("a".encode())
                 self.bytessent += succeded
+                self.expectedBytes += succeded
             ### Add state to TODO stack so worker thread can perform the received action ###
             if int(self.hostID) == 1:
                 self.mergeStack.put((id, message))
@@ -242,7 +243,7 @@ class Server:
                 totalsent += sent
                 if totalsent == datasize:
                     finished = True
-            if finished:
+            if finished and self.hostID != 1:
                 byte = sock.recv(1)
                 byte = byte.decode()
                 if byte == "a":
