@@ -33,7 +33,7 @@ class Server:
         self.numberofhost = int(numberofhosts)
         self.ownIP += str(hostnumber)
         self.hostID = hostnumber
-        self.crdt.myid = hostnumber
+        self.crdt.myvehicleid = hostnumber
         self.bytessentadress = "testdata/bytes" + self.hostID
         self.crdt.creatematrix(int(numberofhosts))
         self.domatrix = int(domatrix)

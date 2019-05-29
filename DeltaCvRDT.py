@@ -78,7 +78,7 @@ class DeltaCvRDT:
         while len(self.divergematrix[0]) < messagenumber:
             for i in range(0, len(self.divergematrix)):
                 self.divergematrix[i].append(0)
-        print("\nSENDER: ", sender, "MESSAGENUMBER: ", messagenumber, "\n" )
+        #print("\nSENDER: ", sender, "MESSAGENUMBER: ", messagenumber, "\n" )
         self.divergematrix[int(sender)-1][messagenumber-1] = 1
 
         if prnt == True:

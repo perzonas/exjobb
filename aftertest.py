@@ -161,15 +161,25 @@ def divergematrixcheck(nrofnodes):
             toprint += " |"
             print(toprint)
         print("\n")
+
+    npm = npmatrices[1].shape
+    groundmatrix = np.ones(npm)
+    print(npm, "\n")
+    print(groundmatrix)
+
+    gtrdict = {}
+    for i in range(1, nrofnodes+1):
+        gtrdict[i] = np.sum(np.equal(npmatrices[i], groundmatrix))
+
     print("Number of messages sent: ", mdict)
     print("Divergence in procent:", rdict, "\n")
     print("Number of messages sent divergence:", largestmatrix-smallestmatrix)
-    print("Size: ", npmatrices[1].size)
+    print("Ground truth: ", gtrdict)
 
 
 
 #consistensycheck(16, 3)
-divergematrixcheck(4)
+divergematrixcheck(8)
 
 #consistensycheck(1)
 #consistensycheck(2)
