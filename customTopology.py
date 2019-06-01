@@ -86,7 +86,7 @@ class CustomTopology:
             draw = Draw()
             draw.perform_writes(2)
 
-
+        divergematrixcheck(no_of_hosts)
 
     def restartTest(self, hosts):
         test = Test()

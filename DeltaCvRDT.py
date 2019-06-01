@@ -97,5 +97,5 @@ class DeltaCvRDT:
         file = open("testdata/divergematrix" + str(self.myid), "w")
         os.chmod("testdata/divergematrix" + str(self.myid), 0o777)
         file.write(json.dumps(self.divergematrix) + "\n")
-        file.write(json.dumps(self.messagecounter))
+        file.write(json.dumps(self.messagecounter) + "\n")
         file.close()

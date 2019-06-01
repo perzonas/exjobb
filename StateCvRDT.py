@@ -89,5 +89,5 @@ class StateCvRDT:
         file = open("testdata/divergematrix" + str(self.myvehicleid), "w")
         os.chmod("testdata/divergematrix" + str(self.myvehicleid), 0o777)
         file.write(json.dumps(self.divergematrix) + "\n")
-        file.write(json.dumps(self.messagecounter))
+        file.write(json.dumps(self.messagecounter) + "\n")
         file.close()

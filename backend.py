@@ -121,7 +121,7 @@ class Server:
         while True:
             state = self.crdt.query()
             self.broadcaststate(state)
-            time.sleep(5)
+            time.sleep(35)
 
 
     # Broadcast a message to all other nodes
