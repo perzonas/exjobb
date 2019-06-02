@@ -30,12 +30,12 @@ topos = {'customtopo': (lambda: CustomTopo())}
 
 class CustomTopology:
 
-    def startBackend(self, server, hosts, totalnohost, network):
+    def startBackend(self, server, hosts, totalnohost, network, domatrix):
         print("starting server %s" % server.IP())
 
-        network.terms += makeTerm(node=server, cmd="python3 centralizedBackend.py %s %s" % (hosts, totalnohost))
+        network.terms += makeTerm(node=server, cmd="python3 centralizedBackend.py %s %s %s" % (hosts, totalnohost,domatrix))
 
-    def setup(self, no_of_hosts=10, bandwidth=1.5, delay='150ms', loss=1, queue_size=1000):
+    def setup(self, no_of_hosts=10, bandwidth=1.5, delay='150ms', loss=1, queue_size=1000, domatrix=0):
 
         topology = CustomTopo(no_of_hosts)
         # Select TCP Reno
@@ -74,11 +74,11 @@ class CustomTopology:
         time.sleep(1)
 
         for host in network.hosts:
-            self.startBackend(host, host.IP().split(".")[-1], len(network.hosts), network)
+            self.startBackend(host, host.IP().split(".")[-1], len(network.hosts), network, domatrix)
 
 
         # the int is the number of seconds of total downtime during a test
-        linkScript(network, len(network.hosts), 16, 1)
+        linkScript(network, len(network.hosts), 4, 1)
 
         ### If you want to start the mininet console remove this commented line below ###
         # CLI(network)
@@ -91,6 +91,9 @@ class CustomTopology:
         #if consistensycheck(int(no_of_hosts), 1):
         draw = Draw()
         draw.perform_writes(1)
+
+        if int(domatrix) == 1:
+            listcheck(no_of_hosts)
 
     def restartTest(self, hosts):
         test = Test()
@@ -106,5 +109,5 @@ if __name__ == '__main__':
         simulation.setup()
     else:
         hosts = int(sys.argv[1])
-        simulation.setup(hosts)
+        simulation.setup(hosts, domatrix=sys.argv[2])
 

@@ -140,7 +140,7 @@ class Server:
                 thread.start()
                 #self.sendmessage(ms, host, self.port)
         if self.domatrix == 1:
-            self.crdt.matrixupdate(self.crdt.myid, self.crdt.messagecounter, False)
+            self.crdt.matrixupdate(int(self.crdt.myid), int(self.crdt.messagecounter), False)
         self.crdt.messagecounter += 1
 
 
@@ -150,7 +150,7 @@ class Server:
         state = self.crdt.query(task[1])
 
         if self.domatrix == 1:
-            self.crdt.matrixupdate(task[2][0], task[2][1], True)
+            self.crdt.matrixupdate(int(task[2][0]), int(task[2][1]), True)
 
         if not len(state) == 0:
             self.sendmessage([0, state], host, self.port)

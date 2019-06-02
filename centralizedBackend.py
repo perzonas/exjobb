@@ -28,11 +28,13 @@ class Server:
     dropped_messages = 0
     expectedBytes = 0
     messageSizes = []
+    domatrix = 0
+    msgcounter = 1
+    msglist = []
 
 
 
-
-    def run(self, hostnumber, numberofhosts=1):
+    def run(self, hostnumber, numberofhosts=1, domatrix = 0):
 
         self.numberofhost = numberofhosts
         self.ownIP += str(hostnumber)
@@ -40,8 +42,7 @@ class Server:
         for i in range(1, int(numberofhosts)+1):
             self.centralclockholder[i] = 0
         self.bytessentadress = "testdata/bytes" + str(self.hostID)
-        #if not dbexistcheck(self.hostID, 1):
-          #  addnewdb(self.hostID, 1)
+        self.domatrix = int(domatrix)
 
 
 
@@ -176,18 +177,30 @@ class Server:
         if not dbexistcheck(self.hostID, 1):
             addnewdb(self.hostID, 1)
         start_time = time.time()
-        for table, tlist in state.items():
+        for table, tlist in state[0].items():
             if tlist:
                 for entry in tlist:
                     try:
                         if not dbentryexist(self.hostID, 1, table, entry[0]):
                             dbaddentry(self.hostID, 1, table, entry)
                     except sqlite3.OperationalError:
-                        self.updatestate(state)
+                        self.updatestate(state[0])
         end_time = time.time()
         total_time = end_time-start_time
         self.mergetime.append((total_time*1000))
         self.writeMerge()
+
+        if self.domatrix == 1 and self.hostID != 1:
+
+            while len(self.msglist) < state[1]-1:
+                self.msglist.append(0)
+
+            self.msglist.append(1)
+
+            file = open("testdata/divergelist" + str(self.hostID), "w")
+            os.chmod("testdata/divergelist" + str(self.hostID), 0o777)
+            file.write(json.dumps(self.msglist))
+            file.close()
 
     # Broadcast a message to all other nodes
     def broadcaststate(self):
@@ -199,7 +212,9 @@ class Server:
             if not dbexistcheck(self.hostID, self.hostID):
                 addnewdb(self.hostID, self.hostID)
             try:
-                message = dbquery(self.hostID, self.hostID)
+                state = dbquery(self.hostID, self.hostID)
+                message = (state, self.msgcounter)
+                self.msgcounter += 1
 
 
                 for host in range(1, (int(self.numberofhost) + 1)):
@@ -365,7 +380,7 @@ class Server:
 if __name__ == '__main__':
     server = Server()
     try:
-        server.run(sys.argv[1], sys.argv[2])
+        server.run(sys.argv[1], sys.argv[2], sys.argv[3])
     except IndexError:
         print("Too few arguments")
 

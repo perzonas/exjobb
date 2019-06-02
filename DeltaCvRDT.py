@@ -75,11 +75,9 @@ class DeltaCvRDT:
 
 
     def matrixupdate(self, sender, messagenumber, prnt):
-        while len(self.divergematrix[0]) < messagenumber:
-            for i in range(0, len(self.divergematrix)):
-                self.divergematrix[i].append(0)
-        #print("\nSENDER: ", sender, "MESSAGENUMBER: ", messagenumber, "\n" )
-        self.divergematrix[int(sender)-1][messagenumber-1] = 1
+        while len(self.divergematrix[sender-1]) < messagenumber - 1:
+            self.divergematrix[sender-1].append(0)
+        self.divergematrix[sender-1].append(1)
 
         if prnt == True:
             for li in self.divergematrix:

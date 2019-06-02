@@ -104,7 +104,7 @@ class Server:
             self.mergeStack.put(message)
 
             if self.domatrix == 1:
-                self.crdt.matrixupdate(message[1][0], message[1][1], True)
+                self.crdt.matrixupdate(int(message[1][0]), int(message[1][1]), True)
         else:
             self.dropped_msgs += 1
         self.writeMessage()
@@ -121,7 +121,7 @@ class Server:
         while True:
             state = self.crdt.query()
             self.broadcaststate(state)
-            time.sleep(35)
+            time.sleep(15)
 
 
     # Broadcast a message to all other nodes
@@ -140,7 +140,7 @@ class Server:
                 #self.sendmessage(message, host, self.port)
 
         if self.domatrix == 1:
-            self.crdt.matrixupdate(self.hostID, self.crdt.messagecounter, 0)
+            self.crdt.matrixupdate(int(self.hostID), int(self.crdt.messagecounter), 0)
         self.crdt.messagecounter += 1
 
 
