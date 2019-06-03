@@ -71,7 +71,7 @@ class DeltaCvRDT:
 
     def creatematrix(self, nrofhosts):
         for i in range(0, nrofhosts):
-            self.divergematrix.append([0])
+            self.divergematrix.append([])
 
 
     def matrixupdate(self, sender, messagenumber, prnt):

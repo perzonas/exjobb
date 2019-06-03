@@ -199,7 +199,7 @@ class Server:
 
             file = open("testdata/divergelist" + str(self.hostID), "w")
             os.chmod("testdata/divergelist" + str(self.hostID), 0o777)
-            file.write(json.dumps(self.msglist))
+            file.write(json.dumps(self.msglist) + "\n")
             file.close()
 
     # Broadcast a message to all other nodes
@@ -208,7 +208,7 @@ class Server:
 
         while True:
 
-            time.sleep(5)
+            time.sleep(15)
             if not dbexistcheck(self.hostID, self.hostID):
                 addnewdb(self.hostID, self.hostID)
             try:

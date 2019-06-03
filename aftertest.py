@@ -70,21 +70,12 @@ def consistensycheck(nrofnodes, type):
 
 
 def divergematrixcheck(nrofnodes):
-    percentresult = 0
     matrices = {}
-    npmatrices = {}
-    rdict = {}
     msgdict = {}
-    largestmatrix = 0
-    smallestmatrix = 0
-    totalnumberofmsg = 0
 
-    ### Reads matrices, makes them the same size if necessary and checks ###
-    ### how similar they are.                                            ###
     for i in range(1, nrofnodes+1):
         file = open("testdata/divergematrix" + str(i), "r")
         text = file.readlines()
-        #print(text)
         mtrx = json.loads(text[0])
         nrofmessages = json.loads(text[1])
 
@@ -93,15 +84,10 @@ def divergematrixcheck(nrofnodes):
         matrices[i] = mtrx
         msgdict[i] = nrofmessages
 
-    totalnumberofmsg = sum(msgdict.values())
-    #print(totalnumberofmsg)
-    #print(matrices)
-
-
     ### Count zeroes in matrix ###
     totalzeroes = 0
     worstnode = (0, 0)
-    t = 0
+    totalmessages = 0
     rowzeroes = (0,0)
     tmpz = 0
 
@@ -118,14 +104,13 @@ def divergematrixcheck(nrofnodes):
                         rowzeroes = (i,tmpz)
                     else:
                         tmpz = 0
-                    t +=1
+                    totalmessages +=1
 
         if tmpworstnode > worstnode[1]:
             worstnode = (i, tmpworstnode)
 
     print(totalzeroes)
     print(worstnode)
-    print(t)
     print(rowzeroes)
     printmatrices(matrices)
 
@@ -189,18 +174,49 @@ def divergematrixcheck(nrofnodes):
 
 
 def listcheck(nrofnodes):
-    for i in range(2, nrofnodes):
+    matrix = []
+    for i in range(2, nrofnodes+1):
         file = open("testdata/divergelist" + str(i), "r")
-        list = file.readlines()
-        #list = json.loads(list[0])
+        text = file.readlines()
+        list = json.loads(text[0])
 
-        print(list[0].replace(",", ""))
-        '''for j in range(0, len(list)):
-            print(list[j], " ", end='')
-            pass
-        print("\n")
-        '''
+        matrix.append(list)
 
+    #print(matrix)
+
+    totalzeroes = 0
+    worstnode = (0, 0)
+    totalmessages = 0
+    rowzeroes = (0, 0)
+    tmpz = 0
+
+    for j in range(0, nrofnodes-1):
+        tmpworstnode = 0
+        print(str(matrix[j]).replace(",", ""))
+        for k in range(0, len(matrix[j])):
+            if matrix[j][k] == 0:
+                totalzeroes += 1
+                tmpworstnode += 1
+                tmpz += 1
+            else:
+                if tmpz > rowzeroes[1]:
+                    rowzeroes = (j+2, tmpz)
+                else:
+                    tmpz = 0
+                totalmessages += 1
+
+            if tmpworstnode > worstnode[1]:
+                worstnode = (j+2, tmpworstnode)
+
+    print(totalzeroes)
+    print(worstnode)
+    print(rowzeroes)
+
+    file = open("testdata/divergelist" + str(2), "a")
+    file.write(json.dumps(totalzeroes) + "\n")
+    file.write(json.dumps(worstnode) + "\n")
+    file.write(json.dumps(rowzeroes))
+    file.close()
 
 def printmatrices(matrices):
     for id, matrix in matrices.items():
@@ -303,5 +319,5 @@ def divergeways(nrofnodes):
 
 
 if __name__ == '__main__':
-    divergematrixcheck(int(sys.argv[1]))
-    #listcheck(16)
+    #divergematrixcheck(int(sys.argv[1]))
+    listcheck(16)
