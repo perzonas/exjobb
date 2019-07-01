@@ -77,7 +77,7 @@ class CustomTopology:
             self.startBackend(host, host.IP().split(".")[-1], len(network.hosts), network, domatrix)
 
 
-        linkScript(network, len(network.hosts), 16, 3)
+        linkScript(network, len(network.hosts), 4, 3)
 
         ### If you want to start the mininet console remove this commented line below ###
         #CLI(network)

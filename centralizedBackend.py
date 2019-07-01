@@ -116,9 +116,11 @@ class Server:
             self.messagetime.append(total_time*1000)
             message = json.loads(data)
             if int(self.hostID) == 1:
-                succeded = connection.send("a".encode())
+                msg = "a".encode()
+                self.expectedBytes += len(msg)
+                succeded = connection.send(msg)
                 self.bytessent += succeded
-                self.expectedBytes += succeded
+                #self.expectedBytes += succeded
             ### Add state to TODO stack so worker thread can perform the received action ###
             if int(self.hostID) == 1:
                 self.mergeStack.put((id, message))
