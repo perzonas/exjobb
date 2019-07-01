@@ -2,6 +2,7 @@ import sqlite3
 from DbConnect import *
 import json
 import numpy as np
+import sys
 
 
 def consistensycheck(nrofnodes, type):
@@ -66,41 +67,175 @@ def consistensycheck(nrofnodes, type):
     except sqlite3.OperationalError as e:
         print("ERROR", e)
         return False
-'''
 
-    resultdict = {}
-    iscorrect = []
-    try:
-
-        for i in range(1, nrofnodes+1):
-            insidedict = {}
-            if type == 1:
-                insidedict[1] = dbquery(i, 1)
-            else:
-                for j in range(1, nrofnodes+1):
-                    insidedict[j] = dbquery(i, j)
-            resultdict[i] = insidedict
-
-        #for name, content in resultdict.items():
-        #    print("ID:", name, "| Databases: ", content)
-
-        for i in range(1, nrofnodes+1):
-
-            for j in range(1, nrofnodes+1):
-                iscorrect.append(resultdict[i] == resultdict[j])
-
-        print(iscorrect)
-        return all(iscorrect)
-    except sqlite3.OperationalError:
-        return False
-'''
 
 def divergematrixcheck(nrofnodes):
+    matrices = {}
+    msgdict = {}
+
+    for i in range(1, nrofnodes+1):
+        file = open("testdata/divergematrix" + str(i), "r")
+        text = file.readlines()
+        mtrx = json.loads(text[0])
+        nrofmessages = json.loads(text[1])
+
+        file.close()
+
+        matrices[i] = mtrx
+        msgdict[i] = nrofmessages
+
+    ### Count zeroes in matrix ###
+    totalzeroes = 0
+    worstnode = (0, 0)
+    totalmessages = 0
+    rowzeroes = (0,0)
+    tmpz = 0
+
+    for i in range(1, nrofnodes+1):
+        tmpworstnode = 0
+        for j in range(0, nrofnodes):
+            for k in range(0, len(matrices[i][j])):
+                if matrices[i][j][k] == 0:
+                    totalzeroes += 1
+                    tmpworstnode += 1
+                    tmpz += 1
+                else:
+                    if tmpz > rowzeroes[1]:
+                        rowzeroes = (i,tmpz)
+                    else:
+                        tmpz = 0
+                    totalmessages +=1
+
+        if tmpworstnode > worstnode[1]:
+            worstnode = (i, tmpworstnode)
+
+    print(totalzeroes)
+    print(worstnode)
+    print(rowzeroes)
+    printmatrices(matrices)
+
+    file = open("testdata/divergematrix" + str(1), "a")
+    file.write(json.dumps(totalzeroes) + "\n")
+    file.write(json.dumps(worstnode) + "\n")
+    file.write(json.dumps(rowzeroes))
+    file.close()
+
+    '''
+    ### Pad matrices to be the same size ###
+    for i in range(1, nrofnodes+1):
+        while len(matrices[i][0]) < largestmatrix:
+            for j in range(0, nrofnodes):
+                matrices[i][j].append(0)
+    
+    ### Turn normal matrices into numpy arrays ###
+    for i in range(1, nrofnodes+1):
+        npmatrices[i] = np.array(matrices[i])
+
+    ###
+    for i in range(1, nrofnodes+1):
+        rlist = []
+
+        for j in range(1, nrofnodes+1):
+            if i != j:
+                rlist.append(np.sum(np.equal(npmatrices[i], npmatrices[j])))
+
+         rdict[i] = rlist
+    
+    tsize = npmatrices[1].size
+    for i in range(1, nrofnodes+1):
+        for j in range(0, nrofnodes-1):
+            rdict[i][j] = round(100-rdict[i][j]/float(tsize)*100, 2)
+    #printmatrices(matrices)
+
+    groundmatrix = np.ones(npmatrices[1].shape)
+    npm = 0
+
+    gtrdict = {}
+    for i in range(1, nrofnodes+1):
+        gtrdict[i] = np.sum(np.equal(npmatrices[i], groundmatrix))
+
+        if i == 1 or npm > gtrdict[1]:
+            npm = gtrdict[i]
+
+    print("NPM: ", npm, "GT: ", groundmatrix.size, "r: ", round(100-npm/float(groundmatrix.size)*100, 2))
+    npm = round(100-npm/float(groundmatrix.size)*100, 2)
+    
+    print("Number of messages sent: ", msgdict)
+    print("Divergence in procent:", rdict, "\n")
+    print("Number of messages sent divergence:", largestmatrix-smallestmatrix)
+    #print("Ground truth: ", gtrdict)
+    #print(npm)
+
+    file = open("testdata/divergematrix" + str(1), "a")
+    file.write(json.dumps(rdict) + "\n")
+    file.write(json.dumps(npm))
+    file.close()
+    '''
+
+
+def listcheck(nrofnodes):
+    matrix = []
+    for i in range(2, nrofnodes+1):
+        file = open("testdata/divergelist" + str(i), "r")
+        text = file.readlines()
+        list = json.loads(text[0])
+
+        matrix.append(list)
+
+    #print(matrix)
+
+    totalzeroes = 0
+    worstnode = (0, 0)
+    totalmessages = 0
+    rowzeroes = (0, 0)
+    tmpz = 0
+
+    for j in range(0, nrofnodes-1):
+        tmpworstnode = 0
+        print(str(matrix[j]).replace(",", ""))
+        for k in range(0, len(matrix[j])):
+            if matrix[j][k] == 0:
+                totalzeroes += 1
+                tmpworstnode += 1
+                tmpz += 1
+            else:
+                if tmpz > rowzeroes[1]:
+                    rowzeroes = (j+2, tmpz)
+                else:
+                    tmpz = 0
+                totalmessages += 1
+
+            if tmpworstnode > worstnode[1]:
+                worstnode = (j+2, tmpworstnode)
+
+    print(totalzeroes)
+    print(worstnode)
+    print(rowzeroes)
+
+    file = open("testdata/divergelist" + str(2), "a")
+    file.write(json.dumps(totalzeroes) + "\n")
+    file.write(json.dumps(worstnode) + "\n")
+    file.write(json.dumps(rowzeroes))
+    file.close()
+
+def printmatrices(matrices):
+    for id, matrix in matrices.items():
+        for li in matrix:
+            toprint = "|"
+            for x in li:
+                toprint += " " + str(x)
+            toprint += " |"
+            print(toprint)
+        print("\n")
+
+
+### Checks how different ways the nodes took to converge ###
+def divergeways(nrofnodes):
     percentresult = 0
     matrices = {}
     npmatrices = {}
     rdict = {}
-    mdict = {}
+    msgdict = {}
     largestmatrix = 0
     smallestmatrix = 0
 
@@ -116,7 +251,7 @@ def divergematrixcheck(nrofnodes):
         file.close()
 
         matrices[i] = mtrx
-        mdict[i] = nrofmessages
+        msgdict[i] = nrofmessages
 
         if largestmatrix < len(mtrx[0]):
             largestmatrix = len(mtrx[0])
@@ -125,14 +260,9 @@ def divergematrixcheck(nrofnodes):
 
     ### Pad matrices to be the same size ###
     for i in range(1, nrofnodes+1):
-        tmpsize = largestmatrix - len(matrices[i][0])
-
-
-        while tmpsize < largestmatrix and tmpsize != 0:
+        while len(matrices[i][0]) < largestmatrix:
             for j in range(0, nrofnodes):
                 matrices[i][j].append(0)
-
-            tmpsize += 1
 
     ### Turn normal matrices into numpy arrays ###
     for i in range(1, nrofnodes+1):
@@ -151,7 +281,7 @@ def divergematrixcheck(nrofnodes):
     tsize = npmatrices[1].size
     for i in range(1, nrofnodes+1):
         for j in range(0, nrofnodes-1):
-            rdict[i][j] = round(100-rdict[i][j]/tsize*100, 2)
+            rdict[i][j] = round(100-rdict[i][j]/float(tsize)*100, 2)
 
     for id, matrix in matrices.items():
         for li in matrix:
@@ -162,26 +292,32 @@ def divergematrixcheck(nrofnodes):
             print(toprint)
         print("\n")
 
-    npm = npmatrices[1].shape
-    groundmatrix = np.ones(npm)
-    print(npm, "\n")
-    print(groundmatrix)
+    groundmatrix = np.ones(npmatrices[1].shape)
+    npm = 0
 
     gtrdict = {}
     for i in range(1, nrofnodes+1):
         gtrdict[i] = np.sum(np.equal(npmatrices[i], groundmatrix))
 
-    print("Number of messages sent: ", mdict)
+        if i == 1 or npm > gtrdict[1]:
+            npm = gtrdict[i]
+
+    print("NPM: ", npm, "GT: ", groundmatrix.size, "r: ", round(100-npm/float(groundmatrix.size)*100, 2))
+    npm = round(100-npm/float(groundmatrix.size)*100, 2)
+
+    print("Number of messages sent: ", msgdict)
     print("Divergence in procent:", rdict, "\n")
     print("Number of messages sent divergence:", largestmatrix-smallestmatrix)
     print("Ground truth: ", gtrdict)
+    print(npm)
+
+    file = open("testdata/divergematrix" + str(1), "a")
+    file.write(json.dumps(rdict) + "\n")
+    file.write(json.dumps(npm))
+    file.close()
 
 
 
-#consistensycheck(16, 3)
-#divergematrixcheck(4)
-
-#consistensycheck(1)
-#consistensycheck(2)
-
-
+if __name__ == '__main__':
+    #divergematrixcheck(int(sys.argv[1]))
+    listcheck(16)

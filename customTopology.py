@@ -61,7 +61,7 @@ class CustomTopology:
         # network.pingAll()
         info("*** testing bandwith between host 1 & 2\n")
         h1, h2 = network.get('Host1', 'Host2')
-        network.iperf((h1, h2))
+        #network.iperf((h1, h2))
 
 
 
@@ -86,7 +86,7 @@ class CustomTopology:
             draw = Draw()
             draw.perform_writes(2)
 
-
+        divergematrixcheck(no_of_hosts)
 
     def restartTest(self, hosts):
         test = Test()
