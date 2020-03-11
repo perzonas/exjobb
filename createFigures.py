@@ -114,7 +114,7 @@ class Draw:
         data.append(go.Bar(x=["Bytes actually sent", "Total bytes attempted to send"], y=[average1, average2],
                            name="Average across all nodes", text=[average1, average2], textposition='auto'))
 
-        layout = go.Layout(barmode='group', font=dict(family='Courier New, monospace', size=12, color='#2f2f2f'))
+        layout = go.Layout(barmode='group', font=dict(family='Courier New, monospace', size=22, color='#2f2f2f'))
         figure = go.Figure(data=data, layout=layout)
         files = glob.glob(self.path+"/bytes*")
         plot(figure, filename=(self.path+"/bytes%s.html" % str(len(files) + 1)), auto_open=False)
@@ -162,11 +162,11 @@ class Draw:
                 except:
                     pass
             self.messagesize_average.append(total/len(bytes))
-        data.append(go.Scatter(x=self.xrange, y=self.messagesize_average, mode='lines', name="Average message size"))
+        data.append(go.Scatter(x=self.xrange, y=self.messagesize_average, mode='lines'))
 
-        layout = dict(font=dict(family='Courier New, monospace', size=12, color='#2f2f2f'),
-                      xaxis=dict(title='Number of sent messages'),
-                      yaxis=dict(title='Message size (bytes)'),
+        layout = dict(font=dict(family='Courier New, monospace', size=22, color='#2f2f2f'),
+                      xaxis=dict(title='Sequence number of sent message'),
+                      yaxis=dict(title='Size of message sent in bytes'),
                       )
         figure = go.Figure(data=data, layout=layout)
         files = glob.glob(self.path + "/messagesize*")
@@ -214,11 +214,11 @@ class Draw:
                 except:
                     pass
             self.messagelatency_average.append(total/len(bytes))
-        data.append(go.Scatter(x=self.xrange, y=self.messagelatency_average, mode='lines', name="Average message latency"))
+        data.append(go.Scatter(x=self.xrange, y=self.messagelatency_average, mode='lines'))
 
-        layout = dict(font=dict(family='Courier New, monospace', size=12, color='#2f2f2f'),
-                      yaxis=dict(title='Time for message to be received (milliseconds)'),
-                      xaxis=dict(title='Received message number'),
+        layout = dict(font=dict(family='Courier New, monospace', size=22, color='#2f2f2f'),
+                      yaxis=dict(title='Time for message to be received in ms', type='log'),
+                      xaxis=dict(title='Sequence number of received message'),
                       )
         figure = go.Figure(data=data, layout=layout)
         files = glob.glob(self.path + "/messagelatency*")
@@ -265,11 +265,11 @@ class Draw:
                 except:
                     pass
             self.mergelatency_average.append(total/len(bytes))
-        data.append(go.Scatter(x=self.xrange, y=self.mergelatency_average, mode='lines', name="Average message size"))
+        data.append(go.Scatter(x=self.xrange, y=self.mergelatency_average, mode='lines'))
 
-        layout = dict(font=dict(family='Courier New, monospace', size=12, color='#2f2f2f'),
-                      yaxis=dict(title='Time for action/merge(milliseconds)'),
-                      xaxis=dict(title='Action/merge sequence'),
+        layout = dict(font=dict(family='Courier New, monospace', size=22, color='#2f2f2f'),
+                      yaxis=dict(title='Time to perform an operation in ms', type='log'),
+                      xaxis=dict(title='Sequence number of performed operation'),
                       )
         figure = go.Figure(data=data, layout=layout)
         files = glob.glob(self.path + "/mergelatency*")
@@ -303,11 +303,11 @@ class Draw:
                 bytes.append(newList)
             self.xrange = list(range(1, len(bytes[i - 2]) + 1))
             data.append(go.Scatter(x=self.xrange, y=bytes[i - 2], mode='lines', name=("Node" + str(i))))
-        data.append(go.Scatter(x=self.xrange, y=self.mergelatency_average, mode='lines', name="Average message size"))
+        data.append(go.Scatter(x=self.xrange, y=self.mergelatency_average, mode='lines'))
 
-        layout = dict(font=dict(family='Courier New, monospace', size=12, color='#2f2f2f'),
-                      yaxis=dict(title='Time for action/merge(milliseconds)'),
-                      xaxis=dict(title='Action/merge sequence number'),
+        layout = dict(font=dict(family='Courier New, monospace', size=22, color='#2f2f2f'),
+                      yaxis=dict(title='Time to perform an operation in ms', type='log'),
+                      xaxis=dict(title='Sequence number of performed operation'),
                       )
         figure = go.Figure(data=data, layout=layout)
         files = glob.glob(self.path + "/slavemergelatency*")
@@ -341,9 +341,9 @@ class Draw:
         data.append(go.Scatter(x=self.xrange, y=bytes[0], mode='lines', name="Node1"))
         data.append(go.Scatter(x=self.xrange, y=self.mergelatency_average, mode='lines', name="Average message size"))
 
-        layout = dict(font=dict(family='Courier New, monospace', size=12, color='#2f2f2f'),
-                      yaxis=dict(title='Time for action/merge(milliseconds)'),
-                      xaxis=dict(title='Action/merge sequence number'),
+        layout = dict(font=dict(family='Courier New, monospace', size=22, color='#2f2f2f'),
+                      yaxis=dict(title='Time to perform an operation in ms', type='log'),
+                      xaxis=dict(title='Sequence number of performed operation'),
                       )
         figure = go.Figure(data=data, layout=layout)
         files = glob.glob(self.path + "/mastermergelatency*")
@@ -377,11 +377,11 @@ class Draw:
                 bytes.append(newList)
             self.xrange = list(range(1, len(bytes[i - 2]) + 1))
             data.append(go.Scatter(x=self.xrange, y=bytes[i - 2], mode='lines', name=("Node" + str(i))))
-        data.append(go.Scatter(x=self.xrange, y=self.messagelatency_average, mode='lines', name="Average message size"))
+        data.append(go.Scatter(x=self.xrange, y=self.messagelatency_average, mode='lines'))
 
-        layout = dict(font=dict(family='Courier New, monospace', size=12, color='#2f2f2f'),
-                      yaxis=dict(title='Time for message to be received (milliseconds)'),
-                      xaxis=dict(title='Received message number'),
+        layout = dict(font=dict(family='Courier New, monospace', size=22, color='#2f2f2f'),
+                      yaxis=dict(title='Time for a message to be received in ms', type='log'),
+                      xaxis=dict(title='Sequence number of received message'),
                       )
         figure = go.Figure(data=data, layout=layout)
         files = glob.glob(self.path + "/slavemessagelatency*")
@@ -415,9 +415,9 @@ class Draw:
         data.append(go.Scatter(x=self.xrange, y=bytes[0], mode='lines', name="Node1"))
         data.append(go.Scatter(x=self.xrange, y=self.messagelatency_average, mode='lines', name="Average message size"))
 
-        layout = dict(font=dict(family='Courier New, monospace', size=12, color='#2f2f2f'),
-                      yaxis=dict(title='Time for message to be received (milliseconds)'),
-                      xaxis=dict(title='Received message number'),
+        layout = dict(font=dict(family='Courier New, monospace', size=22, color='#2f2f2f'),
+                      yaxis=dict(title='Time for a message to be received in ms', type='log'),
+                      xaxis=dict(title='Sequence number of received message'),
                       )
         figure = go.Figure(data=data, layout=layout)
         files = glob.glob(self.path + "/mastermessagelatency*")
@@ -451,11 +451,11 @@ class Draw:
                 bytes.append(newList)
             self.xrange = list(range(1, len(bytes[i - 2]) + 1))
             data.append(go.Scatter(x=self.xrange, y=bytes[i - 2], mode='lines', name=("Node" + str(i))))
-        data.append(go.Scatter(x=self.xrange, y=self.messagesize_average, mode='lines', name="Average message size"))
+        data.append(go.Scatter(x=self.xrange, y=self.messagesize_average, mode='lines'))
 
-        layout = dict(font=dict(family='Courier New, monospace', size=12, color='#2f2f2f'),
-                      yaxis=dict(title='Message size (bytes)'),
-                      xaxis=dict(title='Number of sent messages'),
+        layout = dict(font=dict(family='Courier New, monospace', size=22, color='#2f2f2f'),
+                      yaxis=dict(title='Size of message sent in bytes'),
+                      xaxis=dict(title='Sequence number of sent message'),
                       )
         figure = go.Figure(data=data, layout=layout)
         files = glob.glob(self.path + "/slavemessagesize*")
@@ -487,11 +487,11 @@ class Draw:
             bytes.append(newList)
         self.xrange = list(range(1, len(bytes[0]) + 1))
         data.append(go.Scatter(x=self.xrange, y=bytes[0], mode='lines', name="Node1"))
-        data.append(go.Scatter(x=self.xrange, y=self.messagesize_average, mode='lines', name="Average message size"))
+        data.append(go.Scatter(x=self.xrange, y=self.messagesize_average, mode='lines'))
 
-        layout = dict(font=dict(family='Courier New, monospace', size=12, color='#2f2f2f'),
-                      yaxis=dict(title='Message size (bytes)'),
-                      xaxis=dict(title='Number of sent messages'),
+        layout = dict(font=dict(family='Courier New, monospace', size=22, color='#2f2f2f'),
+                      yaxis=dict(title='Size of message sent in bytes'),
+                      xaxis=dict(title='Sequence number of sent message')
                       )
         figure = go.Figure(data=data, layout=layout)
         files = glob.glob(self.path + "/mastermessagesize*")
@@ -502,5 +502,5 @@ class Draw:
 if __name__ == '__main__':
     #write_bytes()
     data = Draw()
-    data.perform_writes(2)
+    data.perform_writes(3)
 

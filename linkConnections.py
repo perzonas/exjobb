@@ -35,6 +35,7 @@ def linkScript(network, hosts, seconds, type):
                 file.close()
                 break
 
+
         if cur_time % 300 < 5:
             for j in range(3):
                 for i in range(1, hosts+1):
