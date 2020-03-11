@@ -75,6 +75,7 @@ def divergematrixcheck(nrofnodes):
 
     for i in range(1, nrofnodes+1):
         file = open("testdata/divergematrices/divergematrix" + str(i), "r")
+
         text = file.readlines()
         mtrx = json.loads(text[0])
         nrofmessages = json.loads(text[1])
@@ -322,3 +323,4 @@ if __name__ == '__main__':
     divergematrixcheck(16)
     #listcheck(16)
     pass
+

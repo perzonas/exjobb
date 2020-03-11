@@ -123,7 +123,7 @@ class Server:
         while True:
             snapshot = self.crdt.getsnapshot()
             self.broadcastsnapshot(snapshot)
-            time.sleep(5)
+            time.sleep(25)
 
     # Broadcast a message to all other nodes
     def broadcastsnapshot(self, message):
