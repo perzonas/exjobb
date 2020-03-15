@@ -28,38 +28,7 @@ class Draw:
 
 
     def perform_writes(self, type):
-        ### Create a directory for all the graphs
-        files = glob.glob("rawdata/bytes*")
-        numberofhosts = len(files)
-        if type == self.CENTRALIZED:
-            files = os.listdir("results/")
-            count = 0
-            for file in files:
-                if "centralized" in file:
-                    count += 1
-            self.path = "results/centralized_%dhosts" % numberofhosts
-            os.mkdir(self.path)
-            os.chmod(self.path, 0o777)
-
-        elif type == self.STATE:
-            files = os.listdir("results/")
-            count = 0
-            for file in files:
-                if "state" in file:
-                    count += 1
-            self.path = "results/state_%dhosts" % numberofhosts
-            os.mkdir(self.path)
-            os.chmod(self.path, 0o777)
-
-        elif type == self.DELTA:
-            files = os.listdir("results/")
-            count = 0
-            for file in files:
-                if "delta" in file:
-                    count += 1
-            self.path = "results/delta_%dhosts" % numberofhosts
-            os.mkdir(self.path)
-            os.chmod(self.path, 0o777)
+        self.path = os.path.dirname(os.path.abspath(__file__))
 
         ### Create the right graphs for the solutions that has been used ###
         print("### CREATING GRAPHS FROM RESULTS ###")

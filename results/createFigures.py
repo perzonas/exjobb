@@ -28,38 +28,7 @@ class Draw:
 
 
     def perform_writes(self, type):
-        ### Create a directory for all the graphs
-        files = glob.glob("testdata/bytes*")
-        numberofhosts = len(files)
-        if type == self.CENTRALIZED:
-            files = os.listdir("results/")
-            count = 0
-            for file in files:
-                if "centralized" in file:
-                    count += 1
-            self.path = "results/centralized_%dhosts" % numberofhosts
-            os.mkdir(self.path)
-            os.chmod(self.path, 0o777)
-
-        elif type == self.STATE:
-            files = os.listdir("results/")
-            count = 0
-            for file in files:
-                if "state" in file:
-                    count += 1
-            self.path = "results/state_%dhosts" % numberofhosts
-            os.mkdir(self.path)
-            os.chmod(self.path, 0o777)
-
-        elif type == self.DELTA:
-            files = os.listdir("results/")
-            count = 0
-            for file in files:
-                if "delta" in file:
-                    count += 1
-            self.path = "results/delta_%dhosts" % numberofhosts
-            os.mkdir(self.path)
-            os.chmod(self.path, 0o777)
+        self.path = os.path.dirname(os.path.abspath(__file__))
 
         ### Create the right graphs for the solutions that has been used ###
         print("### CREATING GRAPHS FROM RESULTS ###")
@@ -83,10 +52,10 @@ class Draw:
         sum2 = 0
         bytes = []
 
-        files = glob.glob("testdata/bytes*")
+        files = glob.glob("rawdata/bytes*")
         data = []
         for i in range(1, len(files)+1):
-            file = open("testdata/bytes"+str(i), "r")
+            file = open("rawdata/bytes"+str(i), "r")
             line = file.read()
             file.close()
             try:
@@ -128,11 +97,11 @@ class Draw:
 
 
     def write_messagesize(self):
-        files = glob.glob("testdata/messagesize*")
+        files = glob.glob("rawdata/messagesize*")
         data = []
         bytes = []
         for i in range(1, len(files)+1):
-            file = open("testdata/messagesize"+str(i), "r")
+            file = open("rawdata/messagesize"+str(i), "r")
             line = file.read()
             file.close()
             try:
@@ -191,11 +160,11 @@ class Draw:
 
 
     def write_messagelatency(self):
-        files = glob.glob("testdata/messagelatency*")
+        files = glob.glob("rawdata/messagelatency*")
         data = []
         bytes = []
         for i in range(1, len(files) + 1):
-            file = open("testdata/messagelatency" + str(i), "r")
+            file = open("rawdata/messagelatency" + str(i), "r")
             line = file.read()
             file.close()
             try:
@@ -253,11 +222,11 @@ class Draw:
 
 
     def write_mergelatency(self):
-        files = glob.glob("testdata/mergelatency*")
+        files = glob.glob("rawdata/mergelatency*")
         data = []
         bytes = []
         for i in range(1, len(files) + 1):
-            file = open("testdata/mergelatency" + str(i), "r")
+            file = open("rawdata/mergelatency" + str(i), "r")
             line = file.read()
             file.close()
             try:
