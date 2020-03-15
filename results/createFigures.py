@@ -10,6 +10,7 @@ import json
 class Draw:
 
     path = ""
+    temp_path = ""
     CENTRALIZED = 1
     STATE = 2
     DELTA = 3
@@ -29,8 +30,9 @@ class Draw:
 
     def perform_writes(self, type):
         self.path = os.path.dirname(os.path.abspath(__file__))
-
+        folders = glob.glob(self.path+"/*")
         ### Create the right graphs for the solutions that has been used ###
+
         print("### CREATING GRAPHS FROM RESULTS ###")
         self.write_bytes()
         self.write_messagesize()
@@ -151,8 +153,8 @@ class Draw:
 
 
         layout = dict(font=dict(family='Courier New, monospace', size=22, color='#2f2f2f'),
-                      xaxis=dict(title='Sequence number of sent message', type='log'),
-                      yaxis=dict(title='Size of message sent in bytes'))
+                      xaxis=dict(title='Sequence number of sent message'),
+                      yaxis=dict(title='Size of message sent in bytes', type='log'))
         figure = go.Figure(data=data, layout=layout)
         files = glob.glob(self.path + "/messagesize*")
         plot(figure, filename=(self.path + "/messagesize%s.html" % str(len(files) + 1)), auto_open=False)
