@@ -72,9 +72,9 @@ class Draw:
                     try:
                         newList.append(float(element))
                     except:
-                        print("################")
+                        print("###############")
                         print(element)
-                        print("################")
+                        print("###############")
                 if not newList == []:
                     bytes.append(newList)
 
