@@ -154,7 +154,7 @@ class Draw:
 
         layout = dict(font=dict(family='Courier New, monospace', size=22, color='#2f2f2f'),
                       xaxis=dict(title='Sequence number of sent message'),
-                      yaxis=dict(title='Size of message sent in bytes', type='log'))
+                      yaxis=dict(title='Size of messages in bytes', type='log'))
         figure = go.Figure(data=data, layout=layout)
         files = glob.glob(self.path + "/messagesize*")
         plot(figure, filename=(self.path + "/messagesize%s.html" % str(len(files) + 1)), auto_open=False)
@@ -461,7 +461,7 @@ class Draw:
         data.append(go.Scatter(x=self.xrange, y=self.messagesize_average, mode='lines'))
 
         layout = dict(font=dict(family='Courier New, monospace', size=22, color='#2f2f2f'),
-                      yaxis=dict(title='Size of message sent in bytes'),
+                      yaxis=dict(title='Size of messages in bytes'),
                       xaxis=dict(title='Sequence number of sent message'),
                       )
         figure = go.Figure(data=data, layout=layout)
@@ -497,7 +497,7 @@ class Draw:
         data.append(go.Scatter(x=self.xrange, y=self.messagesize_average, mode='lines'))
 
         layout = dict(font=dict(family='Courier New, monospace', size=22, color='#2f2f2f'),
-                      yaxis=dict(title='Size of message sent in bytes'),
+                      yaxis=dict(title='Size of messages in bytes'),
                       xaxis=dict(title='Sequence number of sent message')
                       )
         figure = go.Figure(data=data, layout=layout)
