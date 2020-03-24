@@ -106,7 +106,6 @@ class Draw:
         files = glob.glob(folder+"/rawdata/messagesize*")
         data = []
         bytes = []
-
         for i in range(1, len(files)+1):
             file = open(folder+"/rawdata/messagesize"+str(i), "r")
             line = file.read()
@@ -128,7 +127,7 @@ class Draw:
                         print("################")
                 bytes.append(newList)
 
-            
+            self.xrange = list(range(1, len(bytes[i-1])+1))
             #data.append(go.Scatter(x=self.xrange, y=bytes[i-1], mode='lines', name=("Node"+str(i))))
 
         max_length = 0
@@ -136,14 +135,11 @@ class Draw:
             if len(input)>max_length:
                 max_length = len(input)
 
-        self.xrange = list(range(1, max_length+1))
-        
-
         for i in range(max_length):
             total = 0
             min = 999999999999999999
             max = 0
-
+            
             for j in range(len(bytes)):
                 try:
                     if bytes[j][i] < min:
@@ -153,11 +149,9 @@ class Draw:
                     total += bytes[j][i]
                 except:
                     pass
-
             self.messagesize_average.append(total/len(bytes))
             self.messagesize_max.append(max)
             self.messagesize_min.append(min)
-
         data.append(go.Scatter(x=self.xrange, y=self.messagesize_average, name="Average", mode='lines'))
         data.append(go.Scatter(x=self.xrange, y=self.messagesize_max, name="Maximum", mode='lines'))
         data.append(go.Scatter(x=self.xrange, y=self.messagesize_min, name="Minimum", mode='lines'))
