@@ -209,7 +209,7 @@ class Server:
 
 
         while True:
-            time.sleep(25)
+            time.sleep(5)
 
             if not dbexistcheck(self.hostID, self.hostID):
                 addnewdb(self.hostID, self.hostID)
