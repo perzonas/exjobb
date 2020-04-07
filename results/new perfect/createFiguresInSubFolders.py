@@ -24,6 +24,8 @@ class Draw:
     mergelatency_average = []
     mergelatency_min = []
     mergelatency_max = []
+    max_avg = []
+    min_avg = []
     xrange = []
 
 
@@ -210,6 +212,8 @@ class Draw:
         self.xrange = list(range(1, max_length + 1))
         total = 0
         messages_sent = 0
+        max_total = 0
+        min_total = 0
         for i in range(max_length):
 
             max = 0
@@ -224,12 +228,18 @@ class Draw:
                     messages_sent += 1
                 except:
                     pass
-            self.messagelatency_average.append(total/messages_sent)
+            max_total += max
+            min_total += min
+            self.max_avg.append(max_total / (i + 1))
+            self.min_avg.append(min_total / (i + 1))
+            self.messagelatency_average.append(total / messages_sent)
             self.messagelatency_max.append(max)
             self.messagelatency_min.append(min)
-        data.append(go.Scatter(x=self.xrange, y=self.messagelatency_average, name="Avg", mode='lines', line=dict(color='blue', width=6)))
-        data.append(go.Scatter(x=self.xrange, y=self.messagelatency_max, name="Max", mode='lines', line=dict(color='black', width=4, dash='dot')))
-        data.append(go.Scatter(x=self.xrange, y=self.messagelatency_min, name="Min", mode='lines', line=dict(color='firebrick', width=4, dash='dash')))
+        data.append(go.Scatter(x=self.xrange, y=self.max_avg, name="Max_Avg", mode='lines', line=dict(color='black', width=5, dash='dot')))
+        data.append(go.Scatter(x=self.xrange, y=self.min_avg, name="Min_Avg", mode='lines', line=dict(color='firebrick', width=5, dash='dash')))
+        data.append(go.Scatter(x=self.xrange, y=self.messagelatency_average, name="Avg", mode='lines', line=dict(color='blue', width=4)))
+        data.append(go.Scatter(x=self.xrange, y=self.messagelatency_max, name="Max", opacity=0.3, mode='lines', line=dict(color='black', width=3, dash='dot')))
+        data.append(go.Scatter(x=self.xrange, y=self.messagelatency_min, name="Min", opacity=0.4, mode='lines', line=dict(color='firebrick', width=3, dash='dash')))
 
         layout = dict(font=dict(family='Courier New, monospace', size=22, color='#2f2f2f'),
                       yaxis=dict(title='Time to receive message in ms', type='log'),
