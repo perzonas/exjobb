@@ -1,4 +1,3 @@
-import plotly.plotly as py
 from plotly.offline import plot
 import plotly.io as pio
 import plotly.graph_objs as go
@@ -102,7 +101,8 @@ class Draw:
         data.append(go.Bar(x=["Bytes actually sent", "Total bytes attempted to send"], y=[average1, average2],
                            name="Average across all nodes", text=[average1, average2], textposition='auto'))
 
-        layout = go.Layout(barmode='group', font=dict(family='Courier New, monospace', size=22, color='#2f2f2f'))
+        layout = go.Layout(barmode='group', font=dict(family='Courier New, monospace', size=22, color='#2f2f2f'),
+                           yaxis=dict(type='log'))
         figure = go.Figure(data=data, layout=layout)
         files = glob.glob(folder+"/bytes*")
         plot(figure, filename=(folder+"/bytes%s.html" % str(len(files) + 1)), auto_open=False)
