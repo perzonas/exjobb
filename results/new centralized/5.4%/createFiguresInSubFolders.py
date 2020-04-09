@@ -1,4 +1,3 @@
-import plotly.plotly as py
 from plotly.offline import plot
 import plotly.io as pio
 import plotly.graph_objs as go
@@ -24,6 +23,8 @@ class Draw:
     mergelatency_average = []
     mergelatency_min = []
     mergelatency_max = []
+    max_avg = []
+    min_avg = []
     xrange = []
 
 
@@ -38,10 +39,15 @@ class Draw:
         for folder in folders:
             print(folder)
             print("### CREATING GRAPHS FROM RESULTS ###")
+            self.clear()
             self.write_bytes(folder)
+            self.clear()
             self.write_messagesize(folder)
+            self.clear()
             self.write_messagelatency(folder)
+            self.clear()
             self.write_mergelatency(folder)
+            self.clear()
             if type == self.CENTRALIZED:
                 self.write_master_mergelatency()
                 self.write_slave_messagelatency()
@@ -95,7 +101,8 @@ class Draw:
         data.append(go.Bar(x=["Bytes actually sent", "Total bytes attempted to send"], y=[average1, average2],
                            name="Average across all nodes", text=[average1, average2], textposition='auto'))
 
-        layout = go.Layout(barmode='group', font=dict(family='Courier New, monospace', size=22, color='#2f2f2f'))
+        layout = go.Layout(barmode='group', font=dict(family='Courier New, monospace', size=22, color='#2f2f2f'),
+                           yaxis=dict(type='log'))
         figure = go.Figure(data=data, layout=layout)
         files = glob.glob(folder+"/bytes*")
         plot(figure, filename=(folder+"/bytes%s.html" % str(len(files) + 1)), auto_open=False)
@@ -155,9 +162,9 @@ class Draw:
             self.messagesize_average.append(total/sent_messages)
             self.messagesize_max.append(max)
             self.messagesize_min.append(min)
-        data.append(go.Scatter(x=self.xrange, y=self.messagesize_average, name="Avg", mode='lines', line=dict(color='blue', width=4)))
-        data.append(go.Scatter(x=self.xrange, y=self.messagesize_max, name="Max", mode='lines', line=dict(color='black', width=3, dash='dot')))
-        data.append(go.Scatter(x=self.xrange, y=self.messagesize_min, name="Min", mode='lines', line=dict(color='firebrick', width=3, dash='dash')))
+        data.append(go.Scatter(x=self.xrange, y=self.messagesize_average, name="Avg", mode='lines', line=dict(color='blue', width=6)))
+        data.append(go.Scatter(x=self.xrange, y=self.messagesize_max, name="Max", mode='lines', line=dict(color='black', width=4, dash='dot')))
+        data.append(go.Scatter(x=self.xrange, y=self.messagesize_min, name="Min", mode='lines', line=dict(color='firebrick', width=4, dash='dash')))
 
 
         layout = dict(font=dict(family='Courier New, monospace', size=22, color='#2f2f2f'),
@@ -204,6 +211,8 @@ class Draw:
         self.xrange = list(range(1, max_length + 1))
         total = 0
         messages_sent = 0
+        max_total = 0
+        min_total = 0
         for i in range(max_length):
 
             max = 0
@@ -218,12 +227,18 @@ class Draw:
                     messages_sent += 1
                 except:
                     pass
-            self.messagelatency_average.append(total/messages_sent)
+            max_total += max
+            min_total += min
+            self.max_avg.append(max_total / (i + 1))
+            self.min_avg.append(min_total / (i + 1))
+            self.messagelatency_average.append(total / messages_sent)
             self.messagelatency_max.append(max)
             self.messagelatency_min.append(min)
+        data.append(go.Scatter(x=self.xrange, y=self.max_avg, name="Max_Avg", mode='lines', line=dict(color='black', width=5, dash='dot')))
+        data.append(go.Scatter(x=self.xrange, y=self.min_avg, name="Min_Avg", mode='lines', line=dict(color='firebrick', width=5, dash='dash')))
         data.append(go.Scatter(x=self.xrange, y=self.messagelatency_average, name="Avg", mode='lines', line=dict(color='blue', width=4)))
-        data.append(go.Scatter(x=self.xrange, y=self.messagelatency_max, name="Max", mode='lines', line=dict(color='black', width=3, dash='dot')))
-        data.append(go.Scatter(x=self.xrange, y=self.messagelatency_min, name="Min", mode='lines', line=dict(color='firebrick', width=3, dash='dash')))
+        data.append(go.Scatter(x=self.xrange, y=self.messagelatency_max, name="Max", opacity=0.3, mode='lines', line=dict(color='black', width=3, dash='dot')))
+        data.append(go.Scatter(x=self.xrange, y=self.messagelatency_min, name="Min", opacity=0.4, mode='lines', line=dict(color='firebrick', width=3, dash='dash')))
 
         layout = dict(font=dict(family='Courier New, monospace', size=22, color='#2f2f2f'),
                       yaxis=dict(title='Time to receive message in ms', type='log'),
@@ -270,6 +285,8 @@ class Draw:
         self.xrange = list(range(1, max_length+1))
         total = 0
         messages_sent = 0
+        max_total = 0
+        min_total = 0
         for i in range(max_length):
             min = 999999999999999
             max = 0
@@ -283,12 +300,20 @@ class Draw:
                     messages_sent += 1
                 except:
                     pass
-            self.mergelatency_average.append(total/messages_sent)
+            max_total += max
+            min_total += min
+            self.max_avg.append(max_total / (i + 1))
+            self.min_avg.append(min_total / (i + 1))
+            self.mergelatency_average.append(total / messages_sent)
             self.mergelatency_max.append(max)
             self.mergelatency_min.append(min)
-        data.append(go.Scatter(x=self.xrange, y=self.mergelatency_average, name="Avg", mode='lines', line=dict(color='blue', width=4)))
-        data.append(go.Scatter(x=self.xrange, y=self.mergelatency_max, name="Max", mode='lines', line=dict(color='black', width=3, dash='dot')))
-        data.append(go.Scatter(x=self.xrange, y=self.mergelatency_min, name="Min", mode='lines', line=dict(color='firebrick', width=3, dash='dash')))
+        data.append(go.Scatter(x=self.xrange, y=self.max_avg, name="Max_Avg", mode='lines',
+                               line=dict(color='black', width=5, dash='dot')))
+        data.append(go.Scatter(x=self.xrange, y=self.min_avg, name="Min_Avg", mode='lines',
+                               line=dict(color='firebrick', width=5, dash='dash')))
+        data.append(go.Scatter(x=self.xrange, y=self.mergelatency_average, name="Avg", mode='lines', line=dict(color='blue', width=6)))
+        data.append(go.Scatter(x=self.xrange, y=self.mergelatency_max, name="Max", opacity=0.3, mode='lines', line=dict(color='black', width=4, dash='dot')))
+        data.append(go.Scatter(x=self.xrange, y=self.mergelatency_min, name="Min", opacity=0.4, mode='lines', line=dict(color='firebrick', width=4, dash='dash')))
 
         layout = dict(font=dict(family='Courier New, monospace', size=22, color='#2f2f2f'),
                       yaxis=dict(title='Time to perform operation in ms', type='log'),
@@ -520,6 +545,21 @@ class Draw:
         files = glob.glob(self.path + "/mastermessagesize*")
         plot(figure, filename=(self.path + "/mastermessagesize%s.html" % str(len(files)+1)), auto_open=False)
         os.chmod(self.path + "/mastermessagesize%s.html" % str(len(files) + 1), 0o777)
+
+    def clear(self):
+        self.min_avg = []
+        self.max_avg = []
+        self.bytes_average = []
+        self.messagesize_average = []
+        self.messagesize_min = []
+        self.messagesize_max = []
+        self.messagelatency_average = []
+        self.messagelatency_min = []
+        self.messagelatency_max = []
+        self.mergelatency_average = []
+        self.mergelatency_min = []
+        self.mergelatency_max = []
+        self.xrange = []
 
 
 if __name__ == '__main__':
