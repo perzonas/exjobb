@@ -1,4 +1,3 @@
-import plotly.plotly as py
 from plotly.offline import plot
 import plotly.io as pio
 import plotly.graph_objs as go
